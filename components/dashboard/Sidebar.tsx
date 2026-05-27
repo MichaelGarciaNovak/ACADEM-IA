@@ -6,6 +6,7 @@ import Logo from '@/components/Logo'
 
 const links = [
   { href: '/dashboard', label: 'mis cursos', icon: '▦' },
+  { href: '/dashboard/cursos', label: 'catálogo', icon: '◈' },
   { href: '/dashboard/perfil', label: 'perfil', icon: '◯' },
 ]
 
