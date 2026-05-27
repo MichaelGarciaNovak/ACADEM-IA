@@ -55,7 +55,7 @@ export default async function NuevoCursoPage() {
         </div>
 
         <div className="flex gap-3 pt-2">
-          <button type="submit" className="btn-primary text-sm">
+          <button type="submit" className="btn-admin text-sm">
             crear y editar →
           </button>
           <a href="/admin/cursos" className="btn-outline text-sm">cancelar</a>

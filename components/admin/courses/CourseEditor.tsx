@@ -499,7 +499,7 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
         <div className="flex items-center gap-4">
           {saving && <span className="text-xs text-ink/30 uppercase tracking-widest">guardando...</span>}
           {saved && <span className="text-xs text-green-600 uppercase tracking-widest">guardado ✓</span>}
-          <button onClick={handleSave} className="btn-primary text-sm">
+          <button onClick={handleSave} className="btn-admin text-sm">
             guardar cambios
           </button>
           <button
@@ -654,7 +654,7 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
           {/* Actions */}
           <div className="flex gap-3 pt-4 border-t border-ink/10">
             <a href="/admin/cursos" className="btn-outline text-sm">cancelar</a>
-            <button onClick={handleSave} className="btn-primary text-sm">
+            <button onClick={handleSave} className="btn-admin text-sm">
               {saving ? 'guardando...' : 'guardar cambios'}
             </button>
           </div>

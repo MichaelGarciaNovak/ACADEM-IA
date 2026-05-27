@@ -16,7 +16,7 @@ export default async function AdminCursosPage() {
           <p className="text-xs uppercase tracking-widest text-ink/30 mb-2">gestor</p>
           <h1 className="text-3xl font-normal uppercase text-ink">cursos</h1>
         </div>
-        <Link href="/admin/cursos/nuevo" className="btn-primary text-sm">
+        <Link href="/admin/cursos/nuevo" className="btn-admin text-sm">
           + nuevo curso
         </Link>
       </div>
