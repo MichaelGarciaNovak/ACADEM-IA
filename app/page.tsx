@@ -64,15 +64,21 @@ const plans = [
 ]
 
 export default async function Home() {
-  const supabase = createClient()
-  const { data: heroData } = await supabase
-    .from('sections')
-    .select('*')
-    .eq('type', 'hero')
-    .eq('published', true)
-    .order('sort_order', { ascending: true })
-    .limit(1)
-    .single()
+  let heroData = null
+  try {
+    const supabase = createClient()
+    const { data } = await supabase
+      .from('sections')
+      .select('*')
+      .eq('type', 'hero')
+      .eq('published', true)
+      .order('sort_order', { ascending: true })
+      .limit(1)
+      .maybeSingle()
+    heroData = data
+  } catch {
+    // fallback to static content
+  }
 
   return (
     <main className="font-mono">
