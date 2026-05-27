@@ -19,7 +19,7 @@ function buildTextureLine(template: string, targetLen = 360): string {
   return out.slice(0, targetLen)
 }
 
-const DEFAULT_TEXTURE = 'system.online // adaptive_learning.active // cognitive_layer.initialized // reduce_friction(); // increase_clarity(); // AI_WORKFLOW.CONNECTED // human_input + ai_reasoning // operating_at_machine_speed // creative_engine.active // visibility.optimized // future.loading // '
+const DEFAULT_TEXTURE = 'system.online // adaptive_learning.active // cognitive_layer.initialized // reduce_friction(); // increase_clarity(); // AI_WORKFLOW.CONNECTED // human_input + ai_reasoning // operating_at_machine_speed // creative_engine.active // visibility.optimized // future.loading // system.online // adaptive_learning.active // cognitive_layer.initialized // reduce_friction(); // increase_clarity(); // AI_WORKFLOW.CONNECTED // system.online // adaptive_learning.active // cognitive_layer.initialized // reduce_friction(); // increase_clarity(); // AI_WORKFLOW.CONNECTED // '
 
 export default function HeroSection({
   title = 'ΛCΛDEM*IΛ',
@@ -36,7 +36,7 @@ export default function HeroSection({
 }: HeroSectionProps) {
   const mutedColor = textColor + 'aa'  // ~67% opacity version of textColor
 
-  const line = buildTextureLine(textureSymbol || DEFAULT_TEXTURE)
+  const line = buildTextureLine(DEFAULT_TEXTURE)
   const rows: string[] = []
   while (rows.length < 100) rows.push(line)
 
