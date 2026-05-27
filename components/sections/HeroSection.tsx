@@ -12,14 +12,19 @@ interface HeroSectionProps {
   textureColor?: string
 }
 
-function buildTextureLine(template: string, targetLen = 360): string {
-  if (!template.trim()) return ''
-  let out = ''
-  while (out.length < targetLen) out += template + '  '
-  return out.slice(0, targetLen)
-}
+const DEFAULT_TEXTURE = 'system.online // adaptive_learning.active // cognitive_layer.initialized // reduce_friction(); // increase_clarity(); // AI_WORKFLOW.CONNECTED // human_input + ai_reasoning // operating_at_machine_speed // creative_engine.active // visibility.optimized // future.loading // '
 
-const DEFAULT_TEXTURE = 'system.online // adaptive_learning.active // cognitive_layer.initialized // reduce_friction(); // increase_clarity(); // AI_WORKFLOW.CONNECTED // human_input + ai_reasoning // operating_at_machine_speed // creative_engine.active // visibility.optimized // future.loading // system.online // adaptive_learning.active // cognitive_layer.initialized // reduce_friction(); // increase_clarity(); // AI_WORKFLOW.CONNECTED // system.online // adaptive_learning.active // cognitive_layer.initialized // reduce_friction(); // increase_clarity(); // AI_WORKFLOW.CONNECTED // '
+function buildTextureRows(text: string, charsPerRow = 160, rowCount = 100): string[] {
+  // Repeat text until we have enough characters for all rows
+  let long = ''
+  while (long.length < charsPerRow * rowCount) long += text
+  // Slice into rows — each row continues where the previous left off
+  const rows: string[] = []
+  for (let i = 0; i < rowCount; i++) {
+    rows.push(long.slice(i * charsPerRow, (i + 1) * charsPerRow))
+  }
+  return rows
+}
 
 export default function HeroSection({
   title = 'ΛCΛDEM*IΛ',
@@ -36,9 +41,7 @@ export default function HeroSection({
 }: HeroSectionProps) {
   const mutedColor = textColor + 'aa'  // ~67% opacity version of textColor
 
-  const line = buildTextureLine(DEFAULT_TEXTURE)
-  const rows: string[] = []
-  while (rows.length < 100) rows.push(line)
+  const rows = buildTextureRows(DEFAULT_TEXTURE)
 
   const opacity = (textureOpacity ?? 5) / 100
 
