@@ -1,12 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <rect width="32" height="32" fill="#171a21"/>
+  <rect width="32" height="32" fill="#ffffff"/>
   <text
-    x="16"
+    x="7"
     y="22"
     font-family="monospace"
     font-size="13"
     font-weight="400"
     fill="#ef476f"
     text-anchor="middle"
-  >*IA</text>
+  >*</text>
+  <text
+    x="20"
+    y="22"
+    font-family="monospace"
+    font-size="13"
+    font-weight="400"
+    fill="#171a21"
+    text-anchor="middle"
+  >IA</text>
 </svg>
