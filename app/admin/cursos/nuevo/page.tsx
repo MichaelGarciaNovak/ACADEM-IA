@@ -7,13 +7,18 @@ export default async function NuevoCursoPage() {
 
   async function createCourse(formData: FormData) {
     'use server'
+    const { createClient } = await import('@/lib/supabase/server')
     const supabase = createClient()
     const { data, error } = await supabase.from('courses').insert({
       title: formData.get('title') as string,
-      category_id: formData.get('category_id') as string || null,
-      description: formData.get('description') as string,
+      category_id: (formData.get('category_id') as string) || null,
+      description: (formData.get('description') as string) || null,
     }).select('id').single()
-    if (!error && data) redirect(`/admin/cursos/${data.id}/editar`)
+    if (error) {
+      console.error('Error creating course:', error)
+      return
+    }
+    if (data) redirect(`/admin/cursos/${data.id}/editar`)
   }
 
   return (
