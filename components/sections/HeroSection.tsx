@@ -12,36 +12,14 @@ interface HeroSectionProps {
   textureColor?: string
 }
 
-// Short code-like lines that get tiled horizontally to fill the full width
-const CODE_TEMPLATES = (s: string) => [
-  `import { ${s} } from '@academ.ia/core'`,
-  ``,
-  `const section = { render: () => ${s}.init(), theme: '${s}', version: '1.0.0' }`,
-  ``,
-  `export default function Page() {`,
-  `  const data = use${s.replace(/[^\w]/g, '')}()`,
-  `  return <${s} {...data} />`,
-  `}`,
-  ``,
-  `type ${s.replace(/[^\w]/g, '')}Props = { id: string; title: string; published: boolean }`,
-  ``,
-  `async function fetch(id: string) {`,
-  `  const res = await db.from('sections').select('*').eq('type', '${s}').single()`,
-  `  return res.data`,
-  `}`,
-  ``,
-  `/* ${s} ${s} ${s} ${s} ${s} ${s} ${s} ${s} ${s} ${s} ${s} ${s} */`,
-  ``,
-  `const config: Config = { symbol: '${s}', opacity: 0.05, repeat: true }`,
-  ``,
-]
-
-function buildTextureLine(template: string, targetLen = 320): string {
+function buildTextureLine(template: string, targetLen = 360): string {
   if (!template.trim()) return ''
   let out = ''
-  while (out.length < targetLen) out += template + '     '
+  while (out.length < targetLen) out += template + '  '
   return out.slice(0, targetLen)
 }
+
+const DEFAULT_TEXTURE = 'system.online // adaptive_learning.active // cognitive_layer.initialized // reduce_friction(); // increase_clarity(); // AI_WORKFLOW.CONNECTED // human_input + ai_reasoning // operating_at_machine_speed // creative_engine.active // visibility.optimized // future.loading // '
 
 export default function HeroSection({
   title = 'ΛCΛDEM*IΛ',
@@ -52,18 +30,15 @@ export default function HeroSection({
   bgColor = '#171a21',
   accentColor = '#ef476f',
   textColor = '#dddfdf',
-  textureSymbol = 'ΛCΛDEM*IΛ',
+  textureSymbol = DEFAULT_TEXTURE,
   textureOpacity = 5,
   textureColor = '#dddfdf',
 }: HeroSectionProps) {
   const mutedColor = textColor + 'aa'  // ~67% opacity version of textColor
 
-  const templates = CODE_TEMPLATES(textureSymbol)
-  // Tile vertically until we have enough lines to fill ~120vh at 0.7rem/1.7lh ≈ 80 lines
+  const line = buildTextureLine(textureSymbol || DEFAULT_TEXTURE)
   const rows: string[] = []
-  while (rows.length < 90) {
-    templates.forEach((t) => rows.push(buildTextureLine(t)))
-  }
+  while (rows.length < 100) rows.push(line)
 
   const opacity = (textureOpacity ?? 5) / 100
 
@@ -82,13 +57,13 @@ export default function HeroSection({
             key={i}
             style={{
               fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: '0.85rem',
+              fontSize: '0.95rem',
               fontWeight: 400,
-              lineHeight: 1.72,
+              lineHeight: 1.25,
               letterSpacing: '0.01em',
               whiteSpace: 'pre',
               color: textureColor,
-              opacity: line.trim() === '' ? 0 : opacity,
+              opacity: opacity,
             }}
           >
             {line || ' '}
