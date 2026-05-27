@@ -203,7 +203,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
       user_id: userId,
       lesson_id: activeLesson.id,
     })
-    setCompleted(prev => new Set([...prev, activeLesson.id]))
+    setCompleted(prev => new Set(Array.from(prev).concat(activeLesson.id)))
     setMarkingDone(false)
     if (nextLesson) setActiveLesson(nextLesson)
   }
