@@ -2,6 +2,7 @@ import Navbar from '@/components/Navbar'
 import Logo from '@/components/Logo'
 import HeroSection from '@/components/sections/HeroSection'
 import InfoAcordeon from '@/components/sections/InfoAcordeon'
+import CarouselSection from '@/components/sections/CarouselSection'
 import { createClient } from '@/lib/supabase/server'
 
 const features = [
@@ -151,6 +152,20 @@ export default async function Home() {
               label={s.label ?? undefined}
               content={s.content ?? ''}
               items={s.items ? JSON.parse(s.items) : []}
+              bgColor={s.bg_color}
+              textColor={s.text_color ?? '#171a21'}
+              accentColor={s.accent_color}
+            />
+          )
+        }
+        if (s.type === 'carousel') {
+          return (
+            <CarouselSection
+              key={s.id}
+              label={s.label ?? undefined}
+              title={s.title}
+              subtitle={s.subtitle ?? undefined}
+              cards={s.items ? JSON.parse(s.items) : []}
               bgColor={s.bg_color}
               textColor={s.text_color ?? '#171a21'}
               accentColor={s.accent_color}

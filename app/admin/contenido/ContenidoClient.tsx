@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import HeroSection from '@/components/sections/HeroSection'
 import InfoAcordeon from '@/components/sections/InfoAcordeon'
+import CarouselSection, { CarouselCard } from '@/components/sections/CarouselSection'
 
 type Section = {
   id: string
@@ -28,6 +29,7 @@ type Section = {
 const SECTION_TYPES = [
   { value: 'hero', label: 'Hero' },
   { value: 'info-acordeon', label: 'Info Acordeón' },
+  { value: 'carousel', label: 'Carousel' },
 ]
 
 const COLOR_PRESETS = [
@@ -124,6 +126,20 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
   const [titlesText, setTitlesText] = useState('')
   const [itemsList, setItemsList] = useState<{title: string, body: string, icon?: string}[]>([])
   const [uploadingIcon, setUploadingIcon] = useState<number | null>(null)
+  const [cardsList, setCardsList] = useState<CarouselCard[]>([])
+  const [uploadingCardImage, setUploadingCardImage] = useState<number | null>(null)
+  const [expandedCard, setExpandedCard] = useState<number | null>(null)
+
+  async function uploadCardImage(file: File, cardIndex: number) {
+    setUploadingCardImage(cardIndex)
+    const ext = file.name.split('.').pop() ?? 'jpg'
+    const path = `cards/${Date.now()}.${ext}`
+    const { error } = await supabase.storage.from('assets').upload(path, file, { upsert: true })
+    if (error) { alert('Error al subir imagen: ' + error.message); setUploadingCardImage(null); return }
+    const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path)
+    setCardsList(prev => prev.map((x, j) => j === cardIndex ? { ...x, image: publicUrl } : x))
+    setUploadingCardImage(null)
+  }
 
   async function uploadIcon(file: File, itemIndex: number) {
     setUploadingIcon(itemIndex)
@@ -142,6 +158,8 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
     setForm(emptyForm())
     setTitlesText('')
     setItemsList([])
+    setCardsList([])
+    setExpandedCard(null)
     setPreview(false)
     setModalOpen(true)
   }
@@ -149,7 +167,9 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
   function openEdit(s: Section) {
     setEditingId(s.id)
     setTitlesText(s.title_variants ? JSON.parse(s.title_variants).join('\n') : '')
-    setItemsList(s.items ? JSON.parse(s.items) : [])
+    setItemsList(s.type === 'info-acordeon' && s.items ? JSON.parse(s.items) : [])
+    setCardsList(s.type === 'carousel' && s.items ? JSON.parse(s.items) : [])
+    setExpandedCard(null)
     setForm({
       type: s.type,
       title: s.title,
@@ -178,11 +198,14 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
 
   async function save() {
     setSaving(true)
-    // Always derive items from itemsList state to avoid stale closure issues
-    const formToSave = {
-      ...form,
-      items: itemsList.length ? JSON.stringify(itemsList) : null,
-    }
+    // Derive items from the correct list based on section type
+    const itemsValue =
+      form.type === 'carousel'
+        ? (cardsList.length ? JSON.stringify(cardsList) : null)
+        : form.type === 'info-acordeon'
+          ? (itemsList.length ? JSON.stringify(itemsList) : null)
+          : form.items
+    const formToSave = { ...form, items: itemsValue }
     if (editingId) {
       const { data, error } = await supabase
         .from('sections')
@@ -314,6 +337,17 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                       title={form.title || 'Título de ejemplo'}
                       content={form.content || 'Texto del párrafo izquierdo...'}
                       items={itemsList}
+                      bgColor={form.bg_color}
+                      textColor={form.text_color}
+                      accentColor={form.accent_color}
+                    />
+                  )}
+                  {form.type === 'carousel' && (
+                    <CarouselSection
+                      label={form.label ?? undefined}
+                      title={form.title || 'Título del carousel'}
+                      subtitle={form.subtitle ?? undefined}
+                      cards={cardsList}
                       bgColor={form.bg_color}
                       textColor={form.text_color}
                       accentColor={form.accent_color}
@@ -672,6 +706,197 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                 </div>
 
                 </> /* end info-acordeon fields */}
+
+                {/* ── CAROUSEL FIELDS ─────────────────── */}
+                {form.type === 'carousel' && <>
+
+                {/* Etiqueta */}
+                <label className="flex flex-col gap-1.5">
+                  <span className="text-xs uppercase text-ink/40 font-mono">etiqueta rosa (opcional)</span>
+                  <input value={form.label ?? ''} onChange={(e) => set('label', e.target.value || null)}
+                    placeholder="ej. cursos destacados"
+                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                </label>
+
+                {/* Título sección */}
+                <label className="flex flex-col gap-1.5">
+                  <span className="text-xs uppercase text-ink/40 font-mono">título de sección</span>
+                  <input value={form.title} onChange={(e) => set('title', e.target.value)}
+                    placeholder="Elige tu camino"
+                    className="border border-ink/15 px-3 py-2 text-sm font-mono uppercase bg-transparent text-ink focus:outline-none focus:border-slate" />
+                </label>
+
+                {/* Subtítulo sección */}
+                <label className="flex flex-col gap-1.5">
+                  <span className="text-xs uppercase text-ink/40 font-mono">subtítulo de sección (opcional)</span>
+                  <input value={form.subtitle ?? ''} onChange={(e) => set('subtitle', e.target.value || null)}
+                    placeholder="Una línea descriptiva..."
+                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                </label>
+
+                {/* Cards */}
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs uppercase text-ink/40 font-mono">cards ({cardsList.length})</span>
+                    <button
+                      onClick={() => {
+                        const next = [...cardsList, { title: '', ctaText: 'ver más' }]
+                        setCardsList(next)
+                        setExpandedCard(next.length - 1)
+                      }}
+                      className="text-xs uppercase text-slate hover:text-slate/70 font-mono transition-colors"
+                    >+ agregar card</button>
+                  </div>
+
+                  {cardsList.map((card, i) => (
+                    <div key={i} className="border border-ink/10">
+                      {/* Card header */}
+                      <div className="flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-ink/[0.02]"
+                        onClick={() => setExpandedCard(expandedCard === i ? null : i)}>
+                        {card.image
+                          // eslint-disable-next-line @next/next/no-img-element
+                          ? <img src={card.image} alt="" className="w-8 h-10 object-cover flex-shrink-0 border border-ink/10" />
+                          : <div className="w-8 h-10 border border-dashed border-ink/15 flex-shrink-0 flex items-center justify-center">
+                              <span className="text-ink/20 text-[9px]">img</span>
+                            </div>
+                        }
+                        <span className="text-xs font-mono text-ink flex-1 truncate">
+                          {card.title || <span className="text-ink/30">sin título</span>}
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            const next = cardsList.filter((_, j) => j !== i)
+                            setCardsList(next)
+                            setExpandedCard(null)
+                          }}
+                          className="text-ink/20 hover:text-pink transition-colors text-xs ml-2"
+                        >✕</button>
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                          className={`flex-shrink-0 transition-transform duration-200 ${expandedCard === i ? 'rotate-90' : ''}`}>
+                          <path d="M4 2L8 6L4 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+
+                      {/* Card fields */}
+                      {expandedCard === i && (
+                        <div className="border-t border-ink/8 p-3 flex flex-col gap-2.5">
+                          {/* Image upload */}
+                          <div className="flex flex-col gap-1.5">
+                            <span className="text-[10px] uppercase text-ink/30 font-mono">imagen principal</span>
+                            <label className="flex items-center gap-2 cursor-pointer w-fit">
+                              {card.image
+                                // eslint-disable-next-line @next/next/no-img-element
+                                ? <img src={card.image} alt="" className="w-16 h-20 object-cover border border-ink/10" />
+                                : <div className="w-16 h-20 border border-dashed border-ink/20 flex items-center justify-center">
+                                    <span className="text-ink/25 text-[10px]">+</span>
+                                  </div>
+                              }
+                              <span className="text-xs font-mono text-ink/40 hover:text-slate transition-colors">
+                                {uploadingCardImage === i ? 'subiendo...' : card.image ? 'cambiar' : 'subir imagen'}
+                              </span>
+                              <input type="file" accept="image/*" className="hidden"
+                                disabled={uploadingCardImage !== null}
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0]
+                                  if (file) uploadCardImage(file, i)
+                                  e.target.value = ''
+                                }} />
+                            </label>
+                          </div>
+
+                          {/* Badge + Category */}
+                          <div className="grid grid-cols-2 gap-2">
+                            <label className="flex flex-col gap-1">
+                              <span className="text-[10px] uppercase text-ink/30 font-mono">badge</span>
+                              <input value={card.badge ?? ''} placeholder="nuevo"
+                                onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badge: e.target.value||undefined} : x))}
+                                className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                            </label>
+                            <label className="flex flex-col gap-1">
+                              <span className="text-[10px] uppercase text-ink/30 font-mono">categoría</span>
+                              <input value={card.category ?? ''} placeholder="desarrollo"
+                                onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, category: e.target.value||undefined} : x))}
+                                className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                            </label>
+                          </div>
+
+                          {/* Title */}
+                          <label className="flex flex-col gap-1">
+                            <span className="text-[10px] uppercase text-ink/30 font-mono">título *</span>
+                            <input value={card.title} placeholder="Fundamentos de IA"
+                              onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, title: e.target.value} : x))}
+                              className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                          </label>
+
+                          {/* Subtitle */}
+                          <label className="flex flex-col gap-1">
+                            <span className="text-[10px] uppercase text-ink/30 font-mono">subtítulo</span>
+                            <input value={card.subtitle ?? ''} placeholder="Aprende desde cero"
+                              onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, subtitle: e.target.value||undefined} : x))}
+                              className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                          </label>
+
+                          {/* Description */}
+                          <label className="flex flex-col gap-1">
+                            <span className="text-[10px] uppercase text-ink/30 font-mono">descripción corta</span>
+                            <textarea value={card.description ?? ''} rows={2} placeholder="Texto breve..."
+                              onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, description: e.target.value||undefined} : x))}
+                              className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate resize-none" />
+                          </label>
+
+                          {/* Duration + CTA */}
+                          <div className="grid grid-cols-2 gap-2">
+                            <label className="flex flex-col gap-1">
+                              <span className="text-[10px] uppercase text-ink/30 font-mono">duración</span>
+                              <input value={card.duration ?? ''} placeholder="8 semanas"
+                                onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, duration: e.target.value||undefined} : x))}
+                                className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                            </label>
+                            <label className="flex flex-col gap-1">
+                              <span className="text-[10px] uppercase text-ink/30 font-mono">texto cta</span>
+                              <input value={card.ctaText ?? ''} placeholder="ver curso"
+                                onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, ctaText: e.target.value||undefined} : x))}
+                                className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                            </label>
+                          </div>
+                          <label className="flex flex-col gap-1">
+                            <span className="text-[10px] uppercase text-ink/30 font-mono">link cta</span>
+                            <input value={card.ctaLink ?? ''} placeholder="/cursos/nombre-del-curso"
+                              onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, ctaLink: e.target.value||undefined} : x))}
+                              className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                          </label>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  {cardsList.length === 0 && (
+                    <p className="text-xs text-ink/25 font-mono">no hay cards aún — haz clic en + agregar card</p>
+                  )}
+                </div>
+
+                {/* Colores */}
+                <div className="border-t border-ink/8 pt-5 flex flex-col gap-4">
+                  <ColorPicker label="color de fondo" value={form.bg_color} onChange={(v) => set('bg_color', v)} presets={COLOR_PRESETS} />
+                  <ColorPicker label="color del texto" value={form.text_color} onChange={(v) => set('text_color', v)} presets={TEXT_COLOR_PRESETS} />
+                  <ColorPicker label="color de acento" value={form.accent_color} onChange={(v) => set('accent_color', v)} presets={ACCENT_PRESETS} />
+                </div>
+
+                {/* Publicar + orden */}
+                <div className="grid grid-cols-2 gap-4 border-t border-ink/8 pt-5">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" checked={form.published} onChange={(e) => set('published', e.target.checked)} className="w-4 h-4 accent-slate" />
+                    <span className="text-xs uppercase font-mono text-ink/60">publicar</span>
+                  </label>
+                  <label className="flex flex-col gap-1.5">
+                    <span className="text-xs uppercase text-ink/40 font-mono">orden</span>
+                    <input type="number" value={form.sort_order} onChange={(e) => set('sort_order', parseInt(e.target.value) || 0)}
+                      className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-20" />
+                  </label>
+                </div>
+
+                </> /* end carousel fields */}
 
               </div>
             )}
