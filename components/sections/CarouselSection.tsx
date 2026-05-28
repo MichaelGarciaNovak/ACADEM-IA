@@ -6,9 +6,10 @@ import { useRef } from 'react'
 const φ = 1.618033988749895
 // Card scale factor (+30%)
 const S = 1.3
+// Badge diameter = 1/4 of image height = cardWidth / (4φ)
+const BADGE_D = Math.round((295 * S) / (4 * φ))  // ≈ 59px
 
 export interface CarouselCard {
-  badge?: string
   image?: string
   category?: string
   title: string
@@ -17,6 +18,12 @@ export interface CarouselCard {
   duration?: string
   ctaText?: string
   ctaLink?: string
+  // ── Circular badge ──
+  badgeTopText?: string
+  badgeBottomText?: string
+  badgeIcon?: string
+  badgeBgColor?: string
+  badgeTextColor?: string
 }
 
 interface Props {
@@ -25,13 +32,13 @@ interface Props {
   subtitle?: string
   cards: CarouselCard[]
   // ── Section header colors ──
-  bgColor?: string        // section background
-  textColor?: string      // section title
-  accentColor?: string    // section label tag
+  bgColor?: string
+  textColor?: string
+  accentColor?: string
   // ── Card colors ──
-  cardBgColor?: string    // card background
-  cardTextColor?: string  // card title + body text
-  cardAccentColor?: string // card category + CTA
+  cardBgColor?: string
+  cardTextColor?: string
+  cardAccentColor?: string
 }
 
 function ClockIcon() {
@@ -44,25 +51,131 @@ function ClockIcon() {
   )
 }
 
+function CircleBadge({
+  uid,
+  topText,
+  bottomText,
+  icon,
+  bgColor,
+  textColor,
+  top,
+  left,
+}: {
+  uid: number | string
+  topText?: string
+  bottomText?: string
+  icon?: string
+  bgColor: string
+  textColor: string
+  top: number
+  left: number
+}) {
+  if (!topText && !bottomText && !icon) return null
+
+  const arcR = 35
+  const cx = 50, cy = 50
+  const topId  = `ta-${uid}`
+  const botId  = `ba-${uid}`
+
+  return (
+    <svg
+      width={BADGE_D}
+      height={BADGE_D}
+      viewBox="0 0 100 100"
+      className="absolute pointer-events-none"
+      style={{ top, left }}
+    >
+      <defs>
+        {/* Top arc — counterclockwise through top (sweep=0) */}
+        <path
+          id={topId}
+          d={`M ${cx - arcR},${cy} A ${arcR},${arcR} 0 0,0 ${cx + arcR},${cy}`}
+          fill="none"
+        />
+        {/* Bottom arc — clockwise through bottom (sweep=1) */}
+        <path
+          id={botId}
+          d={`M ${cx - arcR},${cy} A ${arcR},${arcR} 0 0,1 ${cx + arcR},${cy}`}
+          fill="none"
+        />
+      </defs>
+
+      {/* Background circle */}
+      <circle cx={cx} cy={cy} r="47" fill={bgColor} />
+
+      {/* Thin inner ring for visual refinement */}
+      <circle cx={cx} cy={cy} r="44" fill="none" stroke={textColor} strokeWidth="0.5" strokeOpacity="0.2" />
+
+      {/* Top arc text */}
+      {topText && (
+        <text
+          fontSize="10"
+          fill={textColor}
+          fontFamily="'IBM Plex Mono', monospace"
+          letterSpacing="1.5"
+          textAnchor="middle"
+        >
+          <textPath href={`#${topId}`} startOffset="50%">
+            {topText.toUpperCase()}
+          </textPath>
+        </text>
+      )}
+
+      {/* Bottom arc text — side="right" renders text on the outside of the bottom arc */}
+      {bottomText && (
+        <text
+          fontSize="10"
+          fill={textColor}
+          fontFamily="'IBM Plex Mono', monospace"
+          letterSpacing="1.5"
+          textAnchor="middle"
+        >
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          <textPath href={`#${botId}`} {...({ side: 'right' } as any)} startOffset="50%">
+            {bottomText.toUpperCase()}
+          </textPath>
+        </text>
+      )}
+
+      {/* Center icon — emoji or symbol */}
+      {icon && (
+        <text
+          x={cx}
+          y={cy}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontSize="24"
+        >
+          {icon}
+        </text>
+      )}
+    </svg>
+  )
+}
+
 function Card({
   card,
+  index,
   cardBgColor,
   cardTextColor,
   cardAccentColor,
 }: {
   card: CarouselCard
+  index: number
   cardBgColor: string
   cardTextColor: string
   cardAccentColor: string
 }) {
-  const base    = 9 * S
-  const titlePx = (9 * φ * S).toFixed(1)
-  const pad     = Math.round(13 * S)
-  const padSide = Math.round(21 * S)
-  const mb8     = Math.round(8  * S)
-  const mb5     = Math.round(5  * S)
-  const mb13    = Math.round(13 * S)
+  const base     = 9 * S
+  const titlePx  = (9 * φ * S).toFixed(1)
+  const pad      = Math.round(13 * S)
+  const padSide  = Math.round(21 * S)
+  const mb8      = Math.round(8  * S)
+  const mb5      = Math.round(5  * S)
+  const mb13     = Math.round(13 * S)
   const badgeTop = Math.round(13 * S)
+
+  const hasBadge = !!(card.badgeTopText || card.badgeBottomText || card.badgeIcon)
 
   return (
     <a
@@ -93,21 +206,18 @@ function Card({
           <div className="w-full h-full" style={{ backgroundColor: cardTextColor + '08' }} />
         )}
 
-        {card.badge && (
-          <span
-            className="absolute font-mono uppercase"
-            style={{
-              top: `${badgeTop}px`,
-              left: `${badgeTop}px`,
-              fontSize: `${base.toFixed(1)}px`,
-              letterSpacing: '0.12em',
-              padding: `${Math.round(5 * S)}px ${Math.round(8 * S)}px`,
-              backgroundColor: 'rgba(255,255,255,0.9)',
-              color: cardTextColor,
-            }}
-          >
-            {card.badge}
-          </span>
+        {/* ── Circular badge ── */}
+        {hasBadge && (
+          <CircleBadge
+            uid={index}
+            topText={card.badgeTopText}
+            bottomText={card.badgeBottomText}
+            icon={card.badgeIcon}
+            bgColor={card.badgeBgColor ?? cardAccentColor}
+            textColor={card.badgeTextColor ?? '#ffffff'}
+            top={badgeTop}
+            left={badgeTop}
+          />
         )}
       </div>
 
@@ -219,7 +329,6 @@ export default function CarouselSection({
   cardTextColor,
   cardAccentColor,
 }: Props) {
-  // Card colors fall back to section colors if not specified
   const resolvedCardText   = cardTextColor   ?? textColor
   const resolvedCardAccent = cardAccentColor ?? accentColor
 
@@ -328,6 +437,7 @@ export default function CarouselSection({
         {cards.map((card, i) => (
           <Card
             key={i}
+            index={i}
             card={card}
             cardBgColor={cardBgColor}
             cardTextColor={resolvedCardText}

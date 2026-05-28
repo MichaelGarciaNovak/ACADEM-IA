@@ -906,6 +906,59 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                               onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, ctaLink: e.target.value||undefined} : x))}
                               className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
                           </label>
+
+                          {/* ── Badge circular ── */}
+                          <div className="border-t border-ink/8 pt-2.5 mt-0.5 flex flex-col gap-2">
+                            <p className="text-[10px] uppercase font-mono text-ink/30 tracking-widest">badge circular (opcional)</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              <label className="flex flex-col gap-1">
+                                <span className="text-[10px] uppercase text-ink/25 font-mono">texto arriba</span>
+                                <input value={card.badgeTopText ?? ''} placeholder="diseño"
+                                  onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeTopText: e.target.value||undefined} : x))}
+                                  className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                              </label>
+                              <label className="flex flex-col gap-1">
+                                <span className="text-[10px] uppercase text-ink/25 font-mono">texto abajo</span>
+                                <input value={card.badgeBottomText ?? ''} placeholder="web"
+                                  onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeBottomText: e.target.value||undefined} : x))}
+                                  className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                              </label>
+                            </div>
+                            <label className="flex flex-col gap-1">
+                              <span className="text-[10px] uppercase text-ink/25 font-mono">ícono (emoji)</span>
+                              <input value={card.badgeIcon ?? ''} placeholder="🎨"
+                                onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeIcon: e.target.value||undefined} : x))}
+                                className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-24" />
+                            </label>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="flex flex-col gap-1">
+                                <span className="text-[10px] uppercase text-ink/25 font-mono">fondo badge</span>
+                                <div className="flex gap-1.5 flex-wrap items-center">
+                                  {['#171a21','#735cdd','#ef476f','#3c91e6','#dddfdf','#ffffff'].map(c => (
+                                    <button key={c} onClick={() => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeBgColor: c} : x))}
+                                      className="w-5 h-5 border-2 transition-all flex-shrink-0"
+                                      style={{ backgroundColor: c, borderColor: card.badgeBgColor === c ? '#735cdd' : 'rgba(23,26,33,0.15)' }} />
+                                  ))}
+                                  <input type="text" value={card.badgeBgColor ?? ''} placeholder="#ef476f"
+                                    onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeBgColor: e.target.value||undefined} : x))}
+                                    className="border border-ink/15 px-1.5 py-1 text-[10px] font-mono w-16 bg-transparent text-ink focus:outline-none focus:border-slate" />
+                                </div>
+                              </div>
+                              <div className="flex flex-col gap-1">
+                                <span className="text-[10px] uppercase text-ink/25 font-mono">texto badge</span>
+                                <div className="flex gap-1.5 flex-wrap items-center">
+                                  {['#ffffff','#dddfdf','#171a21','#ef476f','#735cdd'].map(c => (
+                                    <button key={c} onClick={() => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeTextColor: c} : x))}
+                                      className="w-5 h-5 border-2 transition-all flex-shrink-0"
+                                      style={{ backgroundColor: c, borderColor: card.badgeTextColor === c ? '#735cdd' : 'rgba(23,26,33,0.15)' }} />
+                                  ))}
+                                  <input type="text" value={card.badgeTextColor ?? ''} placeholder="#ffffff"
+                                    onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeTextColor: e.target.value||undefined} : x))}
+                                    className="border border-ink/15 px-1.5 py-1 text-[10px] font-mono w-16 bg-transparent text-ink focus:outline-none focus:border-slate" />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
