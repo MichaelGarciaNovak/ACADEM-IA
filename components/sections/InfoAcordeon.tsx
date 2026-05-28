@@ -65,8 +65,8 @@ export default function InfoAcordeon({
                         src={item.icon}
                         alt=""
                         style={{
-                          width: 'clamp(1.4rem, 2vw, 1.7rem)',
-                          height: 'clamp(1.4rem, 2vw, 1.7rem)',
+                          width: 'clamp(2.1rem, 3vw, 2.55rem)',
+                          height: 'clamp(2.1rem, 3vw, 2.55rem)',
                           objectFit: 'contain',
                           flexShrink: 0,
                           opacity: openIndex === i ? 1 : 0.5,
