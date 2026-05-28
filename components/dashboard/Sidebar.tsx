@@ -21,7 +21,7 @@ export default function DashboardSidebar({ userName }: { userName: string }) {
   }
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-ink flex flex-col border-r border-white/10">
+    <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-ink flex-col border-r border-white/10">
       <div className="px-6 py-5 border-b border-white/10">
         <Logo variant="dark" size="sm" accentColor="#ef476f" />
       </div>

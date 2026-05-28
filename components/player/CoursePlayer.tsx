@@ -173,6 +173,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
   const [completed, setCompleted] = useState<Set<string>>(initialCompleted)
   const [collapsedChapters, setCollapsedChapters] = useState<Set<string>>(new Set())
   const [markingDone, setMarkingDone] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const totalLessons = allLessons.length
   const completedCount = allLessons.filter(l => completed.has(l.id)).length
@@ -211,16 +212,42 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
   return (
     <div className="min-h-screen bg-white font-mono flex flex-col">
       {/* Top nav */}
-      <header className="border-b border-ink/10 px-6 py-4 flex items-center gap-4">
+      <header className="border-b border-ink/10 px-4 md:px-6 py-4 flex items-center gap-4 sticky top-0 bg-white z-20">
         <a href="/dashboard/cursos" className="text-xs text-ink/30 hover:text-ink transition-colors uppercase tracking-widest flex-shrink-0">
           ←
         </a>
-        <h1 className="text-sm uppercase tracking-widest text-ink font-normal truncate">{course.title}</h1>
+        <h1 className="text-xs md:text-sm uppercase tracking-widest text-ink font-normal truncate flex-1">{course.title}</h1>
+        {/* Mobile chapters toggle */}
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="md:hidden flex-shrink-0 text-xs uppercase tracking-widest text-ink/40 hover:text-ink border border-ink/20 px-3 py-1.5 transition-colors"
+        >
+          lecciones
+        </button>
       </header>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1">
+        {/* ── MOBILE BACKDROP ─────────────────────────── */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-ink/50 z-30 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
         {/* ── SIDEBAR ─────────────────────────────────── */}
-        <aside className="w-72 border-r border-ink/10 flex flex-col overflow-y-auto flex-shrink-0">
+        <aside className={`
+          fixed inset-y-0 left-0 z-40 bg-white flex flex-col overflow-y-auto transition-transform duration-300 ease-in-out
+          md:relative md:z-auto md:translate-x-0 md:flex-shrink-0
+          w-72 border-r border-ink/10
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}>
+          {/* Mobile close button */}
+          <div className="md:hidden flex items-center justify-between px-5 py-3 border-b border-ink/10">
+            <span className="text-xs uppercase tracking-widest text-ink/40">lecciones</span>
+            <button onClick={() => setSidebarOpen(false)} className="text-ink/30 hover:text-ink text-lg leading-none">×</button>
+          </div>
+
           {/* Progress header */}
           <div className="px-5 py-3 border-b border-ink/10">
             <div className="flex items-center justify-between mb-2">
@@ -271,7 +298,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                     return (
                       <button
                         key={lesson.id}
-                        onClick={() => setActiveLesson(lesson)}
+                        onClick={() => { setActiveLesson(lesson); setSidebarOpen(false) }}
                         className={`w-full flex items-center gap-3 px-5 py-2 text-left transition-colors ${
                           isActive ? 'bg-pink/8' : 'hover:bg-ink/[0.02]'
                         }`}
@@ -312,7 +339,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
         </aside>
 
         {/* ── MAIN CONTENT ─────────────────────────────── */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto min-w-0">
           {activeLesson ? (
             <div>
               {/* Video */}
@@ -325,9 +352,9 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
               )}
 
               {/* Content */}
-              <div className="px-8 py-6">
+              <div className="px-4 md:px-8 py-5 md:py-6">
                 {/* Title */}
-                <h1 className="text-lg uppercase font-normal text-ink mb-4 tracking-tight">
+                <h1 className="text-base md:text-lg uppercase font-normal text-ink mb-3 md:mb-4 tracking-tight">
                   lec. {allLessons.findIndex(l => l.id === activeLesson.id) + 1}: {activeLesson.title}
                 </h1>
 
