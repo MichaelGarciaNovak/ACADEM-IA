@@ -27,11 +27,13 @@ export default async function CoursePlayerPage({ params }: { params: { id: strin
   const completedLessonIds = new Set((progress ?? []).map((p: any) => p.lesson_id))
 
   return (
-    <CoursePlayer
-      course={course}
-      chapters={chapters ?? []}
-      completedLessonIds={completedLessonIds}
-      userId={user.id}
-    />
+    <div className="-m-10">
+      <CoursePlayer
+        course={course}
+        chapters={chapters ?? []}
+        completedLessonIds={completedLessonIds}
+        userId={user.id}
+      />
+    </div>
   )
 }
