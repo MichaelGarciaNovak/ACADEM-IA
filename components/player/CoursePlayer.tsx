@@ -373,18 +373,6 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                     ) : <span />}
                   </div>
 
-                  <button
-                    onClick={markComplete}
-                    disabled={markingDone || completed.has(activeLesson.id)}
-                    className={`text-xs uppercase tracking-widest px-4 py-2 border transition-colors ${
-                      completed.has(activeLesson.id)
-                        ? 'border-green-300 text-green-600 bg-green-50 cursor-default'
-                        : 'border-pink text-pink hover:bg-pink hover:text-white'
-                    }`}
-                  >
-                    {completed.has(activeLesson.id) ? '✓ completada' : markingDone ? 'guardando...' : 'marcar como completada'}
-                  </button>
-
                   <div>
                     {nextLesson ? (
                       <button
@@ -393,7 +381,19 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                       >
                         siguiente →
                       </button>
-                    ) : <span />}
+                    ) : (
+                      <button
+                        onClick={markComplete}
+                        disabled={markingDone || completed.has(activeLesson.id)}
+                        className={`text-xs uppercase tracking-widest px-4 py-2 border transition-colors ${
+                          completed.has(activeLesson.id)
+                            ? 'border-green-300 text-green-600 bg-green-50 cursor-default'
+                            : 'border-pink text-pink hover:bg-pink hover:text-white'
+                        }`}
+                      >
+                        {completed.has(activeLesson.id) ? '✓ completado' : markingDone ? 'guardando...' : 'marcar como completado'}
+                      </button>
+                    )}
                   </div>
                 </div>
 
