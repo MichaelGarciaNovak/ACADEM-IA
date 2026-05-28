@@ -74,8 +74,7 @@ function CircleBadge({
 
   const arcR = 35
   const cx = 50, cy = 50
-  const topId  = `ta-${uid}`
-  const botId  = `ba-${uid}`
+  const topId = `ta-${uid}`
 
   return (
     <svg
@@ -86,17 +85,10 @@ function CircleBadge({
       style={{ top, left }}
     >
       <defs>
-        {/* Top arc — in SVG Y-down coords, sweep=1 goes OVER the top visually */}
+        {/* Top arc — sweep=1 goes OVER the top in SVG Y-down coords */}
         <path
           id={topId}
           d={`M ${cx - arcR},${cy} A ${arcR},${arcR} 0 0,1 ${cx + arcR},${cy}`}
-          fill="none"
-        />
-        {/* Bottom arc — LEFT→RIGHT through BOTTOM (sweep=0, counterclockwise Y-down)  */}
-        {/* side="right" on the textPath flips glyphs to face OUTWARD at the bottom   */}
-        <path
-          id={botId}
-          d={`M ${cx - arcR},${cy} A ${arcR},${arcR} 0 0,0 ${cx + arcR},${cy}`}
           fill="none"
         />
       </defs>
@@ -122,20 +114,35 @@ function CircleBadge({
         </text>
       )}
 
-      {/* Bottom arc text */}
-      {bottomText && (
-        <text
-          fontSize="10"
-          fill={textColor}
-          fontFamily="'IBM Plex Mono', monospace"
-          letterSpacing="1.5"
-          textAnchor="middle"
-        >
-          <textPath href={`#${botId}`} startOffset="50%" {...({ side: 'right' } as any)}>
-            {bottomText.toUpperCase()}
-          </textPath>
-        </text>
-      )}
+      {/* Bottom arc text — manually placed chars so glyphs face outward correctly */}
+      {/* rotate(θ - 90°) at each arc point makes chars upright and curve-following    */}
+      {bottomText && (() => {
+        const chars = bottomText.toUpperCase().split('')
+        const charArcDeg = (10 * 0.60 + 1.5) / arcR * (180 / Math.PI)
+        const totalArcDeg = chars.length * charArcDeg
+        const startDeg = 90 - totalArcDeg / 2 + charArcDeg / 2
+        return chars.map((ch, i) => {
+          const θ = startDeg + i * charArcDeg
+          const rad = θ * Math.PI / 180
+          const x = cx + arcR * Math.cos(rad)
+          const y = cy + arcR * Math.sin(rad)
+          return (
+            <text
+              key={i}
+              x={x.toFixed(2)}
+              y={y.toFixed(2)}
+              fontSize="10"
+              fill={textColor}
+              fontFamily="'IBM Plex Mono', monospace"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              transform={`rotate(${(θ - 90).toFixed(2)},${x.toFixed(2)},${y.toFixed(2)})`}
+            >
+              {ch}
+            </text>
+          )
+        })
+      })()}
 
       {/* Center icon — image URL */}
       {icon && (
