@@ -39,19 +39,19 @@ a {
 
 @layer components {
   .btn-primary {
-    @apply bg-pink text-white font-mono font-normal uppercase px-6 py-3 rounded-none transition-all duration-150 hover:bg-opacity-90 active:scale-95;
+    @apply bg-pink text-white font-mono font-normal uppercase px-6 py-3 rounded-sm transition-all duration-150 hover:bg-opacity-90 active:scale-95;
   }
 
   .btn-outline {
-    @apply border border-alabaster text-alabaster font-mono font-normal uppercase px-6 py-3 rounded-none transition-all duration-150 hover:bg-alabaster hover:text-ink active:scale-95;
+    @apply border border-alabaster text-alabaster font-mono font-normal uppercase px-6 py-3 rounded-sm transition-all duration-150 hover:bg-alabaster hover:text-ink active:scale-95;
   }
 
   .btn-admin {
-    @apply bg-slate text-white font-mono font-normal uppercase px-6 py-3 rounded-none transition-all duration-150 hover:opacity-90 active:scale-95;
+    @apply bg-slate text-white font-mono font-normal uppercase px-6 py-3 rounded-sm transition-all duration-150 hover:opacity-90 active:scale-95;
   }
 
   .btn-admin-outline {
-    @apply border border-slate text-slate font-mono font-normal uppercase px-6 py-3 rounded-none transition-all duration-150 hover:bg-slate hover:text-white active:scale-95;
+    @apply border border-slate text-slate font-mono font-normal uppercase px-6 py-3 rounded-sm transition-all duration-150 hover:bg-slate hover:text-white active:scale-95;
   }
 
   .section-label {
