@@ -362,6 +362,7 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
   const supabase = createClient()
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [saveError, setSaveError] = useState('')
   const [form, setForm] = useState({
     title: course.title,
     description: course.description ?? '',
@@ -392,17 +393,23 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
     if (saveTimeout.current) clearTimeout(saveTimeout.current)
     saveTimeout.current = setTimeout(async () => {
       setSaving(true)
-      await supabase.from('courses').update({ [field]: value }).eq('id', course.id)
+      setSaveError('')
+      const { error } = await supabase.from('courses').update({ [field]: value }).eq('id', course.id)
       setSaving(false)
-      setSaved(true)
-      setTimeout(() => setSaved(false), 2000)
+      if (error) {
+        setSaveError(error.message)
+      } else {
+        setSaved(true)
+        setTimeout(() => setSaved(false), 2000)
+      }
     }, 800)
   }
 
   // Save all metadata immediately
   const handleSave = async () => {
     setSaving(true)
-    await supabase.from('courses').update({
+    setSaveError('')
+    const { error } = await supabase.from('courses').update({
       title: form.title,
       description: form.description || null,
       category_id: form.category_id || null,
@@ -411,10 +418,15 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
       practice_hours: form.practice_hours,
       practice_price_per_hour: form.practice_price_per_hour,
       published: form.published,
+      image_url: form.image_url || null,
     }).eq('id', course.id)
     setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+    if (error) {
+      setSaveError(error.message)
+    } else {
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    }
   }
 
   // Chapters DnD
@@ -499,6 +511,7 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
         <div className="flex items-center gap-4">
           {saving && <span className="text-xs text-ink/30 uppercase tracking-widest">guardando...</span>}
           {saved && <span className="text-xs text-green-600 uppercase tracking-widest">guardado ✓</span>}
+          {saveError && <span className="text-xs text-pink font-mono max-w-xs truncate" title={saveError}>error: {saveError}</span>}
           <button onClick={handleSave} className="btn-admin text-sm">
             guardar cambios
           </button>
