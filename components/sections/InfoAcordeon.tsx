@@ -29,15 +29,16 @@ export default function InfoAcordeon({
   return (
     <section style={{ backgroundColor: bgColor }} className="py-24">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start pt-4">
 
           {/* ── LEFT: párrafo ─────────────────────────── */}
           <div className="md:sticky md:top-24">
             <p
-              className="font-mono font-normal leading-relaxed"
+              className="font-mono font-normal uppercase leading-tight"
               style={{
-                color: textColor + 'aa',
-                fontSize: 'clamp(1rem, 1.5vw, 1.15rem)',
+                color: textColor,
+                fontSize: 'clamp(1.8rem, 3vw, 2.8rem)',
+                letterSpacing: '-0.02em',
               }}
             >
               {content}
