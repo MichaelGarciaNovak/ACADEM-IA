@@ -256,9 +256,12 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                         {doneCount}/{lessons.length} · Cap. {ci + 1}
                       </p>
                     </div>
-                    <span className="text-ink/25 text-xs flex-shrink-0">
-                      {isCollapsed ? '▼' : '▲'}
-                    </span>
+                    <svg
+                      width="14" height="14" viewBox="0 0 14 14" fill="none"
+                      className={`flex-shrink-0 text-ink/30 transition-transform duration-200 ${isCollapsed ? '' : 'rotate-90'}`}
+                    >
+                      <path d="M5 3L9 7L5 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                   </button>
 
                   {/* Lessons */}
@@ -274,7 +277,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                         }`}
                       >
                         {/* Status icon */}
-                        <div className={`flex-shrink-0 w-6 h-6 rounded-full border flex items-center justify-center transition-colors ${
+                        <div className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
                           isDone
                             ? 'border-pink bg-pink'
                             : isActive
@@ -282,10 +285,12 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                             : 'border-ink/20'
                         }`}>
                           {isDone ? (
-                            <span className="text-white text-xs leading-none">✓</span>
-                          ) : (
-                            <span className={`text-xs leading-none ${isActive ? 'text-pink' : 'text-ink/20'}`}>▶</span>
-                          )}
+                            <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
+                              <path d="M1 3L3 5L7 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          ) : isActive ? (
+                            <div className="w-1.5 h-1.5 rounded-full bg-pink" />
+                          ) : null}
                         </div>
 
                         {/* Text */}

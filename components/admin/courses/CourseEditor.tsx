@@ -111,11 +111,13 @@ function LessonItem({
         </button>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="text-xs text-ink/30 hover:text-ink/60 transition-colors"
-          >
-            {expanded ? '▲' : '▼'}
+          <button onClick={() => setExpanded(!expanded)}>
+            <svg
+              width="14" height="14" viewBox="0 0 14 14" fill="none"
+              className={`text-ink/30 transition-transform duration-200 ${expanded ? 'rotate-90' : ''}`}
+            >
+              <path d="M5 3L9 7L5 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </button>
           <button
             onClick={() => onDelete(lesson.id)}
@@ -304,11 +306,13 @@ function ChapterItem({
           ⠿
         </button>
 
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="text-ink/40 text-xs w-4"
-        >
-          {collapsed ? '▶' : '▼'}
+        <button onClick={() => setCollapsed(!collapsed)}>
+          <svg
+            width="14" height="14" viewBox="0 0 14 14" fill="none"
+            className={`text-ink/30 transition-transform duration-200 ${collapsed ? '' : 'rotate-90'}`}
+          >
+            <path d="M5 3L9 7L5 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </button>
 
         <input
