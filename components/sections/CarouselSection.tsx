@@ -131,7 +131,7 @@ function CircleBadge({
           letterSpacing="1.5"
           textAnchor="middle"
         >
-          <textPath href={`#${botId}`} startOffset="50%" side="right">
+          <textPath href={`#${botId}`} startOffset="50%" {...({ side: 'right' } as any)}>
             {bottomText.toUpperCase()}
           </textPath>
         </text>
