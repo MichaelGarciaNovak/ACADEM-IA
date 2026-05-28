@@ -159,6 +159,20 @@ export default async function Home() {
           )
         }
         if (s.type === 'carousel') {
+          // Parse card colors from content JSON (with legacy hex fallback)
+          let cardBgColor = '#ffffff', cardTextColor: string | undefined, cardAccentColor: string | undefined
+          if (s.content) {
+            try {
+              const cc = JSON.parse(s.content)
+              if (cc && typeof cc === 'object') {
+                cardBgColor     = cc.cardBgColor     ?? '#ffffff'
+                cardTextColor   = cc.cardTextColor
+                cardAccentColor = cc.cardAccentColor
+              }
+            } catch {
+              if (s.content.startsWith('#')) cardBgColor = s.content
+            }
+          }
           return (
             <CarouselSection
               key={s.id}
@@ -169,7 +183,9 @@ export default async function Home() {
               bgColor={s.bg_color}
               textColor={s.text_color ?? '#171a21'}
               accentColor={s.accent_color}
-              cardBgColor={s.content ?? '#ffffff'}
+              cardBgColor={cardBgColor}
+              cardTextColor={cardTextColor}
+              cardAccentColor={cardAccentColor}
             />
           )
         }

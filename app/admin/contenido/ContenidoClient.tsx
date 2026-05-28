@@ -129,6 +129,7 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
   const [cardsList, setCardsList] = useState<CarouselCard[]>([])
   const [uploadingCardImage, setUploadingCardImage] = useState<number | null>(null)
   const [expandedCard, setExpandedCard] = useState<number | null>(null)
+  const [cardColors, setCardColors] = useState({ bg: '#ffffff', text: '#171a21', accent: '#ef476f' })
 
   async function uploadCardImage(file: File, cardIndex: number) {
     setUploadingCardImage(cardIndex)
@@ -160,6 +161,7 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
     setItemsList([])
     setCardsList([])
     setExpandedCard(null)
+    setCardColors({ bg: '#ffffff', text: '#171a21', accent: '#ef476f' })
     setPreview(false)
     setModalOpen(true)
   }
@@ -170,6 +172,26 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
     setItemsList(s.type === 'info-acordeon' && s.items ? JSON.parse(s.items) : [])
     setCardsList(s.type === 'carousel' && s.items ? JSON.parse(s.items) : [])
     setExpandedCard(null)
+    // Parse carousel card colors from content field (JSON or legacy hex string)
+    if (s.type === 'carousel') {
+      let cc: Record<string, string> = {}
+      if (s.content) {
+        try {
+          const parsed = JSON.parse(s.content)
+          if (parsed && typeof parsed === 'object') cc = parsed
+        } catch {
+          // Legacy: content was just a hex cardBgColor
+          if (s.content.startsWith('#')) cc = { cardBgColor: s.content }
+        }
+      }
+      setCardColors({
+        bg:     cc.cardBgColor     ?? '#ffffff',
+        text:   cc.cardTextColor   ?? s.text_color   ?? '#171a21',
+        accent: cc.cardAccentColor ?? s.accent_color ?? '#ef476f',
+      })
+    } else {
+      setCardColors({ bg: '#ffffff', text: '#171a21', accent: '#ef476f' })
+    }
     setForm({
       type: s.type,
       title: s.title,
@@ -205,7 +227,12 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
         : form.type === 'info-acordeon'
           ? (itemsList.length ? JSON.stringify(itemsList) : null)
           : form.items
-    const formToSave = { ...form, items: itemsValue }
+    // For carousel, serialize card colors to content field
+    const contentValue =
+      form.type === 'carousel'
+        ? JSON.stringify({ cardBgColor: cardColors.bg, cardTextColor: cardColors.text, cardAccentColor: cardColors.accent })
+        : form.content
+    const formToSave = { ...form, items: itemsValue, content: contentValue }
     if (editingId) {
       const { data, error } = await supabase
         .from('sections')
@@ -351,7 +378,9 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                       bgColor={form.bg_color}
                       textColor={form.text_color}
                       accentColor={form.accent_color}
-                      cardBgColor={form.content ?? '#ffffff'}
+                      cardBgColor={cardColors.bg}
+                      cardTextColor={cardColors.text}
+                      cardAccentColor={cardColors.accent}
                     />
                   )}
                 </div>
@@ -889,15 +918,14 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
 
                 {/* Colores */}
                 <div className="border-t border-ink/8 pt-5 flex flex-col gap-4">
-                  <ColorPicker label="color de fondo de sección" value={form.bg_color} onChange={(v) => set('bg_color', v)} presets={COLOR_PRESETS} />
-                  <ColorPicker label="color del texto" value={form.text_color} onChange={(v) => set('text_color', v)} presets={TEXT_COLOR_PRESETS} />
-                  <ColorPicker label="color de acento" value={form.accent_color} onChange={(v) => set('accent_color', v)} presets={ACCENT_PRESETS} />
-                  <ColorPicker
-                    label="fondo del card"
-                    value={form.content ?? '#ffffff'}
-                    onChange={(v) => set('content', v)}
-                    presets={COLOR_PRESETS}
-                  />
+                  <p className="text-[10px] uppercase font-mono text-ink/30 tracking-widest">— sección —</p>
+                  <ColorPicker label="fondo de sección" value={form.bg_color} onChange={(v) => set('bg_color', v)} presets={COLOR_PRESETS} />
+                  <ColorPicker label="color del título" value={form.text_color} onChange={(v) => set('text_color', v)} presets={TEXT_COLOR_PRESETS} />
+                  <ColorPicker label="color de la etiqueta" value={form.accent_color} onChange={(v) => set('accent_color', v)} presets={ACCENT_PRESETS} />
+                  <p className="text-[10px] uppercase font-mono text-ink/30 tracking-widest mt-1">— card —</p>
+                  <ColorPicker label="fondo del card" value={cardColors.bg} onChange={(v) => setCardColors(c => ({ ...c, bg: v }))} presets={COLOR_PRESETS} />
+                  <ColorPicker label="texto del card" value={cardColors.text} onChange={(v) => setCardColors(c => ({ ...c, text: v }))} presets={TEXT_COLOR_PRESETS} />
+                  <ColorPicker label="acento del card (categoría + cta)" value={cardColors.accent} onChange={(v) => setCardColors(c => ({ ...c, accent: v }))} presets={ACCENT_PRESETS} />
                 </div>
 
                 {/* Publicar + orden */}

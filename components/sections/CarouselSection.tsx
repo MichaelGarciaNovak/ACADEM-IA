@@ -24,14 +24,17 @@ interface Props {
   title?: string
   subtitle?: string
   cards: CarouselCard[]
-  bgColor?: string
-  textColor?: string
-  accentColor?: string
-  cardBgColor?: string
+  // ── Section header colors ──
+  bgColor?: string        // section background
+  textColor?: string      // section title
+  accentColor?: string    // section label tag
+  // ── Card colors ──
+  cardBgColor?: string    // card background
+  cardTextColor?: string  // card title + body text
+  cardAccentColor?: string // card category + CTA
 }
 
 function ClockIcon() {
-  // viewBox stays 0 0 10 10; rendered size scaled ×S
   const sz = Math.round(10 * S)
   return (
     <svg width={sz} height={sz} viewBox="0 0 10 10" fill="none" className="flex-shrink-0">
@@ -43,24 +46,23 @@ function ClockIcon() {
 
 function Card({
   card,
-  accentColor,
-  textColor,
   cardBgColor,
+  cardTextColor,
+  cardAccentColor,
 }: {
   card: CarouselCard
-  accentColor: string
-  textColor: string
   cardBgColor: string
+  cardTextColor: string
+  cardAccentColor: string
 }) {
-  // Base unit = 9px, scaled × S
-  const base     = 9 * S                        // 11.7px
-  const titlePx  = (9 * φ * S).toFixed(1)       // 18.9px
-  const pad      = Math.round(13 * S)            // 17px top/bottom
-  const padSide  = Math.round(21 * S)            // 27px sides
-  const mb8      = Math.round(8  * S)            // 10px
-  const mb5      = Math.round(5  * S)            // 7px
-  const mb13     = Math.round(13 * S)            // 17px
-  const badgeTop = Math.round(13 * S)            // 17px
+  const base    = 9 * S
+  const titlePx = (9 * φ * S).toFixed(1)
+  const pad     = Math.round(13 * S)
+  const padSide = Math.round(21 * S)
+  const mb8     = Math.round(8  * S)
+  const mb5     = Math.round(5  * S)
+  const mb13    = Math.round(13 * S)
+  const badgeTop = Math.round(13 * S)
 
   return (
     <a
@@ -74,7 +76,7 @@ function Card({
       onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.018)' }}
       onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
     >
-      {/* ── IMAGE — aspect-ratio φ:1 (golden landscape) ── */}
+      {/* ── IMAGE — aspect-ratio φ:1 ── */}
       <div
         className="relative overflow-hidden flex-shrink-0"
         style={{ aspectRatio: `${φ} / 1` }}
@@ -88,7 +90,7 @@ function Card({
             style={{ transitionDuration: `${Math.round(φ * φ * 276)}ms` }}
           />
         ) : (
-          <div className="w-full h-full" style={{ backgroundColor: textColor + '08' }} />
+          <div className="w-full h-full" style={{ backgroundColor: cardTextColor + '08' }} />
         )}
 
         {card.badge && (
@@ -101,7 +103,7 @@ function Card({
               letterSpacing: '0.12em',
               padding: `${Math.round(5 * S)}px ${Math.round(8 * S)}px`,
               backgroundColor: 'rgba(255,255,255,0.9)',
-              color: textColor,
+              color: cardTextColor,
             }}
           >
             {card.badge}
@@ -112,7 +114,7 @@ function Card({
       {/* ── CONTENT ── */}
       <div
         className="flex flex-col"
-        style={{ padding: `${pad}px ${padSide}px ${pad}px`, color: textColor }}
+        style={{ padding: `${pad}px ${padSide}px ${pad}px`, color: cardTextColor }}
       >
         {card.category && (
           <p
@@ -120,7 +122,7 @@ function Card({
             style={{
               fontSize: `${base.toFixed(1)}px`,
               letterSpacing: '0.12em',
-              color: accentColor,
+              color: cardAccentColor,
               marginBottom: `${mb8}px`,
             }}
           >
@@ -133,7 +135,7 @@ function Card({
           style={{
             fontSize: `${titlePx}px`,
             letterSpacing: '-0.02em',
-            color: textColor,
+            color: cardTextColor,
             marginBottom: `${mb5}px`,
           }}
         >
@@ -145,7 +147,7 @@ function Card({
             className="font-mono leading-snug"
             style={{
               fontSize: `${base.toFixed(1)}px`,
-              color: textColor + '60',
+              color: cardTextColor + '60',
               marginBottom: `${mb8}px`,
             }}
           >
@@ -158,7 +160,7 @@ function Card({
             className="leading-relaxed"
             style={{
               fontSize: `${base.toFixed(1)}px`,
-              color: textColor + '50',
+              color: cardTextColor + '50',
               marginBottom: `${mb13}px`,
               display: '-webkit-box',
               WebkitLineClamp: 3,
@@ -175,14 +177,14 @@ function Card({
           className="flex items-center justify-between"
           style={{
             paddingTop: `${mb8}px`,
-            borderTop: `1px solid ${textColor}10`,
+            borderTop: `1px solid ${cardTextColor}10`,
             marginTop: card.description ? '0' : 'auto',
           }}
         >
           {card.duration ? (
             <span
               className="flex items-center font-mono"
-              style={{ fontSize: `${base.toFixed(1)}px`, color: textColor + '40', gap: `${mb5}px` }}
+              style={{ fontSize: `${base.toFixed(1)}px`, color: cardTextColor + '40', gap: `${mb5}px` }}
             >
               <ClockIcon />
               {card.duration}
@@ -194,7 +196,7 @@ function Card({
             style={{
               fontSize: `${base.toFixed(1)}px`,
               letterSpacing: '0.1em',
-              color: accentColor,
+              color: cardAccentColor,
             }}
           >
             {card.ctaText || 'ver más'} →
@@ -214,7 +216,13 @@ export default function CarouselSection({
   textColor = '#171a21',
   accentColor = '#ef476f',
   cardBgColor = '#ffffff',
+  cardTextColor,
+  cardAccentColor,
 }: Props) {
+  // Card colors fall back to section colors if not specified
+  const resolvedCardText   = cardTextColor   ?? textColor
+  const resolvedCardAccent = cardAccentColor ?? accentColor
+
   const scrollRef = useRef<HTMLDivElement>(null)
 
   function scroll(dir: 'left' | 'right') {
@@ -307,7 +315,7 @@ export default function CarouselSection({
         </div>
       </div>
 
-      {/* Scroll track — gap scaled ×S */}
+      {/* Scroll track */}
       <div
         ref={scrollRef}
         className="max-w-6xl mx-auto flex overflow-x-auto snap-x snap-mandatory px-6"
@@ -318,7 +326,13 @@ export default function CarouselSection({
         } as React.CSSProperties}
       >
         {cards.map((card, i) => (
-          <Card key={i} card={card} accentColor={accentColor} textColor={textColor} cardBgColor={cardBgColor} />
+          <Card
+            key={i}
+            card={card}
+            cardBgColor={cardBgColor}
+            cardTextColor={resolvedCardText}
+            cardAccentColor={resolvedCardAccent}
+          />
         ))}
         <div className="flex-shrink-0 w-px" aria-hidden />
       </div>
