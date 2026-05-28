@@ -537,6 +537,17 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                   <p className="text-xs text-ink/25">solo visible en el admin, no aparece en la página</p>
                 </label>
 
+                {/* Etiqueta */}
+                <label className="flex flex-col gap-1.5">
+                  <span className="text-xs uppercase text-ink/40 font-mono">etiqueta rosa (opcional)</span>
+                  <input
+                    value={form.label ?? ''}
+                    onChange={(e) => set('label', e.target.value || null)}
+                    placeholder="ej. nuestra metodología"
+                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                  />
+                </label>
+
                 {/* Párrafo */}
                 <label className="flex flex-col gap-1.5">
                   <span className="text-xs uppercase text-ink/40 font-mono">párrafo</span>

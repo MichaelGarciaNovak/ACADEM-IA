@@ -148,6 +148,7 @@ export default async function Home() {
             <InfoAcordeon
               key={s.id}
               title={s.title}
+              label={s.label ?? undefined}
               content={s.content ?? ''}
               items={s.items ? JSON.parse(s.items) : []}
               bgColor={s.bg_color}

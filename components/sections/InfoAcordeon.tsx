@@ -10,6 +10,7 @@ interface AccordionItem {
 
 interface Props {
   title: string
+  label?: string
   content: string
   items: AccordionItem[]
   bgColor?: string
@@ -19,6 +20,7 @@ interface Props {
 
 export default function InfoAcordeon({
   title,
+  label,
   content,
   items,
   bgColor = '#ffffff',
@@ -34,6 +36,14 @@ export default function InfoAcordeon({
 
           {/* ── LEFT: párrafo ─────────────────────────── */}
           <div className="md:sticky md:top-24 pt-5">
+            {label && (
+              <p
+                className="text-xs font-mono uppercase tracking-widest mb-4"
+                style={{ color: accentColor }}
+              >
+                {label}
+              </p>
+            )}
             <p
               className="font-mono font-normal uppercase leading-tight"
               style={{
