@@ -222,7 +222,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
         {/* ── SIDEBAR ─────────────────────────────────── */}
         <aside className="w-72 border-r border-ink/10 flex flex-col overflow-y-auto flex-shrink-0">
           {/* Progress header */}
-          <div className="px-5 py-4 border-b border-ink/10">
+          <div className="px-5 py-3 border-b border-ink/10">
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs uppercase tracking-widest text-ink/30">progreso</p>
               <span className="text-xs text-ink/40">{completedCount}/{totalLessons} lecciones</span>
@@ -246,7 +246,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                   {/* Chapter row */}
                   <button
                     onClick={() => toggleChapter(chapter.id)}
-                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-ink/[0.02] transition-colors text-left"
+                    className="w-full flex items-center justify-between px-5 py-3 hover:bg-ink/[0.02] transition-colors text-left"
                   >
                     <div className="flex-1 min-w-0 pr-3">
                       <p className="text-xs font-medium text-ink/80 leading-snug uppercase tracking-wide">
@@ -272,7 +272,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                       <button
                         key={lesson.id}
                         onClick={() => setActiveLesson(lesson)}
-                        className={`w-full flex items-center gap-3 px-5 py-3 text-left transition-colors ${
+                        className={`w-full flex items-center gap-3 px-5 py-2 text-left transition-colors ${
                           isActive ? 'bg-pink/8' : 'hover:bg-ink/[0.02]'
                         }`}
                       >
