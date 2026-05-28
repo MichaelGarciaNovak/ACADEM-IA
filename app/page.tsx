@@ -1,6 +1,7 @@
 import Navbar from '@/components/Navbar'
 import Logo from '@/components/Logo'
 import HeroSection from '@/components/sections/HeroSection'
+import InfoAcordeon from '@/components/sections/InfoAcordeon'
 import { createClient } from '@/lib/supabase/server'
 
 const features = [
@@ -65,9 +66,10 @@ const plans = [
 
 export default async function Home() {
   let heroData = null
+  let extraSections: any[] = []
   try {
     const supabase = createClient()
-    const { data } = await supabase
+    const { data: heroRow } = await supabase
       .from('sections')
       .select('*')
       .eq('type', 'hero')
@@ -75,7 +77,15 @@ export default async function Home() {
       .order('sort_order', { ascending: true })
       .limit(1)
       .maybeSingle()
-    heroData = data
+    heroData = heroRow
+
+    const { data: extras } = await supabase
+      .from('sections')
+      .select('*')
+      .neq('type', 'hero')
+      .eq('published', true)
+      .order('sort_order', { ascending: true })
+    extraSections = extras ?? []
   } catch {
     // fallback to static content
   }
@@ -130,6 +140,24 @@ export default async function Home() {
           </div>
         </section>
       )}
+
+      {/* Secciones dinámicas adicionales */}
+      {extraSections.map((s: any) => {
+        if (s.type === 'info-acordeon') {
+          return (
+            <InfoAcordeon
+              key={s.id}
+              title={s.title}
+              content={s.content ?? ''}
+              items={s.items ? JSON.parse(s.items) : []}
+              bgColor={s.bg_color}
+              textColor={s.text_color ?? '#171a21'}
+              accentColor={s.accent_color}
+            />
+          )
+        }
+        return null
+      })}
 
       {/* Features — Blanco */}
       <section id="como-funciona" className="bg-white py-24 px-6 border-t border-ink/10">

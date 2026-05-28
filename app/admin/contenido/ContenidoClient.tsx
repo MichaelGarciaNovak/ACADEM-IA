@@ -3,13 +3,14 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import HeroSection from '@/components/sections/HeroSection'
+import InfoAcordeon from '@/components/sections/InfoAcordeon'
 
 type Section = {
   id: string
   type: string
   label: string | null
   title: string
-  title_variants: string | null  // JSON array stored as text
+  title_variants: string | null
   subtitle: string | null
   cta_text: string | null
   cta_link: string | null
@@ -18,9 +19,16 @@ type Section = {
   text_color: string
   bg_image_url: string | null
   bg_image_overlay: number
+  content: string | null
+  items: string | null
   published: boolean
   sort_order: number
 }
+
+const SECTION_TYPES = [
+  { value: 'hero', label: 'Hero' },
+  { value: 'info-acordeon', label: 'Info Acordeón' },
+]
 
 const COLOR_PRESETS = [
   { label: 'ink', value: '#171a21' },
@@ -60,6 +68,8 @@ const emptyForm = (): Omit<Section, 'id'> => ({
   text_color: '#dddfdf',
   bg_image_url: null,
   bg_image_overlay: 50,
+  content: null,
+  items: null,
   published: false,
   sort_order: 0,
 })
@@ -112,11 +122,13 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
   const [preview, setPreview] = useState(false)
   const [saving, setSaving] = useState(false)
   const [titlesText, setTitlesText] = useState('')
+  const [itemsList, setItemsList] = useState<{title: string, body: string}[]>([])
 
   function openNew() {
     setEditingId(null)
     setForm(emptyForm())
     setTitlesText('')
+    setItemsList([])
     setPreview(false)
     setModalOpen(true)
   }
@@ -124,6 +136,7 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
   function openEdit(s: Section) {
     setEditingId(s.id)
     setTitlesText(s.title_variants ? JSON.parse(s.title_variants).join('\n') : '')
+    setItemsList(s.items ? JSON.parse(s.items) : [])
     setForm({
       type: s.type,
       title: s.title,
@@ -132,6 +145,8 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
       cta_link: s.cta_link ?? '',
       label: s.label ?? 'plataforma educativa',
       title_variants: s.title_variants ?? null,
+      content: s.content ?? null,
+      items: s.items ?? null,
       bg_color: s.bg_color,
       accent_color: s.accent_color,
       text_color: s.text_color ?? '#dddfdf',
@@ -259,23 +274,59 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
             {preview ? (
               <div style={{ maxHeight: '70vh', overflow: 'hidden' }}>
                 <div style={{ transform: 'scale(0.55)', transformOrigin: 'top left', width: '181%', pointerEvents: 'none' }}>
-                  <HeroSection
-                    title={form.title || 'Título de ejemplo'}
-                    titleVariants={form.title_variants ? JSON.parse(form.title_variants) : undefined}
-                    label={form.label || undefined}
-                    subtitle={form.subtitle || undefined}
-                    ctaText={form.cta_text || undefined}
-                    ctaLink={form.cta_link || undefined}
-                    bgColor={form.bg_color}
-                    accentColor={form.accent_color}
-                    textColor={form.text_color}
-                    bgImageUrl={form.bg_image_url || undefined}
-                    bgImageOverlay={form.bg_image_overlay}
-                  />
+                  {form.type === 'hero' && (
+                    <HeroSection
+                      title={form.title || 'Título de ejemplo'}
+                      titleVariants={form.title_variants ? JSON.parse(form.title_variants) : undefined}
+                      label={form.label || undefined}
+                      subtitle={form.subtitle || undefined}
+                      ctaText={form.cta_text || undefined}
+                      ctaLink={form.cta_link || undefined}
+                      bgColor={form.bg_color}
+                      accentColor={form.accent_color}
+                      textColor={form.text_color}
+                      bgImageUrl={form.bg_image_url || undefined}
+                      bgImageOverlay={form.bg_image_overlay}
+                    />
+                  )}
+                  {form.type === 'info-acordeon' && (
+                    <InfoAcordeon
+                      title={form.title || 'Título de ejemplo'}
+                      content={form.content || 'Texto del párrafo izquierdo...'}
+                      items={itemsList}
+                      bgColor={form.bg_color}
+                      textColor={form.text_color}
+                      accentColor={form.accent_color}
+                    />
+                  )}
                 </div>
               </div>
             ) : (
               <div className="px-6 py-6 flex flex-col gap-5">
+
+                {/* Tipo de sección */}
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs uppercase text-ink/40 font-mono">tipo de sección</span>
+                  <div className="flex gap-2">
+                    {SECTION_TYPES.map(t => (
+                      <button
+                        key={t.value}
+                        onClick={() => set('type', t.value)}
+                        className="px-4 py-2 text-xs font-mono uppercase border transition-colors rounded-sm"
+                        style={{
+                          borderColor: form.type === t.value ? '#735cdd' : 'rgba(23,26,33,0.15)',
+                          color: form.type === t.value ? '#735cdd' : 'rgba(23,26,33,0.4)',
+                          backgroundColor: form.type === t.value ? 'rgba(115,92,221,0.06)' : 'transparent',
+                        }}
+                      >
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* ── HERO FIELDS ─────────────────────── */}
+                {form.type === 'hero' && <>
 
                 {/* Etiqueta pequeña */}
                 <label className="flex flex-col gap-1.5">
@@ -448,6 +499,118 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                     />
                   </label>
                 </div>
+
+                </> /* end hero fields */}
+
+                {/* ── INFO ACORDEÓN FIELDS ─────────────── */}
+                {form.type === 'info-acordeon' && <>
+
+                {/* Título del párrafo */}
+                <label className="flex flex-col gap-1.5">
+                  <span className="text-xs uppercase text-ink/40 font-mono">título</span>
+                  <input
+                    value={form.title}
+                    onChange={(e) => set('title', e.target.value)}
+                    placeholder="¿Por qué ΛCΛDEM*IΛ?"
+                    className="border border-ink/15 px-3 py-2 text-sm font-mono uppercase bg-transparent text-ink focus:outline-none focus:border-slate"
+                  />
+                </label>
+
+                {/* Párrafo */}
+                <label className="flex flex-col gap-1.5">
+                  <span className="text-xs uppercase text-ink/40 font-mono">párrafo</span>
+                  <textarea
+                    value={form.content ?? ''}
+                    onChange={(e) => set('content', e.target.value)}
+                    rows={5}
+                    placeholder="Texto del párrafo izquierdo..."
+                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate resize-none"
+                  />
+                </label>
+
+                {/* Acordeones */}
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs uppercase text-ink/40 font-mono">acordeones</span>
+                    <button
+                      onClick={() => {
+                        const next = [...itemsList, { title: '', body: '' }]
+                        setItemsList(next)
+                        set('items', JSON.stringify(next))
+                      }}
+                      className="text-xs uppercase text-slate hover:text-slate/70 font-mono transition-colors"
+                    >
+                      + agregar
+                    </button>
+                  </div>
+
+                  {itemsList.map((item, i) => (
+                    <div key={i} className="border border-ink/10 p-3 flex flex-col gap-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <input
+                          value={item.title}
+                          onChange={(e) => {
+                            const next = itemsList.map((x, j) => j === i ? { ...x, title: e.target.value } : x)
+                            setItemsList(next)
+                            set('items', JSON.stringify(next))
+                          }}
+                          placeholder="Título del acordeón"
+                          className="flex-1 border border-ink/15 px-3 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                        />
+                        <button
+                          onClick={() => {
+                            const next = itemsList.filter((_, j) => j !== i)
+                            setItemsList(next)
+                            set('items', next.length ? JSON.stringify(next) : null)
+                          }}
+                          className="text-ink/20 hover:text-pink transition-colors text-sm"
+                        >✕</button>
+                      </div>
+                      <textarea
+                        value={item.body}
+                        onChange={(e) => {
+                          const next = itemsList.map((x, j) => j === i ? { ...x, body: e.target.value } : x)
+                          setItemsList(next)
+                          set('items', JSON.stringify(next))
+                        }}
+                        rows={2}
+                        placeholder="Contenido del acordeón..."
+                        className="border border-ink/15 px-3 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate resize-none"
+                      />
+                    </div>
+                  ))}
+
+                  {itemsList.length === 0 && (
+                    <p className="text-xs text-ink/25 font-mono">no hay acordeones aún — haz clic en + agregar</p>
+                  )}
+                </div>
+
+                {/* Colores */}
+                <div className="border-t border-ink/8 pt-5 flex flex-col gap-4">
+                  <ColorPicker label="color de fondo" value={form.bg_color} onChange={(v) => set('bg_color', v)} presets={COLOR_PRESETS} />
+                  <ColorPicker label="color del texto" value={form.text_color} onChange={(v) => set('text_color', v)} presets={TEXT_COLOR_PRESETS} />
+                  <ColorPicker label="color de acento" value={form.accent_color} onChange={(v) => set('accent_color', v)} presets={ACCENT_PRESETS} />
+                </div>
+
+                {/* Publicar + orden */}
+                <div className="grid grid-cols-2 gap-4 border-t border-ink/8 pt-5">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" checked={form.published} onChange={(e) => set('published', e.target.checked)} className="w-4 h-4 accent-slate" />
+                    <span className="text-xs uppercase font-mono text-ink/60">publicar</span>
+                  </label>
+                  <label className="flex flex-col gap-1.5">
+                    <span className="text-xs uppercase text-ink/40 font-mono">orden</span>
+                    <input
+                      type="number"
+                      value={form.sort_order}
+                      onChange={(e) => set('sort_order', parseInt(e.target.value) || 0)}
+                      className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-20"
+                    />
+                  </label>
+                </div>
+
+                </> /* end info-acordeon fields */}
+
               </div>
             )}
 
