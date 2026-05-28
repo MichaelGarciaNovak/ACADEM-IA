@@ -568,29 +568,36 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                   {itemsList.map((item, i) => (
                     <div key={i} className="border border-ink/10 p-3 flex flex-col gap-2">
                       <div className="flex items-center justify-between gap-2">
-                        <label className="flex items-center gap-2 cursor-pointer flex-shrink-0">
-                          {item.icon
-                            // eslint-disable-next-line @next/next/no-img-element
-                            ? <img src={item.icon} alt="" className="w-8 h-8 object-contain border border-ink/10" />
-                            : <div className="w-8 h-8 border border-dashed border-ink/20 flex items-center justify-center">
-                                <span className="text-ink/30 text-xs">+</span>
-                              </div>
-                          }
-                          <span className="text-xs font-mono text-ink/40 hover:text-slate transition-colors">
-                            {uploadingIcon === i ? 'subiendo...' : item.icon ? 'cambiar' : 'ícono'}
-                          </span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            disabled={uploadingIcon !== null}
-                            onChange={(e) => {
-                              const file = e.target.files?.[0]
-                              if (file) uploadIcon(file, i)
-                              e.target.value = ''
-                            }}
-                          />
-                        </label>
+                        <div className="flex flex-col gap-1 flex-shrink-0">
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            {item.icon
+                              // eslint-disable-next-line @next/next/no-img-element
+                              ? <img src={item.icon} alt="" className="w-8 h-8 object-contain border border-ink/10" />
+                              : <div className="w-8 h-8 border border-dashed border-ink/20 flex items-center justify-center">
+                                  <span className="text-ink/30 text-xs">+</span>
+                                </div>
+                            }
+                            <span className="text-xs font-mono text-ink/40 hover:text-slate transition-colors">
+                              {uploadingIcon === i ? 'subiendo...' : item.icon ? 'cambiar' : 'ícono'}
+                            </span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              disabled={uploadingIcon !== null}
+                              onChange={(e) => {
+                                const file = e.target.files?.[0]
+                                if (file) uploadIcon(file, i)
+                                e.target.value = ''
+                              }}
+                            />
+                          </label>
+                          {item.icon && (
+                            <a href={item.icon} target="_blank" rel="noopener noreferrer"
+                              className="text-[10px] font-mono text-slate/60 hover:text-slate truncate max-w-[120px]"
+                            >ver url ↗</a>
+                          )}
+                        </div>
                         <input
                           value={item.title}
                           onChange={(e) => {
