@@ -505,15 +505,16 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                 {/* ── INFO ACORDEÓN FIELDS ─────────────── */}
                 {form.type === 'info-acordeon' && <>
 
-                {/* Título del párrafo */}
+                {/* Nombre interno (para identificar en la lista) */}
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">título</span>
+                  <span className="text-xs uppercase text-ink/40 font-mono">nombre interno</span>
                   <input
                     value={form.title}
                     onChange={(e) => set('title', e.target.value)}
-                    placeholder="¿Por qué ΛCΛDEM*IΛ?"
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono uppercase bg-transparent text-ink focus:outline-none focus:border-slate"
+                    placeholder="ej. FAQs, Por qué nosotros..."
+                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
                   />
+                  <p className="text-xs text-ink/25">solo visible en el admin, no aparece en la página</p>
                 </label>
 
                 {/* Párrafo */}
