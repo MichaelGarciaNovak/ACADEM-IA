@@ -86,16 +86,16 @@ function CircleBadge({
       style={{ top, left }}
     >
       <defs>
-        {/* Top arc — counterclockwise through top (sweep=0) */}
+        {/* Top arc — in SVG Y-down coords, sweep=1 goes OVER the top visually */}
         <path
           id={topId}
-          d={`M ${cx - arcR},${cy} A ${arcR},${arcR} 0 0,0 ${cx + arcR},${cy}`}
+          d={`M ${cx - arcR},${cy} A ${arcR},${arcR} 0 0,1 ${cx + arcR},${cy}`}
           fill="none"
         />
-        {/* Bottom arc — clockwise through bottom (sweep=1) */}
+        {/* Bottom arc — sweep=0 goes UNDER the bottom visually */}
         <path
           id={botId}
-          d={`M ${cx - arcR},${cy} A ${arcR},${arcR} 0 0,1 ${cx + arcR},${cy}`}
+          d={`M ${cx - arcR},${cy} A ${arcR},${arcR} 0 0,0 ${cx + arcR},${cy}`}
           fill="none"
         />
       </defs>
@@ -121,7 +121,7 @@ function CircleBadge({
         </text>
       )}
 
-      {/* Bottom arc text — side="right" renders text on the outside of the bottom arc */}
+      {/* Bottom arc text */}
       {bottomText && (
         <text
           fontSize="10"
@@ -130,8 +130,7 @@ function CircleBadge({
           letterSpacing="1.5"
           textAnchor="middle"
         >
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          <textPath href={`#${botId}`} {...({ side: 'right' } as any)} startOffset="50%">
+          <textPath href={`#${botId}`} startOffset="50%">
             {bottomText.toUpperCase()}
           </textPath>
         </text>
