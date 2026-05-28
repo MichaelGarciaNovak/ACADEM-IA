@@ -32,12 +32,12 @@ export default function InfoAcordeon({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start pt-4">
 
           {/* ── LEFT: párrafo ─────────────────────────── */}
-          <div className="md:sticky md:top-24">
+          <div className="md:sticky md:top-24 pt-5">
             <p
               className="font-mono font-normal uppercase leading-tight"
               style={{
                 color: textColor,
-                fontSize: 'clamp(1.875rem, 3vw, 2.25rem)',
+                fontSize: 'clamp(1.875rem, 3.2vw, 2.25rem)',
                 letterSpacing: '-0.02em',
               }}
             >
