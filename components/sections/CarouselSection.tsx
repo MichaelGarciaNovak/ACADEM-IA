@@ -137,8 +137,8 @@ function CircleBadge({
               fill={textColor}
               fontFamily="'IBM Plex Mono', monospace"
               textAnchor="middle"
-              dominantBaseline="middle"
-              transform={`rotate(${(θ - 90).toFixed(2)},${x.toFixed(2)},${y.toFixed(2)})`}
+              dominantBaseline="auto"
+              transform={`rotate(${(90 - θ).toFixed(2)},${x.toFixed(2)},${y.toFixed(2)})`}
             >
               {ch}
             </text>
