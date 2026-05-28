@@ -122,7 +122,7 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
   const [preview, setPreview] = useState(false)
   const [saving, setSaving] = useState(false)
   const [titlesText, setTitlesText] = useState('')
-  const [itemsList, setItemsList] = useState<{title: string, body: string}[]>([])
+  const [itemsList, setItemsList] = useState<{title: string, body: string, icon?: string}[]>([])
 
   function openNew() {
     setEditingId(null)
@@ -548,6 +548,17 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                   {itemsList.map((item, i) => (
                     <div key={i} className="border border-ink/10 p-3 flex flex-col gap-2">
                       <div className="flex items-center justify-between gap-2">
+                        <input
+                          value={item.icon ?? ''}
+                          onChange={(e) => {
+                            const next = itemsList.map((x, j) => j === i ? { ...x, icon: e.target.value || undefined } : x)
+                            setItemsList(next)
+                            set('items', JSON.stringify(next))
+                          }}
+                          placeholder="🔥"
+                          title="Ícono (emoji opcional)"
+                          className="w-12 border border-ink/15 px-2 py-1.5 text-base text-center bg-transparent focus:outline-none focus:border-slate"
+                        />
                         <input
                           value={item.title}
                           onChange={(e) => {

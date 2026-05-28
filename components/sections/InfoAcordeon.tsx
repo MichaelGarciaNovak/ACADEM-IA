@@ -5,6 +5,7 @@ import { useState } from 'react'
 interface AccordionItem {
   title: string
   body: string
+  icon?: string
 }
 
 interface Props {
@@ -57,15 +58,29 @@ export default function InfoAcordeon({
                   onClick={() => setOpenIndex(openIndex === i ? null : i)}
                   className="w-full flex items-center justify-between py-5 text-left gap-4"
                 >
-                  <span
-                    className="font-mono font-normal uppercase transition-colors"
-                    style={{
-                      color: openIndex === i ? accentColor : textColor,
-                      fontSize: 'clamp(1rem, 1.5vw, 1.2rem)',
-                      letterSpacing: '-0.01em',
-                    }}
-                  >
-                    {item.title}
+                  <span className="flex items-center gap-3">
+                    {item.icon && (
+                      <span
+                        style={{
+                          fontSize: 'clamp(1.4rem, 2vw, 1.7rem)',
+                          lineHeight: 1,
+                          opacity: openIndex === i ? 1 : 0.6,
+                          transition: 'opacity 0.2s',
+                        }}
+                      >
+                        {item.icon}
+                      </span>
+                    )}
+                    <span
+                      className="font-mono font-normal uppercase transition-colors"
+                      style={{
+                        color: openIndex === i ? accentColor : textColor,
+                        fontSize: 'clamp(1rem, 1.5vw, 1.2rem)',
+                        letterSpacing: '-0.01em',
+                      }}
+                    >
+                      {item.title}
+                    </span>
                   </span>
                   <svg
                     width="14" height="14" viewBox="0 0 14 14" fill="none"
