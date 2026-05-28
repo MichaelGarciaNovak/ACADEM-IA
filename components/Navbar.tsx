@@ -57,6 +57,9 @@ export default function Navbar() {
             </a>
           ))}
           <hr className="border-ink/10" />
+          <a href="/login" className="text-sm uppercase font-normal text-ink/50 hover:text-ink font-mono" onClick={() => setOpen(false)}>
+            entrar
+          </a>
           <a href="/registro" className="btn-primary text-sm text-center">
             empezar gratis
           </a>
