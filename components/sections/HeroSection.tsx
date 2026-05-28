@@ -1,5 +1,8 @@
+import AnimatedTitle from './AnimatedTitle'
+
 interface HeroSectionProps {
   title: string
+  titleVariants?: string[]  // if provided with 2+, animates between them
   label?: string
   subtitle?: string
   ctaText?: string
@@ -8,11 +11,12 @@ interface HeroSectionProps {
   accentColor?: string
   textColor?: string
   bgImageUrl?: string
-  bgImageOverlay?: number  // 0–100, opacity of dark overlay
+  bgImageOverlay?: number
 }
 
 export default function HeroSection({
   title = 'ΛCΛDEM*IΛ',
+  titleVariants,
   label = 'plataforma educativa',
   subtitle = 'Aprende con propósito.',
   ctaText = 'Empezar gratis',
@@ -24,6 +28,7 @@ export default function HeroSection({
   bgImageOverlay = 50,
 }: HeroSectionProps) {
   const mutedColor = textColor + 'aa'
+  const animatedTitles = titleVariants && titleVariants.length > 1 ? titleVariants : null
 
   return (
     <section
@@ -68,20 +73,29 @@ export default function HeroSection({
           <h1
             className="font-mono font-normal uppercase leading-none mb-8"
             style={{
-              color: textColor,
               fontSize: 'clamp(2.8rem, 7vw, 6rem)',
               letterSpacing: '-0.02em',
             }}
           >
-            {title.split('*').map((part, i, arr) =>
-              i < arr.length - 1 ? (
-                <span key={i}>
-                  {part}
-                  <span style={{ color: accentColor }}>*</span>
-                </span>
-              ) : (
-                <span key={i}>{part}</span>
-              )
+            {animatedTitles ? (
+              <AnimatedTitle
+                titles={animatedTitles}
+                accentColor={accentColor}
+                textColor={textColor}
+              />
+            ) : (
+              <span style={{ color: textColor }}>
+                {title.split('*').map((part, i, arr) =>
+                  i < arr.length - 1 ? (
+                    <span key={i}>
+                      {part}
+                      <span style={{ color: accentColor }}>*</span>
+                    </span>
+                  ) : (
+                    <span key={i}>{part}</span>
+                  )
+                )}
+              </span>
             )}
           </h1>
 

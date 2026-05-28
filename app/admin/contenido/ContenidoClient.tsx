@@ -9,6 +9,7 @@ type Section = {
   type: string
   label: string | null
   title: string
+  title_variants: string | null  // JSON array stored as text
   subtitle: string | null
   cta_text: string | null
   cta_link: string | null
@@ -50,6 +51,7 @@ const emptyForm = (): Omit<Section, 'id'> => ({
   type: 'hero',
   label: 'plataforma educativa',
   title: '',
+  title_variants: null,
   subtitle: '',
   cta_text: 'Empezar gratis',
   cta_link: '/registro',
@@ -126,6 +128,7 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
       cta_text: s.cta_text ?? '',
       cta_link: s.cta_link ?? '',
       label: s.label ?? 'plataforma educativa',
+      title_variants: s.title_variants ?? null,
       bg_color: s.bg_color,
       accent_color: s.accent_color,
       text_color: s.text_color ?? '#dddfdf',
@@ -255,6 +258,7 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                 <div style={{ transform: 'scale(0.55)', transformOrigin: 'top left', width: '181%', pointerEvents: 'none' }}>
                   <HeroSection
                     title={form.title || 'Título de ejemplo'}
+                    titleVariants={form.title_variants ? JSON.parse(form.title_variants) : undefined}
                     label={form.label || undefined}
                     subtitle={form.subtitle || undefined}
                     ctaText={form.cta_text || undefined}
@@ -291,6 +295,28 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                     className="border border-ink/15 px-3 py-2 text-sm font-mono uppercase bg-transparent text-ink focus:outline-none focus:border-slate"
                   />
                 </label>
+
+                {/* Títulos animados */}
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs uppercase text-ink/40 font-mono">títulos animados</span>
+                  <textarea
+                    value={form.title_variants
+                      ? JSON.parse(form.title_variants).join('\n')
+                      : ''}
+                    onChange={(e) => {
+                      const lines = e.target.value.split('\n').map(l => l.trim()).filter(Boolean)
+                      set('title_variants', lines.length >= 2 ? JSON.stringify(lines) : null)
+                    }}
+                    rows={4}
+                    placeholder={'Un título por línea (mínimo 2 para activar animación):\nAprende con IA\nAutomatiza tu trabajo\nCrece más rápido'}
+                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate resize-none placeholder:text-ink/20"
+                  />
+                  <p className="text-xs text-ink/25">
+                    {form.title_variants
+                      ? `✓ ${JSON.parse(form.title_variants).length} títulos — se ignorará el campo "título" de arriba`
+                      : 'deja vacío para usar el título estático de arriba'}
+                  </p>
+                </div>
 
                 {/* Subtítulo */}
                 <label className="flex flex-col gap-1.5">

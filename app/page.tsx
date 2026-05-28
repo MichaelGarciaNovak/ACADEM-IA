@@ -97,6 +97,7 @@ export default async function Home() {
           textColor={heroData.text_color ?? undefined}
           bgImageUrl={(heroData as any).bg_image_url ?? undefined}
           bgImageOverlay={(heroData as any).bg_image_overlay ?? 50}
+          titleVariants={(heroData as any).title_variants ? JSON.parse((heroData as any).title_variants) : undefined}
         />
       ) : (
         <section className="bg-ink text-alabaster min-h-screen flex flex-col justify-center px-6 pt-16">
