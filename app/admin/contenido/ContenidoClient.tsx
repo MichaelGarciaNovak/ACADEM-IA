@@ -350,13 +350,6 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                     presets={ACCENT_PRESETS}
                   />
 
-                  {/* Color textura */}
-                  <ColorPicker
-                    label="color de la textura de fondo"
-                    value={form.texture_color}
-                    onChange={(v) => set('texture_color', v)}
-                    presets={COLOR_PRESETS}
-                  />
                 </div>
 
                 <div className="border-t border-ink/8 pt-5 flex flex-col gap-5">
