@@ -120,9 +120,11 @@ function CircleBadge({
         const chars = bottomText.toUpperCase().split('')
         const charArcDeg = (10 * 0.60 + 1.5) / arcR * (180 / Math.PI)
         const totalArcDeg = chars.length * charArcDeg
-        const startDeg = 90 - totalArcDeg / 2 + charArcDeg / 2
+        // In SVG Y-down, θ=90° is the bottommost point, lower θ → right side, higher θ → left side.
+        // Start high (left) and decrease (right) so text reads L→R from the viewer's perspective.
+        const startDeg = 90 + totalArcDeg / 2 - charArcDeg / 2
         return chars.map((ch, i) => {
-          const θ = startDeg + i * charArcDeg
+          const θ = startDeg - i * charArcDeg
           const rad = θ * Math.PI / 180
           const x = cx + arcR * Math.cos(rad)
           const y = cy + arcR * Math.sin(rad)
