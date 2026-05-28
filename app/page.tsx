@@ -73,6 +73,7 @@ export default async function Home() {
     const { data: heroRow } = await supabase
       .from('sections')
       .select('*')
+      .eq('page', '/')
       .eq('type', 'hero')
       .eq('published', true)
       .order('sort_order', { ascending: true })
@@ -83,6 +84,7 @@ export default async function Home() {
     const { data: extras } = await supabase
       .from('sections')
       .select('*')
+      .eq('page', '/')
       .neq('type', 'hero')
       .eq('published', true)
       .order('sort_order', { ascending: true })

@@ -8,6 +8,7 @@ import CarouselSection, { CarouselCard } from '@/components/sections/CarouselSec
 
 type Section = {
   id: string
+  page: string
   type: string
   label: string | null
   title: string
@@ -57,7 +58,8 @@ const ACCENT_PRESETS = [
   { label: 'white', value: '#ffffff' },
 ]
 
-const emptyForm = (): Omit<Section, 'id'> => ({
+const emptyForm = (page = '/'): Omit<Section, 'id'> => ({
+  page,
   type: 'hero',
   label: 'plataforma educativa',
   title: '',
@@ -118,6 +120,7 @@ function ColorPicker({
 export default function ContenidoClient({ initialSections }: { initialSections: Section[] }) {
   const supabase = createClient()
   const [sections, setSections] = useState<Section[]>(initialSections)
+  const [currentPage, setCurrentPage] = useState('/')
   const [modalOpen, setModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState(emptyForm())
@@ -168,7 +171,7 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
 
   function openNew() {
     setEditingId(null)
-    setForm(emptyForm())
+    setForm(emptyForm(currentPage))
     setTitlesText('')
     setItemsList([])
     setCardsList([])
@@ -205,6 +208,7 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
       setCardColors({ bg: '#ffffff', text: '#171a21', accent: '#ef476f' })
     }
     setForm({
+      page: s.page ?? '/',
       type: s.type,
       title: s.title,
       subtitle: s.subtitle ?? '',
@@ -275,10 +279,14 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
     setSections((prev) => prev.map((x) => (x.id === s.id ? { ...x, published: next } : x)))
   }
 
+  // Collect known pages from existing sections for quick switching
+  const knownPages = Array.from(new Set(sections.map(s => s.page ?? '/'))).sort()
+  const filteredSections = sections.filter(s => (s.page ?? '/') === currentPage)
+
   return (
     <>
       <div>
-        <div className="mb-10 flex items-end justify-between">
+        <div className="mb-6 flex items-end justify-between">
           <div>
             <p className="text-xs uppercase text-slate mb-1">gestor</p>
             <h1 className="text-3xl font-normal uppercase text-ink">contenido</h1>
@@ -288,6 +296,37 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
           </button>
         </div>
 
+        {/* ── Page selector ── */}
+        <div className="mb-6 p-4 border border-ink/10 bg-ink/[0.02] flex flex-col gap-3">
+          <span className="text-xs uppercase text-ink/40 font-mono">página activa</span>
+          <div className="flex gap-2 flex-wrap items-center">
+            {knownPages.map(page => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className="px-3 py-1 text-xs font-mono border transition-colors"
+                style={{
+                  borderColor: currentPage === page ? '#735cdd' : 'rgba(23,26,33,0.15)',
+                  color: currentPage === page ? '#735cdd' : 'rgba(23,26,33,0.4)',
+                  backgroundColor: currentPage === page ? 'rgba(115,92,221,0.06)' : 'transparent',
+                }}
+              >
+                {page === '/' ? '/ (home)' : page}
+              </button>
+            ))}
+            <input
+              type="text"
+              value={currentPage}
+              onChange={e => setCurrentPage(e.target.value)}
+              placeholder="/cursos/mi-curso"
+              className="border border-ink/15 px-2 py-1 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-52"
+            />
+          </div>
+          <p className="text-xs text-ink/25">
+            escribe o selecciona una página — las secciones nuevas se asignarán a esta ruta
+          </p>
+        </div>
+
         <div className="border border-ink/10">
           <div className="grid grid-cols-5 px-6 py-3 border-b border-ink/10 bg-ink/[0.02]">
             {['tipo', 'título', 'colores', 'estado', 'acciones'].map((h) => (
@@ -295,12 +334,12 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
             ))}
           </div>
 
-          {sections.length === 0 ? (
+          {filteredSections.length === 0 ? (
             <div className="px-6 py-10 text-center text-ink/30 text-sm">
-              no hay secciones creadas aún
+              no hay secciones en <span className="font-mono">{currentPage}</span> — crea la primera
             </div>
           ) : (
-            sections.map((s) => (
+            filteredSections.map((s) => (
               <div
                 key={s.id}
                 className="grid grid-cols-5 px-6 py-4 border-b border-ink/5 hover:bg-ink/[0.02] items-center"
