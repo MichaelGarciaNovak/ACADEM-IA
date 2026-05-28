@@ -60,16 +60,19 @@ export default function InfoAcordeon({
                 >
                   <span className="flex items-center gap-3">
                     {item.icon && (
-                      <span
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={item.icon}
+                        alt=""
                         style={{
-                          fontSize: 'clamp(1.4rem, 2vw, 1.7rem)',
-                          lineHeight: 1,
-                          opacity: openIndex === i ? 1 : 0.6,
+                          width: 'clamp(1.4rem, 2vw, 1.7rem)',
+                          height: 'clamp(1.4rem, 2vw, 1.7rem)',
+                          objectFit: 'contain',
+                          flexShrink: 0,
+                          opacity: openIndex === i ? 1 : 0.5,
                           transition: 'opacity 0.2s',
                         }}
-                      >
-                        {item.icon}
-                      </span>
+                      />
                     )}
                     <span
                       className="font-mono font-normal uppercase transition-colors"

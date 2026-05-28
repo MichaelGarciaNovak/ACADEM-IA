@@ -123,6 +123,20 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
   const [saving, setSaving] = useState(false)
   const [titlesText, setTitlesText] = useState('')
   const [itemsList, setItemsList] = useState<{title: string, body: string, icon?: string}[]>([])
+  const [uploadingIcon, setUploadingIcon] = useState<number | null>(null)
+
+  async function uploadIcon(file: File, itemIndex: number) {
+    setUploadingIcon(itemIndex)
+    const ext = file.name.split('.').pop() ?? 'png'
+    const path = `icons/${Date.now()}.${ext}`
+    const { error } = await supabase.storage.from('assets').upload(path, file, { upsert: true })
+    if (error) { alert('Error al subir imagen: ' + error.message); setUploadingIcon(null); return }
+    const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path)
+    const next = itemsList.map((x, j) => j === itemIndex ? { ...x, icon: publicUrl } : x)
+    setItemsList(next)
+    set('items', JSON.stringify(next))
+    setUploadingIcon(null)
+  }
 
   function openNew() {
     setEditingId(null)
@@ -548,17 +562,29 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                   {itemsList.map((item, i) => (
                     <div key={i} className="border border-ink/10 p-3 flex flex-col gap-2">
                       <div className="flex items-center justify-between gap-2">
-                        <input
-                          value={item.icon ?? ''}
-                          onChange={(e) => {
-                            const next = itemsList.map((x, j) => j === i ? { ...x, icon: e.target.value || undefined } : x)
-                            setItemsList(next)
-                            set('items', JSON.stringify(next))
-                          }}
-                          placeholder="🔥"
-                          title="Ícono (emoji opcional)"
-                          className="w-12 border border-ink/15 px-2 py-1.5 text-base text-center bg-transparent focus:outline-none focus:border-slate"
-                        />
+                        <label className="flex items-center gap-2 cursor-pointer flex-shrink-0">
+                          {item.icon
+                            // eslint-disable-next-line @next/next/no-img-element
+                            ? <img src={item.icon} alt="" className="w-8 h-8 object-contain border border-ink/10" />
+                            : <div className="w-8 h-8 border border-dashed border-ink/20 flex items-center justify-center">
+                                <span className="text-ink/30 text-xs">+</span>
+                              </div>
+                          }
+                          <span className="text-xs font-mono text-ink/40 hover:text-slate transition-colors">
+                            {uploadingIcon === i ? 'subiendo...' : item.icon ? 'cambiar' : 'ícono'}
+                          </span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            disabled={uploadingIcon !== null}
+                            onChange={(e) => {
+                              const file = e.target.files?.[0]
+                              if (file) uploadIcon(file, i)
+                              e.target.value = ''
+                            }}
+                          />
+                        </label>
                         <input
                           value={item.title}
                           onChange={(e) => {
