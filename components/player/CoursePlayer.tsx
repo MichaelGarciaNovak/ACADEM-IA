@@ -325,7 +325,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
               )}
 
               {/* Content */}
-              <div className="px-8 py-10">
+              <div className="px-8 py-6">
                 {/* Title */}
                 <h1 className="text-lg uppercase font-normal text-ink mb-4 tracking-tight">
                   lec. {allLessons.findIndex(l => l.id === activeLesson.id) + 1}: {activeLesson.title}
@@ -333,7 +333,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
 
                 {/* Description */}
                 {activeLesson.description && (
-                  <p className="text-sm text-ink/60 leading-relaxed mb-6">{activeLesson.description}</p>
+                  <p className="text-sm text-ink/60 leading-relaxed mb-4">{activeLesson.description}</p>
                 )}
 
                 {/* Resources */}
@@ -383,7 +383,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                 )}
 
                 {/* Navigation */}
-                <div className="flex items-center justify-between py-6 border-t border-b border-ink/10 mb-8">
+                <div className="flex items-center justify-between py-4 border-t border-ink/10 mb-6">
                   <div>
                     {prevLesson ? (
                       <button
