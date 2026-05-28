@@ -4,6 +4,8 @@ import { useRef } from 'react'
 
 // Golden ratio
 const φ = 1.618033988749895
+// Card scale factor (+30%)
+const S = 1.3
 
 export interface CarouselCard {
   badge?: string
@@ -29,8 +31,10 @@ interface Props {
 }
 
 function ClockIcon() {
+  // viewBox stays 0 0 10 10; rendered size scaled ×S
+  const sz = Math.round(10 * S)
   return (
-    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" className="flex-shrink-0">
+    <svg width={sz} height={sz} viewBox="0 0 10 10" fill="none" className="flex-shrink-0">
       <circle cx="5" cy="5" r="4" stroke="currentColor" strokeWidth="1" />
       <path d="M5 3V5L6.5 6.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
     </svg>
@@ -48,12 +52,22 @@ function Card({
   textColor: string
   cardBgColor: string
 }) {
+  // Base unit = 9px, scaled × S
+  const base     = 9 * S                        // 11.7px
+  const titlePx  = (9 * φ * S).toFixed(1)       // 18.9px
+  const pad      = Math.round(13 * S)            // 17px top/bottom
+  const padSide  = Math.round(21 * S)            // 27px sides
+  const mb8      = Math.round(8  * S)            // 10px
+  const mb5      = Math.round(5  * S)            // 7px
+  const mb13     = Math.round(13 * S)            // 17px
+  const badgeTop = Math.round(13 * S)            // 17px
+
   return (
     <a
       href={card.ctaLink || '#'}
       className="group flex-shrink-0 snap-start flex flex-col"
       style={{
-        width: 'clamp(240px, 24vw, 295px)',
+        width: `clamp(${Math.round(240 * S)}px, ${(24 * S).toFixed(1)}vw, ${Math.round(295 * S)}px)`,
         backgroundColor: cardBgColor,
         transition: `transform ${Math.round(φ * 276)}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
       }}
@@ -79,11 +93,13 @@ function Card({
 
         {card.badge && (
           <span
-            className="absolute top-[13px] left-[13px] font-mono uppercase"
+            className="absolute font-mono uppercase"
             style={{
-              fontSize: '9px',
+              top: `${badgeTop}px`,
+              left: `${badgeTop}px`,
+              fontSize: `${base.toFixed(1)}px`,
               letterSpacing: '0.12em',
-              padding: '5px 8px',
+              padding: `${Math.round(5 * S)}px ${Math.round(8 * S)}px`,
               backgroundColor: 'rgba(255,255,255,0.9)',
               color: textColor,
             }}
@@ -93,20 +109,19 @@ function Card({
         )}
       </div>
 
-      {/* ── CONTENT — height = imageHeight/φ (golden proportion of image) ── */}
-      {/* Fibonacci padding: 13px top, 21px sides, 13px bottom */}
+      {/* ── CONTENT ── */}
       <div
         className="flex flex-col"
-        style={{ padding: '13px 21px 13px', color: textColor }}
+        style={{ padding: `${pad}px ${padSide}px ${pad}px`, color: textColor }}
       >
         {card.category && (
           <p
             className="font-mono uppercase"
             style={{
-              fontSize: '9px',
+              fontSize: `${base.toFixed(1)}px`,
               letterSpacing: '0.12em',
               color: accentColor,
-              marginBottom: '8px',
+              marginBottom: `${mb8}px`,
             }}
           >
             {card.category}
@@ -116,10 +131,10 @@ function Card({
         <h3
           className="font-mono font-normal uppercase leading-tight"
           style={{
-            fontSize: `${(9 * φ).toFixed(1)}px`,
+            fontSize: `${titlePx}px`,
             letterSpacing: '-0.02em',
             color: textColor,
-            marginBottom: '5px',
+            marginBottom: `${mb5}px`,
           }}
         >
           {card.title}
@@ -129,9 +144,9 @@ function Card({
           <p
             className="font-mono leading-snug"
             style={{
-              fontSize: '9px',
+              fontSize: `${base.toFixed(1)}px`,
               color: textColor + '60',
-              marginBottom: '8px',
+              marginBottom: `${mb8}px`,
             }}
           >
             {card.subtitle}
@@ -142,9 +157,9 @@ function Card({
           <p
             className="leading-relaxed"
             style={{
-              fontSize: '9px',
+              fontSize: `${base.toFixed(1)}px`,
               color: textColor + '50',
-              marginBottom: '13px',
+              marginBottom: `${mb13}px`,
               display: '-webkit-box',
               WebkitLineClamp: 3,
               WebkitBoxOrient: 'vertical',
@@ -159,7 +174,7 @@ function Card({
         <div
           className="flex items-center justify-between"
           style={{
-            paddingTop: '8px',
+            paddingTop: `${mb8}px`,
             borderTop: `1px solid ${textColor}10`,
             marginTop: card.description ? '0' : 'auto',
           }}
@@ -167,7 +182,7 @@ function Card({
           {card.duration ? (
             <span
               className="flex items-center font-mono"
-              style={{ fontSize: '9px', color: textColor + '40', gap: '5px' }}
+              style={{ fontSize: `${base.toFixed(1)}px`, color: textColor + '40', gap: `${mb5}px` }}
             >
               <ClockIcon />
               {card.duration}
@@ -175,9 +190,9 @@ function Card({
           ) : <span />}
 
           <span
-            className="font-mono uppercase transition-transform duration-300 group-hover:translate-x-[3px]"
+            className="font-mono uppercase transition-transform duration-300 group-hover:translate-x-[4px]"
             style={{
-              fontSize: '9px',
+              fontSize: `${base.toFixed(1)}px`,
               letterSpacing: '0.1em',
               color: accentColor,
             }}
@@ -205,7 +220,7 @@ export default function CarouselSection({
   function scroll(dir: 'left' | 'right') {
     if (!scrollRef.current) return
     const firstCard = scrollRef.current.querySelector('a') as HTMLElement | null
-    const step = firstCard ? firstCard.offsetWidth + 24 : 319
+    const step = firstCard ? firstCard.offsetWidth + Math.round(21 * S) : Math.round(319 * S)
     scrollRef.current.scrollBy({ left: dir === 'right' ? step : -step, behavior: 'smooth' })
   }
 
@@ -224,7 +239,7 @@ export default function CarouselSection({
                   fontSize: '9px',
                   letterSpacing: '0.15em',
                   color: accentColor,
-                  marginBottom: '13px',  // Fibonacci F7
+                  marginBottom: '13px',
                 }}
               >
                 {label}
@@ -265,7 +280,7 @@ export default function CarouselSection({
                   onClick={() => scroll(dir)}
                   className="flex items-center justify-center border transition-all duration-200"
                   style={{
-                    width: `${Math.round(21 * φ)}px`,   // 21 × φ = 34px (Fibonacci!)
+                    width: `${Math.round(21 * φ)}px`,
                     height: `${Math.round(21 * φ)}px`,
                     borderColor: textColor + '18',
                     color: textColor + '50',
@@ -292,12 +307,12 @@ export default function CarouselSection({
         </div>
       </div>
 
-      {/* Scroll track — gap = 21px (Fibonacci F8) */}
+      {/* Scroll track — gap scaled ×S */}
       <div
         ref={scrollRef}
         className="max-w-6xl mx-auto flex overflow-x-auto snap-x snap-mandatory px-6"
         style={{
-          gap: '21px',
+          gap: `${Math.round(21 * S)}px`,
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
         } as React.CSSProperties}
