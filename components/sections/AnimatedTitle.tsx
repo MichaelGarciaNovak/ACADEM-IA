@@ -1,16 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 interface Props {
   titles: string[]
   accentColor: string
   textColor: string
-  intervalMs?: number
+  pauseMs?: number   // how long to hold the full title
+  typeSpeed?: number // ms per character typing
+  deleteSpeed?: number // ms per character deleting
 }
 
-function renderTitle(title: string, accentColor: string, textColor: string) {
-  return title.split('*').map((part, i, arr) =>
+function renderTyped(text: string, accentColor: string, textColor: string) {
+  return text.split('*').map((part, i, arr) =>
     i < arr.length - 1 ? (
       <span key={i}>
         {part}
@@ -22,32 +24,74 @@ function renderTitle(title: string, accentColor: string, textColor: string) {
   )
 }
 
-export default function AnimatedTitle({ titles, accentColor, textColor, intervalMs = 5000 }: Props) {
-  const [index, setIndex] = useState(0)
-  const [visible, setVisible] = useState(true)
+export default function AnimatedTitle({
+  titles,
+  accentColor,
+  textColor,
+  pauseMs = 3000,
+  typeSpeed = 55,
+  deleteSpeed = 30,
+}: Props) {
+  const [displayed, setDisplayed] = useState('')
+  const [titleIndex, setTitleIndex] = useState(0)
+  const phase = useRef<'typing' | 'pausing' | 'deleting'>('typing')
+  const charIndex = useRef(0)
 
   useEffect(() => {
-    if (titles.length <= 1) return
-    const timer = setInterval(() => {
-      setVisible(false)
-      setTimeout(() => {
-        setIndex(i => (i + 1) % titles.length)
-        setVisible(true)
-      }, 400)
-    }, intervalMs)
-    return () => clearInterval(timer)
-  }, [titles.length, intervalMs])
+    if (titles.length <= 1) {
+      setDisplayed(titles[0] ?? '')
+      return
+    }
+
+    let timeout: NodeJS.Timeout
+
+    const tick = () => {
+      const current = titles[titleIndex]
+
+      if (phase.current === 'typing') {
+        charIndex.current += 1
+        setDisplayed(current.slice(0, charIndex.current))
+        if (charIndex.current >= current.length) {
+          phase.current = 'pausing'
+          timeout = setTimeout(tick, pauseMs)
+        } else {
+          timeout = setTimeout(tick, typeSpeed)
+        }
+      } else if (phase.current === 'pausing') {
+        phase.current = 'deleting'
+        timeout = setTimeout(tick, deleteSpeed)
+      } else {
+        // deleting
+        charIndex.current -= 1
+        setDisplayed(current.slice(0, charIndex.current))
+        if (charIndex.current <= 0) {
+          phase.current = 'typing'
+          setTitleIndex(i => (i + 1) % titles.length)
+        } else {
+          timeout = setTimeout(tick, deleteSpeed)
+        }
+      }
+    }
+
+    timeout = setTimeout(tick, typeSpeed)
+    return () => clearTimeout(timeout)
+  }, [titleIndex, titles, pauseMs, typeSpeed, deleteSpeed])
 
   return (
-    <span
-      style={{
-        color: textColor,
-        opacity: visible ? 1 : 0,
-        transition: 'opacity 0.4s ease',
-        display: 'inline',
-      }}
-    >
-      {renderTitle(titles[index], accentColor, textColor)}
+    <span style={{ color: textColor }}>
+      {renderTyped(displayed, accentColor, textColor)}
+      <span
+        style={{
+          display: 'inline-block',
+          width: '3px',
+          height: '0.85em',
+          backgroundColor: accentColor,
+          marginLeft: '4px',
+          verticalAlign: 'middle',
+          animation: 'blink 1s step-end infinite',
+        }}
+      />
+      <style>{`@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }`}</style>
     </span>
   )
 }
