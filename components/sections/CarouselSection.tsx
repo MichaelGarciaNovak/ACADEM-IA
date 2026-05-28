@@ -92,11 +92,11 @@ function CircleBadge({
           d={`M ${cx - arcR},${cy} A ${arcR},${arcR} 0 0,1 ${cx + arcR},${cy}`}
           fill="none"
         />
-        {/* Bottom arc — RIGHT→LEFT through BOTTOM (sweep=1, clockwise Y-down)        */}
-        {/* Text must be reversed so individual glyphs face outward and read correctly */}
+        {/* Bottom arc — LEFT→RIGHT through BOTTOM (sweep=0, counterclockwise Y-down)  */}
+        {/* side="right" on the textPath flips glyphs to face OUTWARD at the bottom   */}
         <path
           id={botId}
-          d={`M ${cx + arcR},${cy} A ${arcR},${arcR} 0 0,1 ${cx - arcR},${cy}`}
+          d={`M ${cx - arcR},${cy} A ${arcR},${arcR} 0 0,0 ${cx + arcR},${cy}`}
           fill="none"
         />
       </defs>
@@ -131,8 +131,8 @@ function CircleBadge({
           letterSpacing="1.5"
           textAnchor="middle"
         >
-          <textPath href={`#${botId}`} startOffset="50%">
-            {bottomText.toUpperCase().split('').reverse().join('')}
+          <textPath href={`#${botId}`} startOffset="50%" side="right">
+            {bottomText.toUpperCase()}
           </textPath>
         </text>
       )}
