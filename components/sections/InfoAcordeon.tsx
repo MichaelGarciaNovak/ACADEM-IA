@@ -25,7 +25,7 @@ export default function InfoAcordeon({
   textColor = '#171a21',
   accentColor = '#ef476f',
 }: Props) {
-  const [openIndex, setOpenIndex] = useState<number | null>(0)
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
     <section style={{ backgroundColor: bgColor }} className="py-24">
