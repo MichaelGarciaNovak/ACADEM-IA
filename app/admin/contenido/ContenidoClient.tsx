@@ -111,16 +111,19 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
   const [form, setForm] = useState(emptyForm())
   const [preview, setPreview] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [titlesText, setTitlesText] = useState('')
 
   function openNew() {
     setEditingId(null)
     setForm(emptyForm())
+    setTitlesText('')
     setPreview(false)
     setModalOpen(true)
   }
 
   function openEdit(s: Section) {
     setEditingId(s.id)
+    setTitlesText(s.title_variants ? JSON.parse(s.title_variants).join('\n') : '')
     setForm({
       type: s.type,
       title: s.title,
@@ -300,20 +303,20 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                 <div className="flex flex-col gap-1.5">
                   <span className="text-xs uppercase text-ink/40 font-mono">títulos animados</span>
                   <textarea
-                    value={form.title_variants
-                      ? JSON.parse(form.title_variants).join('\n')
-                      : ''}
+                    value={titlesText}
                     onChange={(e) => {
-                      const lines = e.target.value.split('\n').map(l => l.trim()).filter(Boolean)
+                      const raw = e.target.value
+                      setTitlesText(raw)
+                      const lines = raw.split('\n').map(l => l.trim()).filter(Boolean)
                       set('title_variants', lines.length >= 2 ? JSON.stringify(lines) : null)
                     }}
                     rows={4}
-                    placeholder={'Un título por línea (mínimo 2 para activar animación):\nAprende con IA\nAutomatiza tu trabajo\nCrece más rápido'}
+                    placeholder={'Un título por línea (mínimo 2 para activar):\nAprende con IA\nAutomatiza tu trabajo\nCrece más rápido'}
                     className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate resize-none placeholder:text-ink/20"
                   />
                   <p className="text-xs text-ink/25">
                     {form.title_variants
-                      ? `✓ ${JSON.parse(form.title_variants).length} títulos — se ignorará el campo "título" de arriba`
+                      ? `✓ ${JSON.parse(form.title_variants).length} títulos activos — se ignora el título estático`
                       : 'deja vacío para usar el título estático de arriba'}
                   </p>
                 </div>
