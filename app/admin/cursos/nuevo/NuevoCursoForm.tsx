@@ -48,19 +48,16 @@ export default function NuevoCursoForm({ categories }: { categories: Category[] 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <div className="flex flex-col gap-1">
           <label className="text-xs uppercase tracking-widest text-ink/40">categoría</label>
-          <div className="relative">
-            <select
-              value={categoryId}
-              onChange={e => setCategoryId(e.target.value)}
-              className="w-full appearance-none border border-ink/20 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/40 pr-8"
-            >
-              <option value="">— sin categoría —</option>
-              {categories.map(c => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-ink/30 text-xs">▼</span>
-          </div>
+          <select
+            value={categoryId}
+            onChange={e => setCategoryId(e.target.value)}
+            className="w-full border border-ink/20 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/40"
+          >
+            <option value="">— sin categoría —</option>
+            {categories.map(c => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
         </div>
 
         <div className="flex flex-col gap-1">
