@@ -132,9 +132,8 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
     const { error } = await supabase.storage.from('assets').upload(path, file, { upsert: true })
     if (error) { alert('Error al subir imagen: ' + error.message); setUploadingIcon(null); return }
     const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path)
-    const next = itemsList.map((x, j) => j === itemIndex ? { ...x, icon: publicUrl } : x)
-    setItemsList(next)
-    set('items', JSON.stringify(next))
+    // Use functional update to always operate on latest state (avoids stale closure)
+    setItemsList(prev => prev.map((x, j) => j === itemIndex ? { ...x, icon: publicUrl } : x))
     setUploadingIcon(null)
   }
 
@@ -185,15 +184,17 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
       items: itemsList.length ? JSON.stringify(itemsList) : null,
     }
     if (editingId) {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('sections')
         .update(formToSave)
         .eq('id', editingId)
         .select()
         .single()
+      if (error) { alert('Error al guardar: ' + error.message); setSaving(false); return }
       if (data) setSections((prev) => prev.map((s) => (s.id === editingId ? data : s)))
     } else {
-      const { data } = await supabase.from('sections').insert(formToSave).select().single()
+      const { data, error } = await supabase.from('sections').insert(formToSave).select().single()
+      if (error) { alert('Error al guardar: ' + error.message); setSaving(false); return }
       if (data) setSections((prev) => [...prev, data])
     }
     setSaving(false)
