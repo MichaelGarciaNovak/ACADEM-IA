@@ -220,62 +220,83 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
 
       <div className="flex flex-1 overflow-hidden">
         {/* ── SIDEBAR ─────────────────────────────────── */}
-        <aside className="w-64 border-r border-ink/10 flex flex-col overflow-y-auto flex-shrink-0">
+        <aside className="w-72 border-r border-ink/10 flex flex-col overflow-y-auto flex-shrink-0">
           {/* Progress header */}
           <div className="px-5 py-4 border-b border-ink/10">
-            <p className="text-xs uppercase tracking-widest text-ink/30 mb-2">progreso del curso</p>
-            <div className="flex items-center gap-2">
-              <div className="flex-1 h-px bg-ink/10 relative">
-                <div
-                  className="absolute left-0 top-0 h-full bg-pink transition-all duration-500"
-                  style={{ width: `${progressPct}%` }}
-                />
-              </div>
-              <span className="text-xs text-ink/40">{progressPct}%</span>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs uppercase tracking-widest text-ink/30">progreso</p>
+              <span className="text-xs text-ink/40">{completedCount}/{totalLessons} lecciones</span>
+            </div>
+            <div className="h-1 bg-ink/8 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-pink transition-all duration-500 rounded-full"
+                style={{ width: `${progressPct}%` }}
+              />
             </div>
           </div>
 
           {/* Chapters + Lessons */}
-          <nav className="flex-1 py-2">
+          <nav className="flex-1 py-1">
             {chapters.map((chapter, ci) => {
-              const pct = chapterProgress(chapter)
+              const lessons = chapter.course_lessons ?? []
+              const doneCount = lessons.filter(l => completed.has(l.id)).length
               const isCollapsed = collapsedChapters.has(chapter.id)
               return (
-                <div key={chapter.id}>
+                <div key={chapter.id} className="border-b border-ink/5">
                   {/* Chapter row */}
                   <button
                     onClick={() => toggleChapter(chapter.id)}
-                    className="w-full flex items-start gap-2 px-5 py-3 hover:bg-ink/[0.02] transition-colors text-left"
+                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-ink/[0.02] transition-colors text-left"
                   >
-                    <span className="text-ink/20 mt-0.5 text-xs">{isCollapsed ? '▶' : '▼'}</span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs uppercase tracking-widest text-ink/60 leading-tight">
-                        {String(ci + 1).padStart(2, '0')}. {chapter.title}
+                    <div className="flex-1 min-w-0 pr-3">
+                      <p className="text-xs font-medium text-ink/80 leading-snug uppercase tracking-wide">
+                        {chapter.title}
                       </p>
-                      <p className="text-xs text-ink/25 mt-1">{pct}%</p>
+                      <p className="text-xs text-ink/30 mt-0.5">
+                        {doneCount}/{lessons.length} · Cap. {ci + 1}
+                      </p>
                     </div>
+                    <span className="text-ink/25 text-xs flex-shrink-0">
+                      {isCollapsed ? '▼' : '▲'}
+                    </span>
                   </button>
 
                   {/* Lessons */}
-                  {!isCollapsed && (chapter.course_lessons ?? []).map((lesson, li) => {
+                  {!isCollapsed && lessons.map((lesson, li) => {
                     const isActive = activeLesson?.id === lesson.id
                     const isDone = completed.has(lesson.id)
                     return (
                       <button
                         key={lesson.id}
                         onClick={() => setActiveLesson(lesson)}
-                        className={`w-full flex items-start gap-2 pl-9 pr-4 py-2.5 text-left transition-colors border-l-2 ${
-                          isActive
-                            ? 'border-pink bg-pink/5'
-                            : 'border-transparent hover:bg-ink/[0.02]'
+                        className={`w-full flex items-center gap-3 px-5 py-3 text-left transition-colors ${
+                          isActive ? 'bg-pink/8' : 'hover:bg-ink/[0.02]'
                         }`}
                       >
-                        <span className={`text-xs mt-0.5 flex-shrink-0 ${isDone ? 'text-green-500' : 'text-ink/20'}`}>
-                          {isDone ? '✓' : '○'}
-                        </span>
-                        <span className={`text-xs leading-snug line-clamp-2 ${isActive ? 'text-ink' : 'text-ink/50'}`}>
-                          Lec. {li + 1}. {lesson.title}
-                        </span>
+                        {/* Status icon */}
+                        <div className={`flex-shrink-0 w-6 h-6 rounded-full border flex items-center justify-center transition-colors ${
+                          isDone
+                            ? 'border-pink bg-pink'
+                            : isActive
+                            ? 'border-pink'
+                            : 'border-ink/20'
+                        }`}>
+                          {isDone ? (
+                            <span className="text-white text-xs leading-none">✓</span>
+                          ) : (
+                            <span className={`text-xs leading-none ${isActive ? 'text-pink' : 'text-ink/20'}`}>▶</span>
+                          )}
+                        </div>
+
+                        {/* Text */}
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-xs leading-snug line-clamp-2 ${isActive ? 'text-ink font-medium' : isDone ? 'text-ink/50' : 'text-ink/60'}`}>
+                            {String(li + 1).padStart(2, '0')}. {lesson.title}
+                          </p>
+                          {isDone && (
+                            <p className="text-xs text-pink/60 mt-0.5">Completada</p>
+                          )}
+                        </div>
                       </button>
                     )
                   })}
