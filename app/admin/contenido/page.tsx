@@ -6,7 +6,7 @@ export default async function AdminContenidoPage() {
 
   const [{ data: sections }, { data: courses }] = await Promise.all([
     supabase.from('sections').select('*').order('sort_order', { ascending: true }),
-    supabase.from('courses').select('id, title, slug').order('title', { ascending: true }),
+    supabase.from('courses').select('id, title').order('title', { ascending: true }),
   ])
 
   return (

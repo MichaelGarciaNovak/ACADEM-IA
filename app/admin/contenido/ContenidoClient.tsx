@@ -117,7 +117,19 @@ function ColorPicker({
   )
 }
 
-type CourseOption = { id: string; title: string; slug: string }
+type CourseOption = { id: string; title: string }
+
+/** Derives a URL-safe slug from a course title */
+function titleToSlug(title: string) {
+  return title
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '') // remove accents
+    .replace(/[^a-z0-9\s-]/g, '')   // remove special chars
+    .trim()
+    .replace(/\s+/g, '-')            // spaces → hyphens
+    .replace(/-+/g, '-')             // collapse multiple hyphens
+}
 
 export default function ContenidoClient({
   initialSections,
@@ -131,8 +143,11 @@ export default function ContenidoClient({
 
   // Page selector: three modes instead of a mixed button-array + free-text
   const [pageMode, setPageMode] = useState<'home' | 'curso' | 'otro'>('home')
-  const [selectedCourseSlug, setSelectedCourseSlug] = useState(courses[0]?.slug ?? '')
+  const [selectedCourseId, setSelectedCourseId] = useState(courses[0]?.id ?? '')
   const [customPage, setCustomPage] = useState('')
+
+  const selectedCourse = courses.find(c => c.id === selectedCourseId)
+  const selectedCourseSlug = selectedCourse ? titleToSlug(selectedCourse.title) : ''
 
   const currentPage =
     pageMode === 'home'  ? '/'
@@ -344,12 +359,12 @@ export default function ContenidoClient({
                 <p className="text-xs text-ink/30 font-mono">no hay cursos — créalos primero en /admin/cursos</p>
               ) : (
                 <select
-                  value={selectedCourseSlug}
-                  onChange={e => setSelectedCourseSlug(e.target.value)}
+                  value={selectedCourseId}
+                  onChange={e => setSelectedCourseId(e.target.value)}
                   className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-white text-ink focus:outline-none focus:border-slate w-72"
                 >
                   {courses.map(c => (
-                    <option key={c.id} value={c.slug}>{c.title}</option>
+                    <option key={c.id} value={c.id}>{c.title}</option>
                   ))}
                 </select>
               )}
