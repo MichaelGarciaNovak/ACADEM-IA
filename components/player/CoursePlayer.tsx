@@ -303,7 +303,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
               )}
 
               {/* Content */}
-              <div className="max-w-3xl mx-auto px-8 py-10">
+              <div className="px-8 py-10">
                 {/* Title */}
                 <h1 className="text-lg uppercase font-normal text-ink mb-4 tracking-tight">
                   lec. {allLessons.findIndex(l => l.id === activeLesson.id) + 1}: {activeLesson.title}
