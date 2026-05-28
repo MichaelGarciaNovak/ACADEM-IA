@@ -117,10 +117,28 @@ function ColorPicker({
   )
 }
 
-export default function ContenidoClient({ initialSections }: { initialSections: Section[] }) {
+type CourseOption = { id: string; title: string; slug: string }
+
+export default function ContenidoClient({
+  initialSections,
+  courses,
+}: {
+  initialSections: Section[]
+  courses: CourseOption[]
+}) {
   const supabase = createClient()
   const [sections, setSections] = useState<Section[]>(initialSections)
-  const [currentPage, setCurrentPage] = useState('/')
+
+  // Page selector: three modes instead of a mixed button-array + free-text
+  const [pageMode, setPageMode] = useState<'home' | 'curso' | 'otro'>('home')
+  const [selectedCourseSlug, setSelectedCourseSlug] = useState(courses[0]?.slug ?? '')
+  const [customPage, setCustomPage] = useState('')
+
+  const currentPage =
+    pageMode === 'home'  ? '/'
+    : pageMode === 'curso' ? (selectedCourseSlug ? `/cursos/${selectedCourseSlug}` : '')
+    : customPage
+
   const [modalOpen, setModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState(emptyForm())
@@ -279,8 +297,6 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
     setSections((prev) => prev.map((x) => (x.id === s.id ? { ...x, published: next } : x)))
   }
 
-  // Collect known pages from existing sections for quick switching
-  const knownPages = Array.from(new Set(sections.map(s => s.page ?? '/'))).sort()
   const filteredSections = sections.filter(s => (s.page ?? '/') === currentPage)
 
   return (
@@ -299,32 +315,64 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
         {/* ── Page selector ── */}
         <div className="mb-6 p-4 border border-ink/10 bg-ink/[0.02] flex flex-col gap-3">
           <span className="text-xs uppercase text-ink/40 font-mono">página activa</span>
-          <div className="flex gap-2 flex-wrap items-center">
-            {knownPages.map(page => (
+
+          {/* Mode tabs */}
+          <div className="flex gap-0 border border-ink/15 w-fit">
+            {(['home', 'curso', 'otro'] as const).map((mode) => (
               <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                className="px-3 py-1 text-xs font-mono border transition-colors"
+                key={mode}
+                onClick={() => setPageMode(mode)}
+                className="px-4 py-1.5 text-xs font-mono uppercase transition-colors"
                 style={{
-                  borderColor: currentPage === page ? '#735cdd' : 'rgba(23,26,33,0.15)',
-                  color: currentPage === page ? '#735cdd' : 'rgba(23,26,33,0.4)',
-                  backgroundColor: currentPage === page ? 'rgba(115,92,221,0.06)' : 'transparent',
+                  backgroundColor: pageMode === mode ? '#735cdd' : 'transparent',
+                  color: pageMode === mode ? '#fff' : 'rgba(23,26,33,0.4)',
                 }}
               >
-                {page === '/' ? '/ (home)' : page}
+                {mode}
               </button>
             ))}
-            <input
-              type="text"
-              value={currentPage}
-              onChange={e => setCurrentPage(e.target.value)}
-              placeholder="/cursos/mi-curso"
-              className="border border-ink/15 px-2 py-1 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-52"
-            />
           </div>
-          <p className="text-xs text-ink/25">
-            escribe o selecciona una página — las secciones nuevas se asignarán a esta ruta
-          </p>
+
+          {/* Mode-specific input */}
+          {pageMode === 'home' && (
+            <p className="text-xs font-mono text-ink/50">página principal <span className="text-slate">/ (home)</span></p>
+          )}
+
+          {pageMode === 'curso' && (
+            <div className="flex flex-col gap-1.5">
+              {courses.length === 0 ? (
+                <p className="text-xs text-ink/30 font-mono">no hay cursos — créalos primero en /admin/cursos</p>
+              ) : (
+                <select
+                  value={selectedCourseSlug}
+                  onChange={e => setSelectedCourseSlug(e.target.value)}
+                  className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-white text-ink focus:outline-none focus:border-slate w-72"
+                >
+                  {courses.map(c => (
+                    <option key={c.id} value={c.slug}>{c.title}</option>
+                  ))}
+                </select>
+              )}
+              {selectedCourseSlug && (
+                <p className="text-xs font-mono text-ink/40">
+                  ruta: <span className="text-slate">/cursos/{selectedCourseSlug}</span>
+                </p>
+              )}
+            </div>
+          )}
+
+          {pageMode === 'otro' && (
+            <div className="flex flex-col gap-1.5">
+              <input
+                type="text"
+                value={customPage}
+                onChange={e => setCustomPage(e.target.value)}
+                placeholder="/otra-pagina"
+                className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-64"
+              />
+              <p className="text-xs text-ink/25">escribe la ruta completa, ej. /sobre-nosotros</p>
+            </div>
+          )}
         </div>
 
         <div className="border border-ink/10">
