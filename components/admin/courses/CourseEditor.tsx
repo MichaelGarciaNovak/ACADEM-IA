@@ -345,7 +345,7 @@ function ChapterItem({
           <div className="px-4 py-3">
             <button
               onClick={handleAddLesson}
-              className="text-xs text-pink hover:text-pink/70 transition-colors uppercase tracking-widest"
+              className="text-xs text-slate hover:text-slate/70 transition-colors uppercase tracking-widest"
             >
               + agregar lección
             </button>
@@ -645,7 +645,7 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
 
             <button
               onClick={handleAddChapter}
-              className="w-full border border-dashed border-ink/20 py-3 text-xs uppercase tracking-widest text-ink/40 hover:border-pink hover:text-pink transition-colors mt-2"
+              className="w-full border border-dashed border-ink/20 py-3 text-xs uppercase tracking-widest text-ink/40 hover:border-slate hover:text-slate transition-colors mt-2"
             >
               + agregar capítulo
             </button>
@@ -691,7 +691,7 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
               className={`w-full text-xs uppercase tracking-widest py-2 border transition-colors ${
                 form.published
                   ? 'border-green-600 text-green-700 bg-green-50 hover:bg-green-100'
-                  : 'border-ink/20 text-ink/50 hover:border-pink hover:text-pink'
+                  : 'border-ink/20 text-ink/50 hover:border-slate hover:text-slate'
               }`}
             >
               {form.published ? '● publicado' : '○ publicar curso'}
