@@ -25,6 +25,7 @@ interface Props {
   bgColor?: string
   textColor?: string
   accentColor?: string
+  cardBgColor?: string
 }
 
 function ClockIcon() {
@@ -40,10 +41,12 @@ function Card({
   card,
   accentColor,
   textColor,
+  cardBgColor,
 }: {
   card: CarouselCard
   accentColor: string
   textColor: string
+  cardBgColor: string
 }) {
   return (
     <a
@@ -51,6 +54,7 @@ function Card({
       className="group flex-shrink-0 snap-start flex flex-col"
       style={{
         width: 'clamp(240px, 24vw, 295px)',
+        backgroundColor: cardBgColor,
         transition: `transform ${Math.round(φ * 276)}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
       }}
       onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.018)' }}
@@ -194,6 +198,7 @@ export default function CarouselSection({
   bgColor = '#ffffff',
   textColor = '#171a21',
   accentColor = '#ef476f',
+  cardBgColor = '#ffffff',
 }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -298,7 +303,7 @@ export default function CarouselSection({
         } as React.CSSProperties}
       >
         {cards.map((card, i) => (
-          <Card key={i} card={card} accentColor={accentColor} textColor={textColor} />
+          <Card key={i} card={card} accentColor={accentColor} textColor={textColor} cardBgColor={cardBgColor} />
         ))}
         <div className="flex-shrink-0 w-px" aria-hidden />
       </div>

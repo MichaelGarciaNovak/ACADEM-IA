@@ -169,6 +169,7 @@ export default async function Home() {
               bgColor={s.bg_color}
               textColor={s.text_color ?? '#171a21'}
               accentColor={s.accent_color}
+              cardBgColor={s.content ?? '#ffffff'}
             />
           )
         }

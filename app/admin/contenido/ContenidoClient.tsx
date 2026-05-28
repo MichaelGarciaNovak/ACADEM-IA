@@ -351,6 +351,7 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                       bgColor={form.bg_color}
                       textColor={form.text_color}
                       accentColor={form.accent_color}
+                      cardBgColor={form.content ?? '#ffffff'}
                     />
                   )}
                 </div>
@@ -888,9 +889,15 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
 
                 {/* Colores */}
                 <div className="border-t border-ink/8 pt-5 flex flex-col gap-4">
-                  <ColorPicker label="color de fondo" value={form.bg_color} onChange={(v) => set('bg_color', v)} presets={COLOR_PRESETS} />
+                  <ColorPicker label="color de fondo de sección" value={form.bg_color} onChange={(v) => set('bg_color', v)} presets={COLOR_PRESETS} />
                   <ColorPicker label="color del texto" value={form.text_color} onChange={(v) => set('text_color', v)} presets={TEXT_COLOR_PRESETS} />
                   <ColorPicker label="color de acento" value={form.accent_color} onChange={(v) => set('accent_color', v)} presets={ACCENT_PRESETS} />
+                  <ColorPicker
+                    label="fondo del card"
+                    value={form.content ?? '#ffffff'}
+                    onChange={(v) => set('content', v)}
+                    presets={COLOR_PRESETS}
+                  />
                 </div>
 
                 {/* Publicar + orden */}
