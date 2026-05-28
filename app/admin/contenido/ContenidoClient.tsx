@@ -179,16 +179,21 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
 
   async function save() {
     setSaving(true)
+    // Always derive items from itemsList state to avoid stale closure issues
+    const formToSave = {
+      ...form,
+      items: itemsList.length ? JSON.stringify(itemsList) : null,
+    }
     if (editingId) {
       const { data } = await supabase
         .from('sections')
-        .update(form)
+        .update(formToSave)
         .eq('id', editingId)
         .select()
         .single()
       if (data) setSections((prev) => prev.map((s) => (s.id === editingId ? data : s)))
     } else {
-      const { data } = await supabase.from('sections').insert(form).select().single()
+      const { data } = await supabase.from('sections').insert(formToSave).select().single()
       if (data) setSections((prev) => [...prev, data])
     }
     setSaving(false)
