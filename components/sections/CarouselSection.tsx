@@ -137,17 +137,16 @@ function CircleBadge({
         </text>
       )}
 
-      {/* Center icon — emoji or symbol */}
+      {/* Center icon — image URL */}
       {icon && (
-        <text
-          x={cx}
-          y={cy}
-          textAnchor="middle"
-          dominantBaseline="central"
-          fontSize="24"
-        >
-          {icon}
-        </text>
+        <image
+          href={icon}
+          x={cx - 18}
+          y={cy - 18}
+          width="36"
+          height="36"
+          preserveAspectRatio="xMidYMid meet"
+        />
       )}
     </svg>
   )

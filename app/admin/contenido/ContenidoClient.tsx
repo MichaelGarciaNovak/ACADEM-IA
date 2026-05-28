@@ -130,6 +130,7 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
   const [uploadingCardImage, setUploadingCardImage] = useState<number | null>(null)
   const [expandedCard, setExpandedCard] = useState<number | null>(null)
   const [cardColors, setCardColors] = useState({ bg: '#ffffff', text: '#171a21', accent: '#ef476f' })
+  const [uploadingBadgeIcon, setUploadingBadgeIcon] = useState<number | null>(null)
 
   async function uploadCardImage(file: File, cardIndex: number) {
     setUploadingCardImage(cardIndex)
@@ -140,6 +141,17 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
     const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path)
     setCardsList(prev => prev.map((x, j) => j === cardIndex ? { ...x, image: publicUrl } : x))
     setUploadingCardImage(null)
+  }
+
+  async function uploadBadgeIcon(file: File, cardIndex: number) {
+    setUploadingBadgeIcon(cardIndex)
+    const ext = file.name.split('.').pop() ?? 'png'
+    const path = `badges/${Date.now()}.${ext}`
+    const { error } = await supabase.storage.from('assets').upload(path, file, { upsert: true })
+    if (error) { alert('Error al subir imagen: ' + error.message); setUploadingBadgeIcon(null); return }
+    const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path)
+    setCardsList(prev => prev.map((x, j) => j === cardIndex ? { ...x, badgeIcon: publicUrl } : x))
+    setUploadingBadgeIcon(null)
   }
 
   async function uploadIcon(file: File, itemIndex: number) {
@@ -845,21 +857,13 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                             </div>
                           </div>
 
-                          {/* Badge + Category */}
-                          <div className="grid grid-cols-2 gap-2">
-                            <label className="flex flex-col gap-1">
-                              <span className="text-[10px] uppercase text-ink/30 font-mono">badge</span>
-                              <input value={card.badge ?? ''} placeholder="nuevo"
-                                onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badge: e.target.value||undefined} : x))}
-                                className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
-                            </label>
-                            <label className="flex flex-col gap-1">
-                              <span className="text-[10px] uppercase text-ink/30 font-mono">categoría</span>
-                              <input value={card.category ?? ''} placeholder="desarrollo"
-                                onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, category: e.target.value||undefined} : x))}
-                                className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
-                            </label>
-                          </div>
+                          {/* Category */}
+                          <label className="flex flex-col gap-1">
+                            <span className="text-[10px] uppercase text-ink/30 font-mono">categoría</span>
+                            <input value={card.category ?? ''} placeholder="desarrollo"
+                              onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, category: e.target.value||undefined} : x))}
+                              className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                          </label>
 
                           {/* Title */}
                           <label className="flex flex-col gap-1">
@@ -924,12 +928,38 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                                   className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
                               </label>
                             </div>
-                            <label className="flex flex-col gap-1">
-                              <span className="text-[10px] uppercase text-ink/25 font-mono">ícono (emoji)</span>
-                              <input value={card.badgeIcon ?? ''} placeholder="🎨"
-                                onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeIcon: e.target.value||undefined} : x))}
-                                className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-24" />
-                            </label>
+                            <div className="flex flex-col gap-1">
+                              <span className="text-[10px] uppercase text-ink/25 font-mono">ícono (imagen)</span>
+                              <div className="flex items-start gap-3">
+                                <label className="cursor-pointer flex-shrink-0">
+                                  {card.badgeIcon
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    ? <img src={card.badgeIcon} alt="" className="w-10 h-10 object-contain border border-ink/10 bg-ink/5" />
+                                    : <div className="w-10 h-10 border border-dashed border-ink/20 flex items-center justify-center bg-ink/[0.02]">
+                                        <span className="text-ink/25 text-[10px]">+</span>
+                                      </div>
+                                  }
+                                  <input type="file" accept="image/*" className="hidden"
+                                    disabled={uploadingBadgeIcon !== null}
+                                    onChange={(e) => {
+                                      const file = e.target.files?.[0]
+                                      if (file) uploadBadgeIcon(file, i)
+                                      e.target.value = ''
+                                    }} />
+                                </label>
+                                <div className="flex flex-col gap-1 flex-1">
+                                  <input
+                                    value={card.badgeIcon ?? ''}
+                                    onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeIcon: e.target.value||undefined} : x))}
+                                    placeholder="https://... o sube una imagen"
+                                    className="border border-ink/15 px-2 py-1.5 text-[10px] font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-full"
+                                  />
+                                  <span className="text-[10px] font-mono text-ink/25">
+                                    {uploadingBadgeIcon === i ? 'subiendo...' : 'pega url o haz clic en la miniatura'}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
                             <div className="grid grid-cols-2 gap-3">
                               <div className="flex flex-col gap-1">
                                 <span className="text-[10px] uppercase text-ink/25 font-mono">fondo badge</span>
