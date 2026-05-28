@@ -37,7 +37,7 @@ export default function InfoAcordeon({
               className="font-mono font-normal uppercase leading-tight"
               style={{
                 color: textColor,
-                fontSize: 'clamp(1.8rem, 3vw, 2.8rem)',
+                fontSize: 'clamp(1.875rem, 3vw, 2.25rem)',
                 letterSpacing: '-0.02em',
               }}
             >
