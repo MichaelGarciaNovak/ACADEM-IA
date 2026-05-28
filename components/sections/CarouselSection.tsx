@@ -45,28 +45,21 @@ function Card({
   accentColor: string
   textColor: string
 }) {
-  // Square card → image fills top 1/φ (61.8%) → aspect-ratio of image = φ:1 ✓
-  // Content fills bottom 1/φ² (38.2%) → aspect-ratio φ²:1 (secondary golden proportion) ✓
-  const imagePercent = (1 / φ) * 100        // 61.8%
-  const contentPercent = (1 - 1 / φ) * 100  // 38.2%
-
   return (
     <a
       href={card.ctaLink || '#'}
       className="group flex-shrink-0 snap-start flex flex-col"
       style={{
         width: 'clamp(240px, 24vw, 295px)',
-        aspectRatio: '1 / 1',
-        overflow: 'hidden',
         transition: `transform ${Math.round(φ * 276)}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
       }}
       onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.018)' }}
       onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
     >
-      {/* ── IMAGE — 61.8% height → φ:1 golden landscape ── */}
+      {/* ── IMAGE — aspect-ratio φ:1 (golden landscape) ── */}
       <div
         className="relative overflow-hidden flex-shrink-0"
-        style={{ height: `${imagePercent}%` }}
+        style={{ aspectRatio: `${φ} / 1` }}
       >
         {card.image ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -96,25 +89,20 @@ function Card({
         )}
       </div>
 
-      {/* ── CONTENT — 38.2% height → φ²:1 proportion ── */}
-      {/* Fibonacci padding: 13px top, 21px sides, 8px bottom */}
+      {/* ── CONTENT — height = imageHeight/φ (golden proportion of image) ── */}
+      {/* Fibonacci padding: 13px top, 21px sides, 13px bottom */}
       <div
-        className="flex flex-col overflow-hidden"
-        style={{
-          height: `${contentPercent}%`,
-          padding: '13px 21px 8px',
-          color: textColor,
-          backgroundColor: textColor === '#171a21' || textColor?.startsWith('#1') ? '#ffffff' : textColor + '05',
-        }}
+        className="flex flex-col"
+        style={{ padding: '13px 21px 13px', color: textColor }}
       >
         {card.category && (
           <p
-            className="font-mono uppercase flex-shrink-0"
+            className="font-mono uppercase"
             style={{
               fontSize: '9px',
               letterSpacing: '0.12em',
               color: accentColor,
-              marginBottom: '5px',   // Fibonacci F5
+              marginBottom: '8px',
             }}
           >
             {card.category}
@@ -122,12 +110,12 @@ function Card({
         )}
 
         <h3
-          className="font-mono font-normal uppercase leading-tight flex-shrink-0"
+          className="font-mono font-normal uppercase leading-tight"
           style={{
-            fontSize: `${(9 * φ).toFixed(1)}px`,   // 9 × φ = 14.6px
+            fontSize: `${(9 * φ).toFixed(1)}px`,
             letterSpacing: '-0.02em',
             color: textColor,
-            marginBottom: '5px',   // Fibonacci F5
+            marginBottom: '5px',
           }}
         >
           {card.title}
@@ -135,11 +123,11 @@ function Card({
 
         {card.subtitle && (
           <p
-            className="font-mono flex-shrink-0 leading-snug"
+            className="font-mono leading-snug"
             style={{
               fontSize: '9px',
               color: textColor + '60',
-              marginBottom: '5px',
+              marginBottom: '8px',
             }}
           >
             {card.subtitle}
@@ -148,26 +136,28 @@ function Card({
 
         {card.description && (
           <p
-            className="leading-relaxed flex-1 overflow-hidden"
+            className="leading-relaxed"
             style={{
               fontSize: '9px',
-              color: textColor + '48',
-              marginBottom: '8px',    // Fibonacci F6
+              color: textColor + '50',
+              marginBottom: '13px',
               display: '-webkit-box',
-              WebkitLineClamp: 2,
+              WebkitLineClamp: 3,
               WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
             } as React.CSSProperties}
           >
             {card.description}
           </p>
         )}
 
-        {/* Bottom row — always at bottom via margin-top auto */}
+        {/* Bottom row */}
         <div
-          className="flex items-center justify-between mt-auto flex-shrink-0"
+          className="flex items-center justify-between"
           style={{
-            paddingTop: '8px',        // Fibonacci F6
+            paddingTop: '8px',
             borderTop: `1px solid ${textColor}10`,
+            marginTop: card.description ? '0' : 'auto',
           }}
         >
           {card.duration ? (
