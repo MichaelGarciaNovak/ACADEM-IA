@@ -33,7 +33,7 @@ export default function HeroSection({
   return (
     <section
       className="relative overflow-hidden"
-      style={{ backgroundColor: bgColor, minHeight: '92vh' }}
+      style={{ backgroundColor: bgColor, minHeight: '50vh' }}
     >
       {/* Background image */}
       {bgImageUrl && (
@@ -58,9 +58,9 @@ export default function HeroSection({
       {/* Content */}
       <div
         className="relative z-10 max-w-6xl mx-auto px-6 flex flex-col justify-center"
-        style={{ minHeight: '92vh' }}
+        style={{ minHeight: '50vh' }}
       >
-        <div className="max-w-3xl pt-32 pb-24">
+        <div className="max-w-3xl pt-24 pb-10">
           {label && (
             <p
               className="text-xs uppercase tracking-widest font-mono font-normal mb-6"

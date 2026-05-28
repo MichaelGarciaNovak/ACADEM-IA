@@ -87,6 +87,7 @@ export default function AnimatedTitle({
           height: '0.85em',
           backgroundColor: accentColor,
           marginLeft: '4px',
+          marginRight: '-7px', // absorb own width so cursor never forces a new line
           verticalAlign: 'middle',
           animation: 'blink 1s step-end infinite',
         }}
