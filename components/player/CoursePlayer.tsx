@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import Logo from '@/components/Logo'
+import Logo from '@/components/Logo' // used in footer
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -211,15 +211,11 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
   return (
     <div className="min-h-screen bg-white font-mono flex flex-col">
       {/* Top nav */}
-      <header className="border-b border-ink/10 px-6 py-3 flex items-center gap-4">
-        <a href="/dashboard/cursos" className="text-xs text-ink/30 hover:text-ink transition-colors uppercase tracking-widest">
+      <header className="border-b border-ink/10 px-6 py-4 flex items-center gap-4">
+        <a href="/dashboard/cursos" className="text-xs text-ink/30 hover:text-ink transition-colors uppercase tracking-widest flex-shrink-0">
           ←
         </a>
-        <div className="flex items-center gap-3">
-          <Logo variant="light" size="sm" accentColor="#ef476f" />
-          <span className="text-ink/20">·</span>
-          <p className="text-xs uppercase tracking-widest text-ink/50">{course.title}</p>
-        </div>
+        <h1 className="text-sm uppercase tracking-widest text-ink font-normal truncate">{course.title}</h1>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
