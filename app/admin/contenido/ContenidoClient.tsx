@@ -208,7 +208,7 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                   <span className="w-4 h-4 border border-ink/10" style={{ backgroundColor: s.bg_color }} title="fondo" />
                   <span className="w-4 h-4 border border-ink/10" style={{ backgroundColor: s.text_color ?? '#dddfdf' }} title="texto" />
                   <span className="w-4 h-4 border border-ink/10" style={{ backgroundColor: s.accent_color }} title="acento" />
-                  <span className="w-4 h-4 border border-ink/10" style={{ backgroundColor: s.texture_color ?? '#dddfdf' }} title="textura" />
+                  <span className="w-4 h-4 border border-ink/10" style={{ backgroundColor: s.bg_image_url ? '#888' : s.bg_color }} title="imagen" />
                 </div>
                 <button
                   onClick={() => togglePublished(s)}
