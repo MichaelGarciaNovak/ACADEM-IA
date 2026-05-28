@@ -781,28 +781,38 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                       {/* Card fields */}
                       {expandedCard === i && (
                         <div className="border-t border-ink/8 p-3 flex flex-col gap-2.5">
-                          {/* Image upload */}
+                          {/* Image upload + URL */}
                           <div className="flex flex-col gap-1.5">
                             <span className="text-[10px] uppercase text-ink/30 font-mono">imagen principal</span>
-                            <label className="flex items-center gap-2 cursor-pointer w-fit">
-                              {card.image
-                                // eslint-disable-next-line @next/next/no-img-element
-                                ? <img src={card.image} alt="" className="w-16 h-20 object-cover border border-ink/10" />
-                                : <div className="w-16 h-20 border border-dashed border-ink/20 flex items-center justify-center">
-                                    <span className="text-ink/25 text-[10px]">+</span>
-                                  </div>
-                              }
-                              <span className="text-xs font-mono text-ink/40 hover:text-slate transition-colors">
-                                {uploadingCardImage === i ? 'subiendo...' : card.image ? 'cambiar' : 'subir imagen'}
-                              </span>
-                              <input type="file" accept="image/*" className="hidden"
-                                disabled={uploadingCardImage !== null}
-                                onChange={(e) => {
-                                  const file = e.target.files?.[0]
-                                  if (file) uploadCardImage(file, i)
-                                  e.target.value = ''
-                                }} />
-                            </label>
+                            <div className="flex items-start gap-3">
+                              <label className="cursor-pointer flex-shrink-0">
+                                {card.image
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  ? <img src={card.image} alt="" className="w-14 h-[4.5rem] object-cover border border-ink/10" />
+                                  : <div className="w-14 h-[4.5rem] border border-dashed border-ink/20 flex items-center justify-center">
+                                      <span className="text-ink/25 text-[10px]">+</span>
+                                    </div>
+                                }
+                                <input type="file" accept="image/*" className="hidden"
+                                  disabled={uploadingCardImage !== null}
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0]
+                                    if (file) uploadCardImage(file, i)
+                                    e.target.value = ''
+                                  }} />
+                              </label>
+                              <div className="flex flex-col gap-1.5 flex-1">
+                                <input
+                                  value={card.image ?? ''}
+                                  onChange={(e) => setCardsList(prev => prev.map((x, j) => j === i ? { ...x, image: e.target.value || undefined } : x))}
+                                  placeholder="https://... o sube una imagen"
+                                  className="border border-ink/15 px-2 py-1.5 text-[10px] font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-full"
+                                />
+                                <span className="text-[10px] font-mono text-ink/25">
+                                  {uploadingCardImage === i ? 'subiendo...' : 'pega url o haz clic en la miniatura para subir'}
+                                </span>
+                              </div>
+                            </div>
                           </div>
 
                           {/* Badge + Category */}
