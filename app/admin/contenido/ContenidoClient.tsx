@@ -15,20 +15,11 @@ type Section = {
   bg_color: string
   accent_color: string
   text_color: string
-  texture_color: string
-  texture_symbol: string
-  texture_opacity: number
+  bg_image_url: string | null
+  bg_image_overlay: number
   published: boolean
   sort_order: number
 }
-
-const TEXTURE_OPTIONS = [
-  { label: 'ΛCΛDEM*IΛ', value: 'ΛCΛDEM*IΛ' },
-  { label: '◯ cursos', value: '◯' },
-  { label: '▦ features', value: '▦' },
-  { label: '* CTA', value: '*' },
-  { label: '◇ pagos', value: '◇' },
-]
 
 const COLOR_PRESETS = [
   { label: 'ink', value: '#171a21' },
@@ -65,9 +56,8 @@ const emptyForm = (): Omit<Section, 'id'> => ({
   bg_color: '#171a21',
   accent_color: '#ef476f',
   text_color: '#dddfdf',
-  texture_color: '#dddfdf',
-  texture_symbol: 'ΛCΛDEM*IΛ',
-  texture_opacity: 5,
+  bg_image_url: null,
+  bg_image_overlay: 50,
   published: false,
   sort_order: 0,
 })
@@ -139,9 +129,8 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
       bg_color: s.bg_color,
       accent_color: s.accent_color,
       text_color: s.text_color ?? '#dddfdf',
-      texture_color: s.texture_color ?? '#dddfdf',
-      texture_symbol: s.texture_symbol,
-      texture_opacity: s.texture_opacity ?? 5,
+      bg_image_url: s.bg_image_url ?? null,
+      bg_image_overlay: s.bg_image_overlay ?? 50,
       published: s.published,
       sort_order: s.sort_order,
     })
@@ -273,9 +262,8 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                     bgColor={form.bg_color}
                     accentColor={form.accent_color}
                     textColor={form.text_color}
-                    textureColor={form.texture_color}
-                    textureSymbol={form.texture_symbol}
-                    textureOpacity={form.texture_opacity}
+                    bgImageUrl={form.bg_image_url || undefined}
+                    bgImageOverlay={form.bg_image_overlay}
                   />
                 </div>
               </div>
@@ -372,44 +360,47 @@ export default function ContenidoClient({ initialSections }: { initialSections: 
                 </div>
 
                 <div className="border-t border-ink/8 pt-5 flex flex-col gap-5">
-                  {/* Textura */}
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-xs uppercase text-ink/40 font-mono">textura de fondo</span>
-                    <div className="flex gap-2 flex-wrap">
-                      {TEXTURE_OPTIONS.map((t) => (
-                        <button
-                          key={t.value}
-                          onClick={() => set('texture_symbol', t.value)}
-                          className="px-3 py-1.5 text-xs font-mono uppercase border transition-colors"
-                          style={{
-                            borderColor: form.texture_symbol === t.value ? '#735cdd' : 'rgba(23,26,33,0.15)',
-                            color: form.texture_symbol === t.value ? '#735cdd' : 'rgba(23,26,33,0.4)',
-                          }}
-                        >
-                          {t.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                  {/* Imagen de fondo */}
+                  <label className="flex flex-col gap-1.5">
+                    <span className="text-xs uppercase text-ink/40 font-mono">imagen de fondo (url)</span>
+                    <input
+                      value={form.bg_image_url ?? ''}
+                      onChange={(e) => set('bg_image_url', e.target.value || null)}
+                      placeholder="https://images.unsplash.com/..."
+                      className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                    />
+                    <p className="text-xs text-ink/25">deja vacío para usar solo el color de fondo</p>
+                  </label>
 
-                  {/* Saturación / opacidad */}
+                  {/* Preview miniatura */}
+                  {form.bg_image_url && (
+                    <div className="relative h-20 overflow-hidden border border-ink/10">
+                      <div
+                        className="absolute inset-0"
+                        style={{ backgroundImage: `url(${form.bg_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+                      />
+                      <div className="absolute inset-0" style={{ backgroundColor: form.bg_color, opacity: (form.bg_image_overlay ?? 50) / 100 }} />
+                    </div>
+                  )}
+
+                  {/* Opacidad del overlay */}
                   <label className="flex flex-col gap-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs uppercase text-ink/40 font-mono">saturación de la textura</span>
-                      <span className="text-xs font-mono text-slate">{form.texture_opacity}%</span>
+                      <span className="text-xs uppercase text-ink/40 font-mono">oscuridad del overlay</span>
+                      <span className="text-xs font-mono text-slate">{form.bg_image_overlay}%</span>
                     </div>
                     <input
                       type="range"
-                      min={1}
-                      max={20}
-                      step={1}
-                      value={form.texture_opacity}
-                      onChange={(e) => set('texture_opacity', parseInt(e.target.value))}
+                      min={0}
+                      max={90}
+                      step={5}
+                      value={form.bg_image_overlay}
+                      onChange={(e) => set('bg_image_overlay', parseInt(e.target.value))}
                       className="w-full accent-slate"
                     />
                     <div className="flex justify-between text-xs font-mono text-ink/20">
-                      <span>tenue</span>
-                      <span>intenso</span>
+                      <span>imagen limpia</span>
+                      <span>muy oscuro</span>
                     </div>
                   </label>
                 </div>

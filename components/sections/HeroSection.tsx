@@ -7,23 +7,8 @@ interface HeroSectionProps {
   bgColor?: string
   accentColor?: string
   textColor?: string
-  textureSymbol?: string
-  textureOpacity?: number  // 1–20
-  textureColor?: string
-}
-
-const DEFAULT_TEXTURE = 'system.online // adaptive_learning.active // cognitive_layer.initialized // reduce_friction(); // increase_clarity(); // AI_WORKFLOW.CONNECTED // human_input + ai_reasoning // operating_at_machine_speed // creative_engine.active // visibility.optimized // future.loading // '
-
-function buildTextureRows(text: string, charsPerRow = 160, rowCount = 100): string[] {
-  // Repeat text until we have enough characters for all rows
-  let long = ''
-  while (long.length < charsPerRow * rowCount) long += text
-  // Slice into rows — each row continues where the previous left off
-  const rows: string[] = []
-  for (let i = 0; i < rowCount; i++) {
-    rows.push(long.slice(i * charsPerRow, (i + 1) * charsPerRow))
-  }
-  return rows
+  bgImageUrl?: string
+  bgImageOverlay?: number  // 0–100, opacity of dark overlay
 }
 
 export default function HeroSection({
@@ -35,44 +20,35 @@ export default function HeroSection({
   bgColor = '#171a21',
   accentColor = '#ef476f',
   textColor = '#dddfdf',
-  textureSymbol = DEFAULT_TEXTURE,
-  textureOpacity = 5,
-  textureColor = '#dddfdf',
+  bgImageUrl,
+  bgImageOverlay = 50,
 }: HeroSectionProps) {
-  const mutedColor = textColor + 'aa'  // ~67% opacity version of textColor
-
-  const rows = buildTextureRows(DEFAULT_TEXTURE)
-
-  const opacity = (textureOpacity ?? 5) / 100
+  const mutedColor = textColor + 'aa'
 
   return (
     <section
       className="relative overflow-hidden"
       style={{ backgroundColor: bgColor, minHeight: '92vh' }}
     >
-      {/* Texture — fills the full background */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 select-none pointer-events-none overflow-hidden"
-      >
-        {rows.map((line, i) => (
+      {/* Background image */}
+      {bgImageUrl && (
+        <>
           <div
-            key={i}
+            aria-hidden="true"
+            className="absolute inset-0"
             style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: '0.95rem',
-              fontWeight: 400,
-              lineHeight: 1.25,
-              letterSpacing: '0.01em',
-              whiteSpace: 'pre',
-              color: textureColor,
-              opacity: opacity,
+              backgroundImage: `url(${bgImageUrl})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
             }}
-          >
-            {line || ' '}
-          </div>
-        ))}
-      </div>
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{ backgroundColor: bgColor, opacity: (bgImageOverlay ?? 50) / 100 }}
+          />
+        </>
+      )}
 
       {/* Content */}
       <div

@@ -95,9 +95,8 @@ export default async function Home() {
           bgColor={heroData.bg_color}
           accentColor={heroData.accent_color}
           textColor={heroData.text_color ?? undefined}
-          textureColor={heroData.texture_color ?? undefined}
-          textureSymbol={heroData.texture_symbol}
-          textureOpacity={heroData.texture_opacity ?? undefined}
+          bgImageUrl={(heroData as any).bg_image_url ?? undefined}
+          bgImageOverlay={(heroData as any).bg_image_overlay ?? 50}
         />
       ) : (
         <section className="bg-ink text-alabaster min-h-screen flex flex-col justify-center px-6 pt-16">
