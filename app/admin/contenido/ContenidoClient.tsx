@@ -1175,6 +1175,17 @@ export default function ContenidoClient({
                 {form.type === 'objectives' && <>
 
                 <label className="flex flex-col gap-1.5">
+                  <span className="text-xs uppercase text-ink/40 font-mono">nombre interno</span>
+                  <input
+                    value={form.title}
+                    onChange={(e) => set('title', e.target.value)}
+                    placeholder="ej. objetivos del curso"
+                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                  />
+                  <p className="text-xs text-ink/25">solo visible en el admin</p>
+                </label>
+
+                <label className="flex flex-col gap-1.5">
                   <span className="text-xs uppercase text-ink/40 font-mono">etiqueta rosa (opcional)</span>
                   <input
                     value={form.label ?? ''}
