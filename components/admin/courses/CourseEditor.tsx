@@ -24,6 +24,7 @@ interface Lesson {
   pdf_url: string | null
   worksheet_url: string | null
   tool_url: string | null
+  duration_minutes: number | null
   sort_order: number
 }
 
@@ -204,6 +205,29 @@ function LessonItem({
                 placeholder="https://..."
               />
               <p className="text-xs text-ink/25 mt-1">si agregas una liga, la herramienta aparecerá con tarjeta de acceso en la lección del portal.</p>
+            </div>
+
+            {/* Duration */}
+            <div className="flex flex-col gap-1">
+              <label className="text-xs uppercase tracking-widest text-ink/30">duración (minutos)</label>
+              <input
+                type="number"
+                min={0}
+                value={data.duration_minutes ?? ''}
+                onChange={e => {
+                  const val = e.target.value === '' ? null : parseInt(e.target.value)
+                  const updated = { ...data, duration_minutes: val }
+                  setData(updated)
+                  onUpdate(lesson.id, { duration_minutes: val })
+                  if (saveTimeout.current) clearTimeout(saveTimeout.current)
+                  saveTimeout.current = setTimeout(async () => {
+                    await supabase.from('course_lessons').update({ duration_minutes: val }).eq('id', lesson.id)
+                  }, 800)
+                }}
+                className="border border-ink/15 bg-white text-ink font-mono text-xs px-3 py-2 outline-none focus:border-ink/30 w-28"
+                placeholder="ej. 25"
+              />
+              <p className="text-xs text-ink/25 mt-1">aparece en el temario de la landing del curso</p>
             </div>
           </div>
         </div>
