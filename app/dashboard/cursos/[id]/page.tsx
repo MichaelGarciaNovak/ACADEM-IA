@@ -27,7 +27,7 @@ export default async function CoursePlayerPage({ params }: { params: { id: strin
   const completedLessonIds = new Set((progress ?? []).map((p: any) => p.lesson_id))
 
   return (
-    <div className="-m-10">
+    <div className="-m-4 md:-m-10">
       <CoursePlayer
         course={course}
         chapters={chapters ?? []}
