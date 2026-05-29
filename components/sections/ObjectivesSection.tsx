@@ -21,18 +21,21 @@ export default function ObjectivesSection({
   return (
     <section style={{ backgroundColor: bgColor }} className="py-24">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start pt-4">
+
+        {/* Label above both columns */}
+        {label && (
+          <p
+            className="text-xs font-mono uppercase tracking-widest mb-8"
+            style={{ color: accentColor }}
+          >
+            {label}
+          </p>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
 
           {/* ── LEFT: propuesta de valor ─────────────────── */}
-          <div className="md:sticky md:top-24 pt-5">
-            {label && (
-              <p
-                className="text-xs font-mono uppercase tracking-widest mb-4"
-                style={{ color: accentColor }}
-              >
-                {label}
-              </p>
-            )}
+          <div className="md:sticky md:top-24">
             <p
               className="font-mono font-normal uppercase leading-tight"
               style={{
