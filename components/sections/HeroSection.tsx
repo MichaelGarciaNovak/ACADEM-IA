@@ -60,7 +60,7 @@ export default function HeroSection({
 
       {/* Content */}
       <div
-        className={`relative z-10 max-w-6xl mx-auto px-6 flex items-center ${hasPhone ? 'gap-12' : 'flex-col justify-center'}`}
+        className={`relative z-10 max-w-6xl mx-auto px-6 flex ${hasPhone ? 'items-center gap-12' : 'flex-col justify-center items-start'}`}
         style={{ minHeight: '50vh' }}
       >
         {/* ── Text side ── */}
