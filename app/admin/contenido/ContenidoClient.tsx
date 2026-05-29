@@ -158,6 +158,7 @@ export default function ContenidoClient({
   const [expandedCard, setExpandedCard] = useState<number | null>(null)
   const [cardColors, setCardColors] = useState({ bg: '#ffffff', text: '#171a21', accent: '#ef476f' })
   const [uploadingBadgeIcon, setUploadingBadgeIcon] = useState<number | null>(null)
+  const [uploadingPhoneImage, setUploadingPhoneImage] = useState(false)
 
   async function uploadCardImage(file: File, cardIndex: number) {
     setUploadingCardImage(cardIndex)
@@ -179,6 +180,22 @@ export default function ContenidoClient({
     const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path)
     setCardsList(prev => prev.map((x, j) => j === cardIndex ? { ...x, badgeIcon: publicUrl } : x))
     setUploadingBadgeIcon(null)
+  }
+
+  async function uploadPhoneImage(file: File) {
+    setUploadingPhoneImage(true)
+    const ext = file.name.split('.').pop() ?? 'jpg'
+    const path = `phone-mockups/${Date.now()}.${ext}`
+    const { error } = await supabase.storage.from('assets').upload(path, file, { upsert: true })
+    if (error) { alert('Error al subir imagen: ' + error.message); setUploadingPhoneImage(false); return }
+    const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path)
+    try {
+      const current = JSON.parse(form.content ?? '{}')
+      set('content', JSON.stringify({ ...current, phoneImageUrl: publicUrl }))
+    } catch {
+      set('content', JSON.stringify({ phoneImageUrl: publicUrl }))
+    }
+    setUploadingPhoneImage(false)
   }
 
   async function uploadIcon(file: File, itemIndex: number) {
@@ -667,24 +684,63 @@ export default function ContenidoClient({
                   </label>
 
                   {/* Teléfono */}
-                  <label className="flex flex-col gap-1.5">
-                    <span className="text-xs uppercase text-ink/40 font-mono">mockup de teléfono (url, opcional)</span>
-                    <input
-                      value={(() => { try { return JSON.parse(form.content ?? '{}').phoneImageUrl ?? '' } catch { return '' } })()}
-                      onChange={(e) => {
-                        const phoneImageUrl = e.target.value || undefined
-                        try {
-                          const current = JSON.parse(form.content ?? '{}')
-                          set('content', JSON.stringify({ ...current, phoneImageUrl }))
-                        } catch {
-                          set('content', JSON.stringify({ phoneImageUrl }))
-                        }
-                      }}
-                      placeholder="https://... captura de pantalla del player"
-                      className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
-                    />
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-xs uppercase text-ink/40 font-mono">mockup de teléfono (opcional)</span>
+                    <div className="flex gap-2 items-start">
+                      {/* Miniatura o placeholder */}
+                      {(() => { try { return JSON.parse(form.content ?? '{}').phoneImageUrl } catch { return null } })() ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={(() => { try { return JSON.parse(form.content ?? '{}').phoneImageUrl } catch { return '' } })()}
+                          alt="phone mockup preview"
+                          className="w-10 h-16 object-cover border border-ink/10 flex-shrink-0"
+                        />
+                      ) : (
+                        <div className="w-10 h-16 border border-dashed border-ink/20 flex items-center justify-center flex-shrink-0">
+                          <span className="text-ink/20 text-xs">📱</span>
+                        </div>
+                      )}
+                      <div className="flex flex-col gap-1.5 flex-1">
+                        {/* Botón subir */}
+                        <label className="cursor-pointer w-fit">
+                          <span className={`text-xs font-mono px-3 py-1.5 border transition-colors block ${
+                            uploadingPhoneImage
+                              ? 'border-ink/10 text-ink/25 cursor-not-allowed'
+                              : 'border-slate/40 text-slate hover:bg-slate/5'
+                          }`}>
+                            {uploadingPhoneImage ? 'subiendo...' : '↑ subir imagen'}
+                          </span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            disabled={uploadingPhoneImage}
+                            onChange={(e) => {
+                              const file = e.target.files?.[0]
+                              if (file) uploadPhoneImage(file)
+                              e.target.value = ''
+                            }}
+                          />
+                        </label>
+                        {/* URL manual */}
+                        <input
+                          value={(() => { try { return JSON.parse(form.content ?? '{}').phoneImageUrl ?? '' } catch { return '' } })()}
+                          onChange={(e) => {
+                            const phoneImageUrl = e.target.value || undefined
+                            try {
+                              const current = JSON.parse(form.content ?? '{}')
+                              set('content', JSON.stringify({ ...current, phoneImageUrl }))
+                            } catch {
+                              set('content', JSON.stringify({ phoneImageUrl }))
+                            }
+                          }}
+                          placeholder="o pega una URL..."
+                          className="border border-ink/15 px-3 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-full"
+                        />
+                      </div>
+                    </div>
                     <p className="text-xs text-ink/25">aparece a la derecha del texto como un smartphone — ideal para cursos</p>
-                  </label>
+                  </div>
                 </div>
 
                 {/* Publicar + orden */}
