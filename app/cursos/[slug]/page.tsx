@@ -4,6 +4,7 @@ import HeroSection from '@/components/sections/HeroSection'
 import InfoAcordeon from '@/components/sections/InfoAcordeon'
 import CarouselSection from '@/components/sections/CarouselSection'
 import CurriculumSection, { CurriculumChapter } from '@/components/sections/CurriculumSection'
+import ObjectivesSection from '@/components/sections/ObjectivesSection'
 import { createClient } from '@/lib/supabase/server'
 import { titleToSlug } from '@/lib/slugify'
 
@@ -11,10 +12,19 @@ interface Props {
   params: { slug: string }
 }
 
+interface CourseData {
+  value_proposition: string | null
+  learning_objective_1: string | null
+  learning_objective_2: string | null
+  learning_objective_3: string | null
+  learning_objective_4: string | null
+}
+
 export default async function CursoLandingPage({ params }: Props) {
   const pageSlug = `/cursos/${params.slug}`
   let sections: any[] = []
   let chapters: CurriculumChapter[] = []
+  let courseData: CourseData | null = null
 
   try {
     const supabase = createClient()
@@ -27,17 +37,27 @@ export default async function CursoLandingPage({ params }: Props) {
       .order('sort_order', { ascending: true })
     sections = data ?? []
 
-    // If any section needs curriculum data, find and load the matching course
-    if (sections.some(s => s.type === 'curriculum')) {
-      const { data: courses } = await supabase.from('courses').select('id, title')
+    // Load course data if any section needs it
+    const needsCourseData = sections.some(s =>
+      s.type === 'curriculum' || s.type === 'objectives'
+    )
+    if (needsCourseData) {
+      const { data: courses } = await supabase
+        .from('courses')
+        .select('id, title, value_proposition, learning_objective_1, learning_objective_2, learning_objective_3, learning_objective_4')
       const course = courses?.find(c => titleToSlug(c.title) === params.slug)
       if (course) {
-        const { data: chapterData } = await supabase
-          .from('course_chapters')
-          .select('*, course_lessons(*)')
-          .eq('course_id', course.id)
-          .order('sort_order', { ascending: true })
-        chapters = chapterData ?? []
+        courseData = course
+
+        // Fetch chapters only if curriculum section present
+        if (sections.some(s => s.type === 'curriculum')) {
+          const { data: chapterData } = await supabase
+            .from('course_chapters')
+            .select('*, course_lessons(*)')
+            .eq('course_id', course.id)
+            .order('sort_order', { ascending: true })
+          chapters = chapterData ?? []
+        }
       }
     }
   } catch {
@@ -128,6 +148,25 @@ export default async function CursoLandingPage({ params }: Props) {
               textColor={s.text_color ?? '#171a21'}
               accentColor={s.accent_color}
               chapters={chapters}
+            />
+          )
+        }
+
+        if (s.type === 'objectives') {
+          return (
+            <ObjectivesSection
+              key={s.id}
+              label={s.label ?? undefined}
+              valueProposition={courseData?.value_proposition ?? ''}
+              objectives={[
+                courseData?.learning_objective_1 ?? '',
+                courseData?.learning_objective_2 ?? '',
+                courseData?.learning_objective_3 ?? '',
+                courseData?.learning_objective_4 ?? '',
+              ]}
+              bgColor={s.bg_color}
+              textColor={s.text_color ?? '#171a21'}
+              accentColor={s.accent_color}
             />
           )
         }

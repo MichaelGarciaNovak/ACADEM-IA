@@ -33,6 +33,7 @@ const SECTION_TYPES = [
   { value: 'info-acordeon', label: 'Info Acordeón' },
   { value: 'carousel', label: 'Carousel' },
   { value: 'curriculum', label: 'Temario' },
+  { value: 'objectives', label: 'Objetivos' },
 ]
 
 const COLOR_PRESETS = [
@@ -1169,6 +1170,48 @@ export default function ContenidoClient({
                 </div>
 
                 </> /* end curriculum fields */}
+
+                {/* ── OBJECTIVES FIELDS ────────────────── */}
+                {form.type === 'objectives' && <>
+
+                <label className="flex flex-col gap-1.5">
+                  <span className="text-xs uppercase text-ink/40 font-mono">etiqueta rosa (opcional)</span>
+                  <input
+                    value={form.label ?? ''}
+                    onChange={(e) => set('label', e.target.value || null)}
+                    placeholder="ej. lo que vas a lograr"
+                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                  />
+                </label>
+
+                <div className="border border-ink/10 bg-ink/[0.02] px-4 py-3 text-xs font-mono text-ink/50 leading-relaxed">
+                  la propuesta de valor y los objetivos de aprendizaje se cargan automáticamente
+                  del curso asociado a esta página — edítalos en el editor del curso
+                </div>
+
+                <div className="border-t border-ink/8 pt-5 flex flex-col gap-4">
+                  <ColorPicker label="color de fondo" value={form.bg_color} onChange={(v) => set('bg_color', v)} presets={COLOR_PRESETS} />
+                  <ColorPicker label="color del texto" value={form.text_color} onChange={(v) => set('text_color', v)} presets={TEXT_COLOR_PRESETS} />
+                  <ColorPicker label="color de acento" value={form.accent_color} onChange={(v) => set('accent_color', v)} presets={ACCENT_PRESETS} />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 border-t border-ink/8 pt-5">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" checked={form.published} onChange={(e) => set('published', e.target.checked)} className="w-4 h-4 accent-slate" />
+                    <span className="text-xs uppercase font-mono text-ink/60">publicar</span>
+                  </label>
+                  <label className="flex flex-col gap-1.5">
+                    <span className="text-xs uppercase text-ink/40 font-mono">orden</span>
+                    <input
+                      type="number"
+                      value={form.sort_order}
+                      onChange={(e) => set('sort_order', parseInt(e.target.value) || 0)}
+                      className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-20"
+                    />
+                  </label>
+                </div>
+
+                </> /* end objectives fields */}
 
               </div>
             )}
