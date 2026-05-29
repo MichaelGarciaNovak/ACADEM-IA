@@ -125,19 +125,24 @@ export default function HeroSection({
 
         {/* ── Phone mockup ── */}
         {hasPhone && (
-          <div className="hidden md:flex flex-shrink-0 items-end justify-center pb-0 pt-16"
-            style={{ width: '240px', alignSelf: 'flex-end' }}
+          <div
+            className="hidden md:block flex-shrink-0"
+            style={{ alignSelf: 'stretch', position: 'relative', width: '300px' }}
           >
+            {/* Phone sits flush at bottom, taller than hero so it crops naturally */}
             <div
-              className="relative"
               style={{
-                width: '240px',
-                height: '490px',
-                borderRadius: '38px',
-                border: `6px solid ${textColor}25`,
+                position: 'absolute',
+                bottom: '-40px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '300px',
+                height: '620px',
+                borderRadius: '46px',
+                border: `7px solid ${textColor}28`,
                 backgroundColor: `${textColor}08`,
                 overflow: 'hidden',
-                boxShadow: `0 40px 80px rgba(0,0,0,0.35), inset 0 0 0 1px ${textColor}12`,
+                boxShadow: `0 40px 80px rgba(0,0,0,0.4), inset 0 0 0 1px ${textColor}12`,
               }}
             >
               {/* Notch */}
@@ -145,12 +150,12 @@ export default function HeroSection({
                 aria-hidden="true"
                 style={{
                   position: 'absolute',
-                  top: '14px',
+                  top: '16px',
                   left: '50%',
                   transform: 'translateX(-50%)',
-                  width: '72px',
-                  height: '20px',
-                  borderRadius: '10px',
+                  width: '84px',
+                  height: '22px',
+                  borderRadius: '11px',
                   backgroundColor: bgColor,
                   zIndex: 10,
                   border: `2px solid ${textColor}15`,
