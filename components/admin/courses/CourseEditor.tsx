@@ -40,6 +40,11 @@ interface Course {
   id: string
   title: string
   description: string | null
+  value_proposition: string | null
+  learning_objective_1: string | null
+  learning_objective_2: string | null
+  learning_objective_3: string | null
+  learning_objective_4: string | null
   image_url: string | null
   category_id: string | null
   theory_hours: number
@@ -394,6 +399,11 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
   const [form, setForm] = useState({
     title: course.title,
     description: course.description ?? '',
+    value_proposition: course.value_proposition ?? '',
+    learning_objective_1: course.learning_objective_1 ?? '',
+    learning_objective_2: course.learning_objective_2 ?? '',
+    learning_objective_3: course.learning_objective_3 ?? '',
+    learning_objective_4: course.learning_objective_4 ?? '',
     category_id: course.category_id ?? '',
     image_url: course.image_url ?? '',
     theory_hours: course.theory_hours,
@@ -601,6 +611,44 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
             <p className="text-xs text-ink/25">
               {form.description.split(/\s+/).filter(Boolean).length}/50 palabras
             </p>
+          </div>
+
+          {/* Value proposition */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs uppercase tracking-widest text-ink/40">
+              propuesta de valor
+            </label>
+            <textarea
+              value={form.value_proposition}
+              onChange={e => handleFormChange('value_proposition', e.target.value)}
+              rows={3}
+              className="border border-ink/20 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/40 resize-none"
+              placeholder="¿Por qué alguien debería tomar este curso? ¿Qué cambia en su vida o trabajo?"
+            />
+          </div>
+
+          {/* Learning objectives */}
+          <div className="flex flex-col gap-3">
+            <div>
+              <p className="text-xs uppercase tracking-widest text-ink/40">objetivos de aprendizaje</p>
+              <p className="text-xs text-ink/25 mt-0.5">uno por capítulo — en qué será mejor el alumno al terminar cada uno</p>
+            </div>
+            {([
+              { field: 'learning_objective_1', label: 'cap. 01', value: form.learning_objective_1 },
+              { field: 'learning_objective_2', label: 'cap. 02', value: form.learning_objective_2 },
+              { field: 'learning_objective_3', label: 'cap. 03', value: form.learning_objective_3 },
+              { field: 'learning_objective_4', label: 'cap. 04', value: form.learning_objective_4 },
+            ] as const).map(({ field, label, value }) => (
+              <div key={field} className="flex gap-3 items-start">
+                <span className="text-xs font-mono text-pink mt-2.5 flex-shrink-0 w-12">{label}</span>
+                <input
+                  value={value}
+                  onChange={e => handleFormChange(field, e.target.value)}
+                  className="flex-1 border border-ink/20 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/40"
+                  placeholder="Al terminar este capítulo el alumno podrá..."
+                />
+              </div>
+            ))}
           </div>
 
           {/* Image */}
