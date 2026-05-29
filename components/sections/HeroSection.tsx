@@ -133,7 +133,7 @@ export default function HeroSection({
             <div
               style={{
                 position: 'absolute',
-                bottom: '-40px',
+                top: '96px',
                 left: '50%',
                 transform: 'translateX(-50%)',
                 width: '300px',
