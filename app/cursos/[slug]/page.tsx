@@ -72,6 +72,8 @@ export default async function CursoLandingPage({ params }: Props) {
 
       {sections.map((s: any) => {
         if (s.type === 'hero') {
+          let phoneImageUrl: string | undefined
+          try { phoneImageUrl = s.content ? JSON.parse(s.content).phoneImageUrl : undefined } catch {}
           return (
             <HeroSection
               key={s.id}
@@ -86,6 +88,7 @@ export default async function CursoLandingPage({ params }: Props) {
               bgImageUrl={s.bg_image_url ?? undefined}
               bgImageOverlay={s.bg_image_overlay ?? 50}
               titleVariants={s.title_variants ? JSON.parse(s.title_variants) : undefined}
+              phoneImageUrl={phoneImageUrl}
             />
           )
         }

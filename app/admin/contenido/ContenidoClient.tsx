@@ -665,6 +665,26 @@ export default function ContenidoClient({
                       <span>muy oscuro</span>
                     </div>
                   </label>
+
+                  {/* Teléfono */}
+                  <label className="flex flex-col gap-1.5">
+                    <span className="text-xs uppercase text-ink/40 font-mono">mockup de teléfono (url, opcional)</span>
+                    <input
+                      value={(() => { try { return JSON.parse(form.content ?? '{}').phoneImageUrl ?? '' } catch { return '' } })()}
+                      onChange={(e) => {
+                        const phoneImageUrl = e.target.value || undefined
+                        try {
+                          const current = JSON.parse(form.content ?? '{}')
+                          set('content', JSON.stringify({ ...current, phoneImageUrl }))
+                        } catch {
+                          set('content', JSON.stringify({ phoneImageUrl }))
+                        }
+                      }}
+                      placeholder="https://... captura de pantalla del player"
+                      className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                    />
+                    <p className="text-xs text-ink/25">aparece a la derecha del texto como un smartphone — ideal para cursos</p>
+                  </label>
                 </div>
 
                 {/* Publicar + orden */}

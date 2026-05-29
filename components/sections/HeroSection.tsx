@@ -2,7 +2,7 @@ import AnimatedTitle from './AnimatedTitle'
 
 interface HeroSectionProps {
   title: string
-  titleVariants?: string[]  // if provided with 2+, animates between them
+  titleVariants?: string[]
   label?: string
   subtitle?: string
   ctaText?: string
@@ -12,6 +12,7 @@ interface HeroSectionProps {
   textColor?: string
   bgImageUrl?: string
   bgImageOverlay?: number
+  phoneImageUrl?: string   // if set, shows phone mockup on the right
 }
 
 export default function HeroSection({
@@ -26,9 +27,11 @@ export default function HeroSection({
   textColor = '#dddfdf',
   bgImageUrl,
   bgImageOverlay = 50,
+  phoneImageUrl,
 }: HeroSectionProps) {
   const mutedColor = textColor + 'aa'
   const animatedTitles = titleVariants && titleVariants.length > 1 ? titleVariants : null
+  const hasPhone = Boolean(phoneImageUrl)
 
   return (
     <section
@@ -57,10 +60,11 @@ export default function HeroSection({
 
       {/* Content */}
       <div
-        className="relative z-10 max-w-6xl mx-auto px-6 flex flex-col justify-center"
+        className={`relative z-10 max-w-6xl mx-auto px-6 flex items-center ${hasPhone ? 'gap-12' : 'flex-col justify-center'}`}
         style={{ minHeight: '50vh' }}
       >
-        <div className="max-w-3xl pt-24 pb-10">
+        {/* ── Text side ── */}
+        <div className={`${hasPhone ? 'flex-1 min-w-0' : 'max-w-3xl w-full'} pt-24 pb-10`}>
           {label && (
             <p
               className="text-xs uppercase tracking-widest font-mono font-normal mb-6"
@@ -73,7 +77,7 @@ export default function HeroSection({
           <h1
             className="font-mono font-normal uppercase leading-none mb-8"
             style={{
-              fontSize: 'clamp(2.8rem, 7vw, 6rem)',
+              fontSize: hasPhone ? 'clamp(2rem, 4.5vw, 4.5rem)' : 'clamp(2.8rem, 7vw, 6rem)',
               letterSpacing: '-0.02em',
             }}
           >
@@ -118,6 +122,55 @@ export default function HeroSection({
             </a>
           )}
         </div>
+
+        {/* ── Phone mockup ── */}
+        {hasPhone && (
+          <div className="hidden md:flex flex-shrink-0 items-end justify-center pb-0 pt-16"
+            style={{ width: '240px', alignSelf: 'flex-end' }}
+          >
+            <div
+              className="relative"
+              style={{
+                width: '240px',
+                height: '490px',
+                borderRadius: '38px',
+                border: `6px solid ${textColor}25`,
+                backgroundColor: `${textColor}08`,
+                overflow: 'hidden',
+                boxShadow: `0 40px 80px rgba(0,0,0,0.35), inset 0 0 0 1px ${textColor}12`,
+              }}
+            >
+              {/* Notch */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  top: '14px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '72px',
+                  height: '20px',
+                  borderRadius: '10px',
+                  backgroundColor: bgColor,
+                  zIndex: 10,
+                  border: `2px solid ${textColor}15`,
+                }}
+              />
+              {/* Screen image */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={phoneImageUrl}
+                alt="vista previa del curso"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'top',
+                }}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </section>
   )

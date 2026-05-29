@@ -111,6 +111,7 @@ export default async function Home() {
           bgImageUrl={(heroData as any).bg_image_url ?? undefined}
           bgImageOverlay={(heroData as any).bg_image_overlay ?? 50}
           titleVariants={(heroData as any).title_variants ? JSON.parse((heroData as any).title_variants) : undefined}
+          phoneImageUrl={(() => { try { return (heroData as any).content ? JSON.parse((heroData as any).content).phoneImageUrl : undefined } catch { return undefined } })()}
         />
       ) : (
         <section className="bg-ink text-alabaster min-h-screen flex flex-col justify-center px-6 pt-16">
