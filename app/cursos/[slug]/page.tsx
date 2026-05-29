@@ -3,7 +3,9 @@ import Navbar from '@/components/Navbar'
 import HeroSection from '@/components/sections/HeroSection'
 import InfoAcordeon from '@/components/sections/InfoAcordeon'
 import CarouselSection from '@/components/sections/CarouselSection'
+import CurriculumSection, { CurriculumChapter } from '@/components/sections/CurriculumSection'
 import { createClient } from '@/lib/supabase/server'
+import { titleToSlug } from '@/lib/slugify'
 
 interface Props {
   params: { slug: string }
@@ -12,9 +14,11 @@ interface Props {
 export default async function CursoLandingPage({ params }: Props) {
   const pageSlug = `/cursos/${params.slug}`
   let sections: any[] = []
+  let chapters: CurriculumChapter[] = []
 
   try {
     const supabase = createClient()
+
     const { data } = await supabase
       .from('sections')
       .select('*')
@@ -22,6 +26,20 @@ export default async function CursoLandingPage({ params }: Props) {
       .eq('published', true)
       .order('sort_order', { ascending: true })
     sections = data ?? []
+
+    // If any section needs curriculum data, find and load the matching course
+    if (sections.some(s => s.type === 'curriculum')) {
+      const { data: courses } = await supabase.from('courses').select('id, title')
+      const course = courses?.find(c => titleToSlug(c.title) === params.slug)
+      if (course) {
+        const { data: chapterData } = await supabase
+          .from('course_chapters')
+          .select('*, course_lessons(*)')
+          .eq('course_id', course.id)
+          .order('sort_order', { ascending: true })
+        chapters = chapterData ?? []
+      }
+    }
   } catch {
     // DB unavailable — fall through to notFound or empty
   }
@@ -96,6 +114,20 @@ export default async function CursoLandingPage({ params }: Props) {
               cardBgColor={cardBgColor}
               cardTextColor={cardTextColor}
               cardAccentColor={cardAccentColor}
+            />
+          )
+        }
+
+        if (s.type === 'curriculum') {
+          return (
+            <CurriculumSection
+              key={s.id}
+              title={s.title}
+              label={s.label ?? undefined}
+              bgColor={s.bg_color}
+              textColor={s.text_color ?? '#171a21'}
+              accentColor={s.accent_color}
+              chapters={chapters}
             />
           )
         }
