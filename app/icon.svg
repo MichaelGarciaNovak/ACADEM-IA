@@ -1,21 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <rect width="32" height="32" fill="#ffffff"/>
-  <text
-    x="7"
-    y="22"
-    font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
-    font-size="13"
-    font-weight="400"
-    fill="#FF6900"
-    text-anchor="middle"
-  >*</text>
-  <text
-    x="21"
-    y="22"
-    font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
-    font-size="13"
-    font-weight="400"
-    fill="#171a21"
-    text-anchor="middle"
-  >IΛ</text>
+<!-- Isotipo Orange centrado en un lienzo cuadrado con ~5% de aire.
+     La tinta va de x 9..2910 e y 16..4015, así que el centro es (1459.5, 2015.5);
+     un viewBox de 4400 de lado alrededor de ese punto la deja centrada.
+     Fondo transparente: el naranja se lee igual sobre pestaña clara u oscura. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-740.5 -184.5 4400 4400" width="32" height="32" fill="#FF6900">
+  <path fill-rule="evenodd" d="M1459.5,1113.75 a1450.75,1450.75 0 1,1 0,2901.5 a1450.75,1450.75 0 1,1 0,-2901.5 Z M1459.5,1789.5 a775,775 0 1,0 0,1550 a775,775 0 1,0 0,-1550 Z"/>
+  <path d="M1461.19,744.81 A677,677 0 0,1 2188.81,17.19 A677,677 0 0,1 1461.19,744.81 Z"/>
 </svg>
