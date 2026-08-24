@@ -25,7 +25,7 @@ export default function InfoAcordeon({
   items,
   bgColor = '#ffffff',
   textColor = '#171a21',
-  accentColor = '#ef476f',
+  accentColor = '#FF6900',
 }: Props) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
@@ -38,14 +38,14 @@ export default function InfoAcordeon({
           <div className="md:sticky md:top-24 pt-5">
             {label && (
               <p
-                className="text-xs font-mono uppercase tracking-widest mb-4"
+                className="text-xs font-sans uppercase tracking-widest mb-4"
                 style={{ color: accentColor }}
               >
                 {label}
               </p>
             )}
             <p
-              className="font-mono font-normal uppercase leading-tight"
+              className="font-sans font-normal leading-tight"
               style={{
                 color: textColor,
                 fontSize: 'clamp(1.875rem, 3.2vw, 2.25rem)',
@@ -85,7 +85,7 @@ export default function InfoAcordeon({
                       />
                     )}
                     <span
-                      className="font-mono font-normal uppercase transition-colors"
+                      className="font-sans font-normal transition-colors"
                       style={{
                         color: openIndex === i ? accentColor : textColor,
                         fontSize: 'clamp(1rem, 1.5vw, 1.2rem)',
@@ -109,7 +109,7 @@ export default function InfoAcordeon({
                   style={{ maxHeight: openIndex === i ? '400px' : '0' }}
                 >
                   <p
-                    className="font-mono text-sm leading-relaxed pb-5"
+                    className="font-sans text-sm leading-relaxed pb-5"
                     style={{ color: textColor + '70' }}
                   >
                     {item.body}

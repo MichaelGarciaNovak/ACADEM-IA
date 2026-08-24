@@ -66,7 +66,7 @@ function VideoEmbed({ url }: { url: string }) {
   const embedUrl = getEmbedUrl(url)
   if (!embedUrl) return (
     <div className="aspect-video bg-ink/10 flex items-center justify-center">
-      <p className="text-xs text-ink/30 font-mono uppercase tracking-widest">formato de video no soportado</p>
+      <p className="text-xs text-ink/30 font-sans uppercase tracking-widest">formato de video no soportado</p>
     </div>
   )
 
@@ -130,7 +130,7 @@ function CommentSection({ lessonId, userId }: { lessonId: string; userId: string
         onChange={e => setText(e.target.value)}
         rows={3}
         maxLength={2000}
-        className="w-full border border-ink/15 bg-white text-ink font-mono text-sm px-4 py-3 outline-none focus:border-ink/30 resize-none placeholder:text-ink/20"
+        className="w-full border border-ink/15 bg-white text-ink font-sans text-sm px-4 py-3 outline-none focus:border-ink/30 resize-none placeholder:text-ink/20"
         placeholder="Comparte tu opinión sobre esta lección..."
       />
       <div className="flex items-center justify-between mt-2 mb-6">
@@ -145,7 +145,7 @@ function CommentSection({ lessonId, userId }: { lessonId: string; userId: string
       </div>
 
       {comments.length === 0 ? (
-        <p className="text-xs text-ink/25 font-mono">aún no hay comentarios. sé el primero.</p>
+        <p className="text-xs text-ink/25 font-sans">aún no hay comentarios. sé el primero.</p>
       ) : (
         <div className="flex flex-col gap-4">
           {comments.map(c => (
@@ -153,7 +153,7 @@ function CommentSection({ lessonId, userId }: { lessonId: string; userId: string
               <p className="text-xs text-ink/30 mb-2">
                 {new Date(c.created_at).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })}
               </p>
-              <p className="text-sm text-ink/70 font-mono leading-relaxed">{c.content}</p>
+              <p className="text-sm text-ink/70 font-sans leading-relaxed">{c.content}</p>
             </div>
           ))}
         </div>
@@ -210,7 +210,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
   }
 
   return (
-    <div className="min-h-screen bg-white font-mono flex flex-col">
+    <div className="min-h-screen bg-white font-sans flex flex-col">
       {/* Top nav */}
       <header className="border-b border-ink/10 px-4 md:px-6 py-4 flex items-center gap-4 sticky top-0 bg-white z-20">
         <a href="/dashboard/cursos" className="text-xs text-ink/30 hover:text-ink transition-colors uppercase tracking-widest flex-shrink-0">
@@ -256,7 +256,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
             </div>
             <div className="h-1 bg-ink/8 rounded-full overflow-hidden">
               <div
-                className="h-full bg-pink transition-all duration-500 rounded-full"
+                className="h-full bg-orange transition-all duration-500 rounded-full"
                 style={{ width: `${progressPct}%` }}
               />
             </div>
@@ -300,15 +300,15 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                         key={lesson.id}
                         onClick={() => { setActiveLesson(lesson); setSidebarOpen(false) }}
                         className={`w-full flex items-center gap-3 px-5 py-2 text-left transition-colors ${
-                          isActive ? 'bg-pink/8' : 'hover:bg-ink/[0.02]'
+                          isActive ? 'bg-orange/8' : 'hover:bg-ink/[0.02]'
                         }`}
                       >
                         {/* Status icon */}
                         <div className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
                           isDone
-                            ? 'border-pink bg-pink'
+                            ? 'border-orange bg-orange'
                             : isActive
-                            ? 'border-pink'
+                            ? 'border-orange'
                             : 'border-ink/20'
                         }`}>
                           {isDone ? (
@@ -316,7 +316,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                               <path d="M1 3L3 5L7 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                           ) : isActive ? (
-                            <div className="w-1.5 h-1.5 rounded-full bg-pink" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-orange" />
                           ) : null}
                         </div>
 
@@ -326,7 +326,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                             {String(li + 1).padStart(2, '0')}. {lesson.title}
                           </p>
                           {isDone && (
-                            <p className="text-xs text-pink/60 mt-0.5">Completada</p>
+                            <p className="text-xs text-orange/60 mt-0.5">Completada</p>
                           )}
                         </div>
                       </button>
@@ -347,7 +347,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                 <VideoEmbed url={activeLesson.video_url} />
               ) : (
                 <div className="aspect-video bg-ink flex items-center justify-center">
-                  <p className="text-xs text-white/20 font-mono uppercase tracking-widest">sin video</p>
+                  <p className="text-xs text-white/20 font-sans uppercase tracking-widest">sin video</p>
                 </div>
               )}
 
@@ -371,7 +371,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                         href={activeLesson.worksheet_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border border-ink/20 px-4 py-2 text-xs uppercase tracking-widest text-ink/60 hover:border-pink hover:text-pink transition-colors"
+                        className="inline-flex items-center gap-2 border border-ink/20 px-4 py-2 text-xs uppercase tracking-widest text-ink/60 hover:border-orange hover:text-orange transition-colors"
                       >
                         ↗ hoja de trabajo
                       </a>
@@ -381,7 +381,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                         href={activeLesson.pdf_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border border-ink/20 px-4 py-2 text-xs uppercase tracking-widest text-ink/60 hover:border-pink hover:text-pink transition-colors"
+                        className="inline-flex items-center gap-2 border border-ink/20 px-4 py-2 text-xs uppercase tracking-widest text-ink/60 hover:border-orange hover:text-orange transition-colors"
                       >
                         ↗ pdf
                       </a>
@@ -391,7 +391,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                         href={activeLesson.presentation_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border border-ink/20 px-4 py-2 text-xs uppercase tracking-widest text-ink/60 hover:border-pink hover:text-pink transition-colors"
+                        className="inline-flex items-center gap-2 border border-ink/20 px-4 py-2 text-xs uppercase tracking-widest text-ink/60 hover:border-orange hover:text-orange transition-colors"
                       >
                         ↗ presentación
                       </a>
@@ -401,7 +401,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                         href={activeLesson.tool_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border border-ink/20 px-4 py-2 text-xs uppercase tracking-widest text-ink/60 hover:border-pink hover:text-pink transition-colors"
+                        className="inline-flex items-center gap-2 border border-ink/20 px-4 py-2 text-xs uppercase tracking-widest text-ink/60 hover:border-orange hover:text-orange transition-colors"
                       >
                         ↗ herramienta
                       </a>
@@ -437,7 +437,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
                         className={`text-xs uppercase tracking-widest px-4 py-2 border transition-colors ${
                           completed.has(activeLesson.id)
                             ? 'border-green-300 text-green-600 bg-green-50 cursor-default'
-                            : 'border-pink text-pink hover:bg-pink hover:text-white'
+                            : 'border-orange text-orange hover:bg-orange hover:text-white'
                         }`}
                       >
                         {completed.has(activeLesson.id) ? '✓ completado' : markingDone ? 'guardando...' : 'marcar como completado'}
@@ -451,7 +451,7 @@ export default function CoursePlayer({ course, chapters, completedLessonIds: ini
 
                 {/* Footer */}
                 <footer className="mt-16 pt-8 border-t border-ink/10 flex items-center justify-between">
-                  <Logo variant="light" size="sm" accentColor="#ef476f" />
+                  <Logo variant="light" size="sm" accentColor="#FF6900" />
                   <p className="text-xs text-ink/20">© {new Date().getFullYear()} ΛCΛDEM*IΛ</p>
                 </footer>
               </div>

@@ -23,7 +23,7 @@ export default function HeroSection({
   ctaText = 'Empezar gratis',
   ctaLink = '/registro',
   bgColor = '#171a21',
-  accentColor = '#ef476f',
+  accentColor = '#FF6900',
   textColor = '#dddfdf',
   bgImageUrl,
   bgImageOverlay = 50,
@@ -67,7 +67,7 @@ export default function HeroSection({
         <div className={`${hasPhone ? 'flex-1 min-w-0' : 'max-w-3xl w-full'} pt-24 pb-10`}>
           {label && (
             <p
-              className="text-xs uppercase tracking-widest font-mono font-normal mb-6"
+              className="text-xs uppercase tracking-widest font-sans font-normal mb-6"
               style={{ color: accentColor }}
             >
               {label}
@@ -75,7 +75,7 @@ export default function HeroSection({
           )}
 
           <h1
-            className="font-mono font-normal uppercase leading-none mb-8"
+            className="font-sans font-normal leading-none mb-8"
             style={{
               fontSize: hasPhone ? 'clamp(2rem, 4.5vw, 4.5rem)' : 'clamp(2.8rem, 7vw, 6rem)',
               letterSpacing: '-0.02em',
@@ -105,7 +105,7 @@ export default function HeroSection({
 
           {subtitle && (
             <p
-              className="font-mono font-normal uppercase text-base mb-12 max-w-xl"
+              className="font-sans font-normal uppercase text-base mb-12 max-w-xl"
               style={{ color: mutedColor }}
             >
               {subtitle}
@@ -115,7 +115,7 @@ export default function HeroSection({
           {ctaText && (
             <a
               href={ctaLink}
-              className="inline-block font-mono font-normal uppercase text-sm px-8 py-4 transition-all duration-150 hover:opacity-90 active:scale-95"
+              className="inline-block font-sans font-normal uppercase text-sm px-8 py-4 transition-all duration-150 hover:opacity-90 active:scale-95"
               style={{ backgroundColor: accentColor, color: '#fff' }}
             >
               {ctaText}

@@ -39,7 +39,7 @@ const SECTION_TYPES = [
 const COLOR_PRESETS = [
   { label: 'ink', value: '#171a21' },
   { label: 'slate', value: '#735cdd' },
-  { label: 'pink', value: '#ef476f' },
+  { label: 'orange', value: '#FF6900' },
   { label: 'ocean', value: '#3c91e6' },
   { label: 'alabaster', value: '#dddfdf' },
   { label: 'white', value: '#ffffff' },
@@ -49,12 +49,12 @@ const TEXT_COLOR_PRESETS = [
   { label: 'alabaster', value: '#dddfdf' },
   { label: 'white', value: '#ffffff' },
   { label: 'ink', value: '#171a21' },
-  { label: 'pink', value: '#ef476f' },
+  { label: 'orange', value: '#FF6900' },
   { label: 'slate', value: '#735cdd' },
 ]
 
 const ACCENT_PRESETS = [
-  { label: 'pink', value: '#ef476f' },
+  { label: 'orange', value: '#FF6900' },
   { label: 'slate', value: '#735cdd' },
   { label: 'ocean', value: '#3c91e6' },
   { label: 'alabaster', value: '#dddfdf' },
@@ -71,7 +71,7 @@ const emptyForm = (page = '/'): Omit<Section, 'id'> => ({
   cta_text: 'Empezar gratis',
   cta_link: '/registro',
   bg_color: '#171a21',
-  accent_color: '#ef476f',
+  accent_color: '#FF6900',
   text_color: '#dddfdf',
   bg_image_url: null,
   bg_image_overlay: 50,
@@ -94,7 +94,7 @@ function ColorPicker({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <span className="text-xs uppercase text-ink/40 font-mono">{label}</span>
+      <span className="text-xs uppercase text-ink/40 font-sans">{label}</span>
       <div className="flex gap-2 flex-wrap items-center">
         {presets.map((c) => (
           <button
@@ -112,7 +112,7 @@ function ColorPicker({
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="border border-ink/15 px-2 py-1 text-xs font-mono w-24 bg-transparent text-ink focus:outline-none focus:border-slate"
+          className="border border-ink/15 px-2 py-1 text-xs font-sans w-24 bg-transparent text-ink focus:outline-none focus:border-slate"
           placeholder="#ffffff"
         />
       </div>
@@ -156,7 +156,7 @@ export default function ContenidoClient({
   const [cardsList, setCardsList] = useState<CarouselCard[]>([])
   const [uploadingCardImage, setUploadingCardImage] = useState<number | null>(null)
   const [expandedCard, setExpandedCard] = useState<number | null>(null)
-  const [cardColors, setCardColors] = useState({ bg: '#ffffff', text: '#171a21', accent: '#ef476f' })
+  const [cardColors, setCardColors] = useState({ bg: '#ffffff', text: '#171a21', accent: '#FF6900' })
   const [uploadingBadgeIcon, setUploadingBadgeIcon] = useState<number | null>(null)
   const [uploadingPhoneImage, setUploadingPhoneImage] = useState(false)
 
@@ -217,7 +217,7 @@ export default function ContenidoClient({
     setItemsList([])
     setCardsList([])
     setExpandedCard(null)
-    setCardColors({ bg: '#ffffff', text: '#171a21', accent: '#ef476f' })
+    setCardColors({ bg: '#ffffff', text: '#171a21', accent: '#FF6900' })
     setPreview(false)
     setModalOpen(true)
   }
@@ -243,10 +243,10 @@ export default function ContenidoClient({
       setCardColors({
         bg:     cc.cardBgColor     ?? '#ffffff',
         text:   cc.cardTextColor   ?? s.text_color   ?? '#171a21',
-        accent: cc.cardAccentColor ?? s.accent_color ?? '#ef476f',
+        accent: cc.cardAccentColor ?? s.accent_color ?? '#FF6900',
       })
     } else {
-      setCardColors({ bg: '#ffffff', text: '#171a21', accent: '#ef476f' })
+      setCardColors({ bg: '#ffffff', text: '#171a21', accent: '#FF6900' })
     }
     setForm({
       page: s.page ?? '/',
@@ -337,7 +337,7 @@ export default function ContenidoClient({
 
         {/* ── Page selector ── */}
         <div className="mb-6 p-4 border border-ink/10 bg-ink/[0.02] flex flex-col gap-3">
-          <span className="text-xs uppercase text-ink/40 font-mono">página activa</span>
+          <span className="text-xs uppercase text-ink/40 font-sans">página activa</span>
 
           {/* Mode tabs */}
           <div className="flex gap-0 border border-ink/15 w-fit">
@@ -345,7 +345,7 @@ export default function ContenidoClient({
               <button
                 key={mode}
                 onClick={() => setPageMode(mode)}
-                className="px-4 py-1.5 text-xs font-mono uppercase transition-colors"
+                className="px-4 py-1.5 text-xs font-sans uppercase transition-colors"
                 style={{
                   backgroundColor: pageMode === mode ? '#735cdd' : 'transparent',
                   color: pageMode === mode ? '#fff' : 'rgba(23,26,33,0.4)',
@@ -358,18 +358,18 @@ export default function ContenidoClient({
 
           {/* Mode-specific input */}
           {pageMode === 'home' && (
-            <p className="text-xs font-mono text-ink/50">página principal <span className="text-slate">/ (home)</span></p>
+            <p className="text-xs font-sans text-ink/50">página principal <span className="text-slate">/ (home)</span></p>
           )}
 
           {pageMode === 'curso' && (
             <div className="flex flex-col gap-1.5">
               {courses.length === 0 ? (
-                <p className="text-xs text-ink/30 font-mono">no hay cursos — créalos primero en /admin/cursos</p>
+                <p className="text-xs text-ink/30 font-sans">no hay cursos — créalos primero en /admin/cursos</p>
               ) : (
                 <select
                   value={selectedCourseId}
                   onChange={e => setSelectedCourseId(e.target.value)}
-                  className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-white text-ink focus:outline-none focus:border-slate w-72"
+                  className="border border-ink/15 px-2 py-1.5 text-xs font-sans bg-white text-ink focus:outline-none focus:border-slate w-72"
                 >
                   {courses.map(c => (
                     <option key={c.id} value={c.id}>{c.title}</option>
@@ -377,7 +377,7 @@ export default function ContenidoClient({
                 </select>
               )}
               {selectedCourseSlug && (
-                <p className="text-xs font-mono text-ink/40">
+                <p className="text-xs font-sans text-ink/40">
                   ruta: <span className="text-slate">/cursos/{selectedCourseSlug}</span>
                 </p>
               )}
@@ -391,7 +391,7 @@ export default function ContenidoClient({
                 value={customPage}
                 onChange={e => setCustomPage(e.target.value)}
                 placeholder="/otra-pagina"
-                className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-64"
+                className="border border-ink/15 px-2 py-1.5 text-xs font-sans bg-transparent text-ink focus:outline-none focus:border-slate w-64"
               />
               <p className="text-xs text-ink/25">escribe la ruta completa, ej. /sobre-nosotros</p>
             </div>
@@ -407,7 +407,7 @@ export default function ContenidoClient({
 
           {filteredSections.length === 0 ? (
             <div className="px-6 py-10 text-center text-ink/30 text-sm">
-              no hay secciones en <span className="font-mono">{currentPage}</span> — crea la primera
+              no hay secciones en <span className="font-sans">{currentPage}</span> — crea la primera
             </div>
           ) : (
             filteredSections.map((s) => (
@@ -415,7 +415,7 @@ export default function ContenidoClient({
                 key={s.id}
                 className="grid grid-cols-5 px-6 py-4 border-b border-ink/5 hover:bg-ink/[0.02] items-center"
               >
-                <span className="text-xs uppercase text-ink/50 font-mono">{s.type}</span>
+                <span className="text-xs uppercase text-ink/50 font-sans">{s.type}</span>
                 <span className="text-sm text-ink font-normal uppercase truncate pr-4">{s.title}</span>
                 <div className="flex gap-1.5 items-center">
                   <span className="w-4 h-4 border border-ink/10" style={{ backgroundColor: s.bg_color }} title="fondo" />
@@ -435,7 +435,7 @@ export default function ContenidoClient({
                 </button>
                 <div className="flex gap-3">
                   <button onClick={() => openEdit(s)} className="text-xs uppercase text-ink/40 hover:text-ink transition-colors">editar</button>
-                  <button onClick={() => remove(s.id)} className="text-xs uppercase text-ink/40 hover:text-pink transition-colors">eliminar</button>
+                  <button onClick={() => remove(s.id)} className="text-xs uppercase text-ink/40 hover:text-orange transition-colors">eliminar</button>
                 </div>
               </div>
             ))
@@ -449,13 +449,13 @@ export default function ContenidoClient({
           <div className="bg-white w-full max-w-2xl mx-4 border border-ink/10">
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-ink/10">
-              <h2 className="text-sm uppercase font-mono font-normal text-ink">
+              <h2 className="text-sm uppercase font-sans font-normal text-ink">
                 {editingId ? 'editar sección' : 'nueva sección'}
               </h2>
               <div className="flex gap-3 items-center">
                 <button
                   onClick={() => setPreview(!preview)}
-                  className="text-xs uppercase font-mono text-ink/40 hover:text-ink transition-colors"
+                  className="text-xs uppercase font-sans text-ink/40 hover:text-ink transition-colors"
                 >
                   {preview ? '← editor' : 'preview →'}
                 </button>
@@ -512,13 +512,13 @@ export default function ContenidoClient({
 
                 {/* Tipo de sección */}
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">tipo de sección</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">tipo de sección</span>
                   <div className="flex gap-2">
                     {SECTION_TYPES.map(t => (
                       <button
                         key={t.value}
                         onClick={() => set('type', t.value)}
-                        className="px-4 py-2 text-xs font-mono uppercase border transition-colors rounded-sm"
+                        className="px-4 py-2 text-xs font-sans uppercase border transition-colors rounded-sm"
                         style={{
                           borderColor: form.type === t.value ? '#735cdd' : 'rgba(23,26,33,0.15)',
                           color: form.type === t.value ? '#735cdd' : 'rgba(23,26,33,0.4)',
@@ -536,29 +536,29 @@ export default function ContenidoClient({
 
                 {/* Etiqueta pequeña */}
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">etiqueta pequeña</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">etiqueta pequeña</span>
                   <input
                     value={form.label ?? ''}
                     onChange={(e) => set('label', e.target.value)}
                     placeholder="plataforma educativa"
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                    className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate"
                   />
                 </label>
 
                 {/* Título */}
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">título</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">título</span>
                   <input
                     value={form.title}
                     onChange={(e) => set('title', e.target.value)}
                     placeholder="ΛCΛDEM*IΛ"
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono uppercase bg-transparent text-ink focus:outline-none focus:border-slate"
+                    className="border border-ink/15 px-3 py-2 text-sm font-sans uppercase bg-transparent text-ink focus:outline-none focus:border-slate"
                   />
                 </label>
 
                 {/* Títulos animados */}
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">títulos animados</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">títulos animados</span>
                   <textarea
                     value={titlesText}
                     onChange={(e) => {
@@ -569,7 +569,7 @@ export default function ContenidoClient({
                     }}
                     rows={4}
                     placeholder={'Un título por línea (mínimo 2 para activar):\nAprende con IA\nAutomatiza tu trabajo\nCrece más rápido'}
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate resize-none placeholder:text-ink/20"
+                    className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate resize-none placeholder:text-ink/20"
                   />
                   <p className="text-xs text-ink/25">
                     {form.title_variants
@@ -580,33 +580,33 @@ export default function ContenidoClient({
 
                 {/* Subtítulo */}
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">subtítulo</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">subtítulo</span>
                   <input
                     value={form.subtitle ?? ''}
                     onChange={(e) => set('subtitle', e.target.value)}
                     placeholder="Aprende con propósito."
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                    className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate"
                   />
                 </label>
 
                 {/* CTA */}
                 <div className="grid grid-cols-2 gap-4">
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-xs uppercase text-ink/40 font-mono">texto del botón</span>
+                    <span className="text-xs uppercase text-ink/40 font-sans">texto del botón</span>
                     <input
                       value={form.cta_text ?? ''}
                       onChange={(e) => set('cta_text', e.target.value)}
                       placeholder="Empezar gratis"
-                      className="border border-ink/15 px-3 py-2 text-sm font-mono uppercase bg-transparent text-ink focus:outline-none focus:border-slate"
+                      className="border border-ink/15 px-3 py-2 text-sm font-sans uppercase bg-transparent text-ink focus:outline-none focus:border-slate"
                     />
                   </label>
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-xs uppercase text-ink/40 font-mono">link del botón</span>
+                    <span className="text-xs uppercase text-ink/40 font-sans">link del botón</span>
                     <input
                       value={form.cta_link ?? ''}
                       onChange={(e) => set('cta_link', e.target.value)}
                       placeholder="/registro"
-                      className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                      className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate"
                     />
                   </label>
                 </div>
@@ -641,12 +641,12 @@ export default function ContenidoClient({
                 <div className="border-t border-ink/8 pt-5 flex flex-col gap-5">
                   {/* Imagen de fondo */}
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-xs uppercase text-ink/40 font-mono">imagen de fondo (url)</span>
+                    <span className="text-xs uppercase text-ink/40 font-sans">imagen de fondo (url)</span>
                     <input
                       value={form.bg_image_url ?? ''}
                       onChange={(e) => set('bg_image_url', e.target.value || null)}
                       placeholder="https://images.unsplash.com/..."
-                      className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                      className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate"
                     />
                     <p className="text-xs text-ink/25">deja vacío para usar solo el color de fondo</p>
                   </label>
@@ -665,8 +665,8 @@ export default function ContenidoClient({
                   {/* Opacidad del overlay */}
                   <label className="flex flex-col gap-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs uppercase text-ink/40 font-mono">oscuridad del overlay</span>
-                      <span className="text-xs font-mono text-slate">{form.bg_image_overlay}%</span>
+                      <span className="text-xs uppercase text-ink/40 font-sans">oscuridad del overlay</span>
+                      <span className="text-xs font-sans text-slate">{form.bg_image_overlay}%</span>
                     </div>
                     <input
                       type="range"
@@ -677,7 +677,7 @@ export default function ContenidoClient({
                       onChange={(e) => set('bg_image_overlay', parseInt(e.target.value))}
                       className="w-full accent-slate"
                     />
-                    <div className="flex justify-between text-xs font-mono text-ink/20">
+                    <div className="flex justify-between text-xs font-sans text-ink/20">
                       <span>imagen limpia</span>
                       <span>muy oscuro</span>
                     </div>
@@ -685,7 +685,7 @@ export default function ContenidoClient({
 
                   {/* Teléfono */}
                   <div className="flex flex-col gap-1.5">
-                    <span className="text-xs uppercase text-ink/40 font-mono">mockup de teléfono (opcional)</span>
+                    <span className="text-xs uppercase text-ink/40 font-sans">mockup de teléfono (opcional)</span>
                     <div className="flex gap-2 items-start">
                       {/* Miniatura o placeholder */}
                       {(() => { try { return JSON.parse(form.content ?? '{}').phoneImageUrl } catch { return null } })() ? (
@@ -703,7 +703,7 @@ export default function ContenidoClient({
                       <div className="flex flex-col gap-1.5 flex-1">
                         {/* Botón subir */}
                         <label className="cursor-pointer w-fit">
-                          <span className={`text-xs font-mono px-3 py-1.5 border transition-colors block ${
+                          <span className={`text-xs font-sans px-3 py-1.5 border transition-colors block ${
                             uploadingPhoneImage
                               ? 'border-ink/10 text-ink/25 cursor-not-allowed'
                               : 'border-slate/40 text-slate hover:bg-slate/5'
@@ -735,7 +735,7 @@ export default function ContenidoClient({
                             }
                           }}
                           placeholder="o pega una URL..."
-                          className="border border-ink/15 px-3 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-full"
+                          className="border border-ink/15 px-3 py-1.5 text-xs font-sans bg-transparent text-ink focus:outline-none focus:border-slate w-full"
                         />
                       </div>
                     </div>
@@ -752,15 +752,15 @@ export default function ContenidoClient({
                       onChange={(e) => set('published', e.target.checked)}
                       className="w-4 h-4 accent-slate"
                     />
-                    <span className="text-xs uppercase font-mono text-ink/60">publicar</span>
+                    <span className="text-xs uppercase font-sans text-ink/60">publicar</span>
                   </label>
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-xs uppercase text-ink/40 font-mono">orden</span>
+                    <span className="text-xs uppercase text-ink/40 font-sans">orden</span>
                     <input
                       type="number"
                       value={form.sort_order}
                       onChange={(e) => set('sort_order', parseInt(e.target.value) || 0)}
-                      className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-20"
+                      className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate w-20"
                     />
                   </label>
                 </div>
@@ -772,50 +772,50 @@ export default function ContenidoClient({
 
                 {/* Nombre interno (para identificar en la lista) */}
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">nombre interno</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">nombre interno</span>
                   <input
                     value={form.title}
                     onChange={(e) => set('title', e.target.value)}
                     placeholder="ej. FAQs, Por qué nosotros..."
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                    className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate"
                   />
                   <p className="text-xs text-ink/25">solo visible en el admin, no aparece en la página</p>
                 </label>
 
                 {/* Etiqueta */}
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">etiqueta rosa (opcional)</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">etiqueta rosa (opcional)</span>
                   <input
                     value={form.label ?? ''}
                     onChange={(e) => set('label', e.target.value || null)}
                     placeholder="ej. nuestra metodología"
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                    className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate"
                   />
                 </label>
 
                 {/* Párrafo */}
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">párrafo</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">párrafo</span>
                   <textarea
                     value={form.content ?? ''}
                     onChange={(e) => set('content', e.target.value)}
                     rows={5}
                     placeholder="Texto del párrafo izquierdo..."
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate resize-none"
+                    className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate resize-none"
                   />
                 </label>
 
                 {/* Acordeones */}
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs uppercase text-ink/40 font-mono">acordeones</span>
+                    <span className="text-xs uppercase text-ink/40 font-sans">acordeones</span>
                     <button
                       onClick={() => {
                         const next = [...itemsList, { title: '', body: '' }]
                         setItemsList(next)
                         set('items', JSON.stringify(next))
                       }}
-                      className="text-xs uppercase text-slate hover:text-slate/70 font-mono transition-colors"
+                      className="text-xs uppercase text-slate hover:text-slate/70 font-sans transition-colors"
                     >
                       + agregar
                     </button>
@@ -833,7 +833,7 @@ export default function ContenidoClient({
                                   <span className="text-ink/30 text-xs">+</span>
                                 </div>
                             }
-                            <span className="text-xs font-mono text-ink/40 hover:text-slate transition-colors">
+                            <span className="text-xs font-sans text-ink/40 hover:text-slate transition-colors">
                               {uploadingIcon === i ? 'subiendo...' : item.icon ? 'cambiar' : 'ícono'}
                             </span>
                             <input
@@ -850,7 +850,7 @@ export default function ContenidoClient({
                           </label>
                           {item.icon && (
                             <a href={item.icon} target="_blank" rel="noopener noreferrer"
-                              className="text-[10px] font-mono text-slate/60 hover:text-slate truncate max-w-[120px]"
+                              className="text-[10px] font-sans text-slate/60 hover:text-slate truncate max-w-[120px]"
                             >ver url ↗</a>
                           )}
                         </div>
@@ -862,7 +862,7 @@ export default function ContenidoClient({
                             set('items', JSON.stringify(next))
                           }}
                           placeholder="Título del acordeón"
-                          className="flex-1 border border-ink/15 px-3 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                          className="flex-1 border border-ink/15 px-3 py-1.5 text-xs font-sans bg-transparent text-ink focus:outline-none focus:border-slate"
                         />
                         <button
                           onClick={() => {
@@ -870,7 +870,7 @@ export default function ContenidoClient({
                             setItemsList(next)
                             set('items', next.length ? JSON.stringify(next) : null)
                           }}
-                          className="text-ink/20 hover:text-pink transition-colors text-sm"
+                          className="text-ink/20 hover:text-orange transition-colors text-sm"
                         >✕</button>
                       </div>
                       <textarea
@@ -882,13 +882,13 @@ export default function ContenidoClient({
                         }}
                         rows={2}
                         placeholder="Contenido del acordeón..."
-                        className="border border-ink/15 px-3 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate resize-none"
+                        className="border border-ink/15 px-3 py-1.5 text-xs font-sans bg-transparent text-ink focus:outline-none focus:border-slate resize-none"
                       />
                     </div>
                   ))}
 
                   {itemsList.length === 0 && (
-                    <p className="text-xs text-ink/25 font-mono">no hay acordeones aún — haz clic en + agregar</p>
+                    <p className="text-xs text-ink/25 font-sans">no hay acordeones aún — haz clic en + agregar</p>
                   )}
                 </div>
 
@@ -903,15 +903,15 @@ export default function ContenidoClient({
                 <div className="grid grid-cols-2 gap-4 border-t border-ink/8 pt-5">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="checkbox" checked={form.published} onChange={(e) => set('published', e.target.checked)} className="w-4 h-4 accent-slate" />
-                    <span className="text-xs uppercase font-mono text-ink/60">publicar</span>
+                    <span className="text-xs uppercase font-sans text-ink/60">publicar</span>
                   </label>
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-xs uppercase text-ink/40 font-mono">orden</span>
+                    <span className="text-xs uppercase text-ink/40 font-sans">orden</span>
                     <input
                       type="number"
                       value={form.sort_order}
                       onChange={(e) => set('sort_order', parseInt(e.target.value) || 0)}
-                      className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-20"
+                      className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate w-20"
                     />
                   </label>
                 </div>
@@ -923,39 +923,39 @@ export default function ContenidoClient({
 
                 {/* Etiqueta */}
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">etiqueta rosa (opcional)</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">etiqueta rosa (opcional)</span>
                   <input value={form.label ?? ''} onChange={(e) => set('label', e.target.value || null)}
                     placeholder="ej. cursos destacados"
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                    className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate" />
                 </label>
 
                 {/* Título sección */}
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">título de sección</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">título de sección</span>
                   <input value={form.title} onChange={(e) => set('title', e.target.value)}
                     placeholder="Elige tu camino"
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono uppercase bg-transparent text-ink focus:outline-none focus:border-slate" />
+                    className="border border-ink/15 px-3 py-2 text-sm font-sans uppercase bg-transparent text-ink focus:outline-none focus:border-slate" />
                 </label>
 
                 {/* Subtítulo sección */}
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">subtítulo de sección (opcional)</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">subtítulo de sección (opcional)</span>
                   <input value={form.subtitle ?? ''} onChange={(e) => set('subtitle', e.target.value || null)}
                     placeholder="Una línea descriptiva..."
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                    className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate" />
                 </label>
 
                 {/* Cards */}
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs uppercase text-ink/40 font-mono">cards ({cardsList.length})</span>
+                    <span className="text-xs uppercase text-ink/40 font-sans">cards ({cardsList.length})</span>
                     <button
                       onClick={() => {
                         const next = [...cardsList, { title: '', ctaText: 'ver más' }]
                         setCardsList(next)
                         setExpandedCard(next.length - 1)
                       }}
-                      className="text-xs uppercase text-slate hover:text-slate/70 font-mono transition-colors"
+                      className="text-xs uppercase text-slate hover:text-slate/70 font-sans transition-colors"
                     >+ agregar card</button>
                   </div>
 
@@ -971,7 +971,7 @@ export default function ContenidoClient({
                               <span className="text-ink/20 text-[9px]">img</span>
                             </div>
                         }
-                        <span className="text-xs font-mono text-ink flex-1 truncate">
+                        <span className="text-xs font-sans text-ink flex-1 truncate">
                           {card.title || <span className="text-ink/30">sin título</span>}
                         </span>
                         <button
@@ -981,7 +981,7 @@ export default function ContenidoClient({
                             setCardsList(next)
                             setExpandedCard(null)
                           }}
-                          className="text-ink/20 hover:text-pink transition-colors text-xs ml-2"
+                          className="text-ink/20 hover:text-orange transition-colors text-xs ml-2"
                         >✕</button>
                         <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
                           className={`flex-shrink-0 transition-transform duration-200 ${expandedCard === i ? 'rotate-90' : ''}`}>
@@ -994,7 +994,7 @@ export default function ContenidoClient({
                         <div className="border-t border-ink/8 p-3 flex flex-col gap-2.5">
                           {/* Image upload + URL */}
                           <div className="flex flex-col gap-1.5">
-                            <span className="text-[10px] uppercase text-ink/30 font-mono">imagen principal</span>
+                            <span className="text-[10px] uppercase text-ink/30 font-sans">imagen principal</span>
                             <div className="flex items-start gap-3">
                               <label className="cursor-pointer flex-shrink-0">
                                 {card.image
@@ -1017,9 +1017,9 @@ export default function ContenidoClient({
                                   value={card.image ?? ''}
                                   onChange={(e) => setCardsList(prev => prev.map((x, j) => j === i ? { ...x, image: e.target.value || undefined } : x))}
                                   placeholder="https://... o sube una imagen"
-                                  className="border border-ink/15 px-2 py-1.5 text-[10px] font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-full"
+                                  className="border border-ink/15 px-2 py-1.5 text-[10px] font-sans bg-transparent text-ink focus:outline-none focus:border-slate w-full"
                                 />
-                                <span className="text-[10px] font-mono text-ink/25">
+                                <span className="text-[10px] font-sans text-ink/25">
                                   {uploadingCardImage === i ? 'subiendo...' : 'pega url o haz clic en la miniatura para subir'}
                                 </span>
                               </div>
@@ -1028,77 +1028,77 @@ export default function ContenidoClient({
 
                           {/* Category */}
                           <label className="flex flex-col gap-1">
-                            <span className="text-[10px] uppercase text-ink/30 font-mono">categoría</span>
+                            <span className="text-[10px] uppercase text-ink/30 font-sans">categoría</span>
                             <input value={card.category ?? ''} placeholder="desarrollo"
                               onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, category: e.target.value||undefined} : x))}
-                              className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                              className="border border-ink/15 px-2 py-1.5 text-xs font-sans bg-transparent text-ink focus:outline-none focus:border-slate" />
                           </label>
 
                           {/* Title */}
                           <label className="flex flex-col gap-1">
-                            <span className="text-[10px] uppercase text-ink/30 font-mono">título *</span>
+                            <span className="text-[10px] uppercase text-ink/30 font-sans">título *</span>
                             <input value={card.title} placeholder="Fundamentos de IA"
                               onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, title: e.target.value} : x))}
-                              className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                              className="border border-ink/15 px-2 py-1.5 text-xs font-sans bg-transparent text-ink focus:outline-none focus:border-slate" />
                           </label>
 
                           {/* Subtitle */}
                           <label className="flex flex-col gap-1">
-                            <span className="text-[10px] uppercase text-ink/30 font-mono">subtítulo</span>
+                            <span className="text-[10px] uppercase text-ink/30 font-sans">subtítulo</span>
                             <input value={card.subtitle ?? ''} placeholder="Aprende desde cero"
                               onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, subtitle: e.target.value||undefined} : x))}
-                              className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                              className="border border-ink/15 px-2 py-1.5 text-xs font-sans bg-transparent text-ink focus:outline-none focus:border-slate" />
                           </label>
 
                           {/* Description */}
                           <label className="flex flex-col gap-1">
-                            <span className="text-[10px] uppercase text-ink/30 font-mono">descripción corta</span>
+                            <span className="text-[10px] uppercase text-ink/30 font-sans">descripción corta</span>
                             <textarea value={card.description ?? ''} rows={2} placeholder="Texto breve..."
                               onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, description: e.target.value||undefined} : x))}
-                              className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate resize-none" />
+                              className="border border-ink/15 px-2 py-1.5 text-xs font-sans bg-transparent text-ink focus:outline-none focus:border-slate resize-none" />
                           </label>
 
                           {/* Duration + CTA */}
                           <div className="grid grid-cols-2 gap-2">
                             <label className="flex flex-col gap-1">
-                              <span className="text-[10px] uppercase text-ink/30 font-mono">duración</span>
+                              <span className="text-[10px] uppercase text-ink/30 font-sans">duración</span>
                               <input value={card.duration ?? ''} placeholder="8 semanas"
                                 onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, duration: e.target.value||undefined} : x))}
-                                className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                                className="border border-ink/15 px-2 py-1.5 text-xs font-sans bg-transparent text-ink focus:outline-none focus:border-slate" />
                             </label>
                             <label className="flex flex-col gap-1">
-                              <span className="text-[10px] uppercase text-ink/30 font-mono">texto cta</span>
+                              <span className="text-[10px] uppercase text-ink/30 font-sans">texto cta</span>
                               <input value={card.ctaText ?? ''} placeholder="ver curso"
                                 onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, ctaText: e.target.value||undefined} : x))}
-                                className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                                className="border border-ink/15 px-2 py-1.5 text-xs font-sans bg-transparent text-ink focus:outline-none focus:border-slate" />
                             </label>
                           </div>
                           <label className="flex flex-col gap-1">
-                            <span className="text-[10px] uppercase text-ink/30 font-mono">link cta</span>
+                            <span className="text-[10px] uppercase text-ink/30 font-sans">link cta</span>
                             <input value={card.ctaLink ?? ''} placeholder="/cursos/nombre-del-curso"
                               onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, ctaLink: e.target.value||undefined} : x))}
-                              className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                              className="border border-ink/15 px-2 py-1.5 text-xs font-sans bg-transparent text-ink focus:outline-none focus:border-slate" />
                           </label>
 
                           {/* ── Badge circular ── */}
                           <div className="border-t border-ink/8 pt-2.5 mt-0.5 flex flex-col gap-2">
-                            <p className="text-[10px] uppercase font-mono text-ink/30 tracking-widest">badge circular (opcional)</p>
+                            <p className="text-[10px] uppercase font-sans text-ink/30 tracking-widest">badge circular (opcional)</p>
                             <div className="grid grid-cols-2 gap-2">
                               <label className="flex flex-col gap-1">
-                                <span className="text-[10px] uppercase text-ink/25 font-mono">texto arriba</span>
+                                <span className="text-[10px] uppercase text-ink/25 font-sans">texto arriba</span>
                                 <input value={card.badgeTopText ?? ''} placeholder="diseño"
                                   onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeTopText: e.target.value||undefined} : x))}
-                                  className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                                  className="border border-ink/15 px-2 py-1.5 text-xs font-sans bg-transparent text-ink focus:outline-none focus:border-slate" />
                               </label>
                               <label className="flex flex-col gap-1">
-                                <span className="text-[10px] uppercase text-ink/25 font-mono">texto abajo</span>
+                                <span className="text-[10px] uppercase text-ink/25 font-sans">texto abajo</span>
                                 <input value={card.badgeBottomText ?? ''} placeholder="web"
                                   onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeBottomText: e.target.value||undefined} : x))}
-                                  className="border border-ink/15 px-2 py-1.5 text-xs font-mono bg-transparent text-ink focus:outline-none focus:border-slate" />
+                                  className="border border-ink/15 px-2 py-1.5 text-xs font-sans bg-transparent text-ink focus:outline-none focus:border-slate" />
                               </label>
                             </div>
                             <div className="flex flex-col gap-1">
-                              <span className="text-[10px] uppercase text-ink/25 font-mono">ícono (imagen)</span>
+                              <span className="text-[10px] uppercase text-ink/25 font-sans">ícono (imagen)</span>
                               <div className="flex items-start gap-3">
                                 <label className="cursor-pointer flex-shrink-0">
                                   {card.badgeIcon
@@ -1121,9 +1121,9 @@ export default function ContenidoClient({
                                     value={card.badgeIcon ?? ''}
                                     onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeIcon: e.target.value||undefined} : x))}
                                     placeholder="https://... o sube una imagen"
-                                    className="border border-ink/15 px-2 py-1.5 text-[10px] font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-full"
+                                    className="border border-ink/15 px-2 py-1.5 text-[10px] font-sans bg-transparent text-ink focus:outline-none focus:border-slate w-full"
                                   />
-                                  <span className="text-[10px] font-mono text-ink/25">
+                                  <span className="text-[10px] font-sans text-ink/25">
                                     {uploadingBadgeIcon === i ? 'subiendo...' : 'pega url o haz clic en la miniatura'}
                                   </span>
                                 </div>
@@ -1131,29 +1131,29 @@ export default function ContenidoClient({
                             </div>
                             <div className="grid grid-cols-2 gap-3">
                               <div className="flex flex-col gap-1">
-                                <span className="text-[10px] uppercase text-ink/25 font-mono">fondo badge</span>
+                                <span className="text-[10px] uppercase text-ink/25 font-sans">fondo badge</span>
                                 <div className="flex gap-1.5 flex-wrap items-center">
-                                  {['#171a21','#735cdd','#ef476f','#3c91e6','#dddfdf','#ffffff'].map(c => (
+                                  {['#171a21','#735cdd','#FF6900','#3c91e6','#dddfdf','#ffffff'].map(c => (
                                     <button key={c} onClick={() => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeBgColor: c} : x))}
                                       className="w-5 h-5 border-2 transition-all flex-shrink-0"
                                       style={{ backgroundColor: c, borderColor: card.badgeBgColor === c ? '#735cdd' : 'rgba(23,26,33,0.15)' }} />
                                   ))}
-                                  <input type="text" value={card.badgeBgColor ?? ''} placeholder="#ef476f"
+                                  <input type="text" value={card.badgeBgColor ?? ''} placeholder="#FF6900"
                                     onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeBgColor: e.target.value||undefined} : x))}
-                                    className="border border-ink/15 px-1.5 py-1 text-[10px] font-mono w-16 bg-transparent text-ink focus:outline-none focus:border-slate" />
+                                    className="border border-ink/15 px-1.5 py-1 text-[10px] font-sans w-16 bg-transparent text-ink focus:outline-none focus:border-slate" />
                                 </div>
                               </div>
                               <div className="flex flex-col gap-1">
-                                <span className="text-[10px] uppercase text-ink/25 font-mono">texto badge</span>
+                                <span className="text-[10px] uppercase text-ink/25 font-sans">texto badge</span>
                                 <div className="flex gap-1.5 flex-wrap items-center">
-                                  {['#ffffff','#dddfdf','#171a21','#ef476f','#735cdd'].map(c => (
+                                  {['#ffffff','#dddfdf','#171a21','#FF6900','#735cdd'].map(c => (
                                     <button key={c} onClick={() => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeTextColor: c} : x))}
                                       className="w-5 h-5 border-2 transition-all flex-shrink-0"
                                       style={{ backgroundColor: c, borderColor: card.badgeTextColor === c ? '#735cdd' : 'rgba(23,26,33,0.15)' }} />
                                   ))}
                                   <input type="text" value={card.badgeTextColor ?? ''} placeholder="#ffffff"
                                     onChange={(e) => setCardsList(prev => prev.map((x,j) => j===i ? {...x, badgeTextColor: e.target.value||undefined} : x))}
-                                    className="border border-ink/15 px-1.5 py-1 text-[10px] font-mono w-16 bg-transparent text-ink focus:outline-none focus:border-slate" />
+                                    className="border border-ink/15 px-1.5 py-1 text-[10px] font-sans w-16 bg-transparent text-ink focus:outline-none focus:border-slate" />
                                 </div>
                               </div>
                             </div>
@@ -1164,17 +1164,17 @@ export default function ContenidoClient({
                   ))}
 
                   {cardsList.length === 0 && (
-                    <p className="text-xs text-ink/25 font-mono">no hay cards aún — haz clic en + agregar card</p>
+                    <p className="text-xs text-ink/25 font-sans">no hay cards aún — haz clic en + agregar card</p>
                   )}
                 </div>
 
                 {/* Colores */}
                 <div className="border-t border-ink/8 pt-5 flex flex-col gap-4">
-                  <p className="text-[10px] uppercase font-mono text-ink/30 tracking-widest">— sección —</p>
+                  <p className="text-[10px] uppercase font-sans text-ink/30 tracking-widest">— sección —</p>
                   <ColorPicker label="fondo de sección" value={form.bg_color} onChange={(v) => set('bg_color', v)} presets={COLOR_PRESETS} />
                   <ColorPicker label="color del título" value={form.text_color} onChange={(v) => set('text_color', v)} presets={TEXT_COLOR_PRESETS} />
                   <ColorPicker label="color de la etiqueta" value={form.accent_color} onChange={(v) => set('accent_color', v)} presets={ACCENT_PRESETS} />
-                  <p className="text-[10px] uppercase font-mono text-ink/30 tracking-widest mt-1">— card —</p>
+                  <p className="text-[10px] uppercase font-sans text-ink/30 tracking-widest mt-1">— card —</p>
                   <ColorPicker label="fondo del card" value={cardColors.bg} onChange={(v) => setCardColors(c => ({ ...c, bg: v }))} presets={COLOR_PRESETS} />
                   <ColorPicker label="texto del card" value={cardColors.text} onChange={(v) => setCardColors(c => ({ ...c, text: v }))} presets={TEXT_COLOR_PRESETS} />
                   <ColorPicker label="acento del card (categoría + cta)" value={cardColors.accent} onChange={(v) => setCardColors(c => ({ ...c, accent: v }))} presets={ACCENT_PRESETS} />
@@ -1184,12 +1184,12 @@ export default function ContenidoClient({
                 <div className="grid grid-cols-2 gap-4 border-t border-ink/8 pt-5">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="checkbox" checked={form.published} onChange={(e) => set('published', e.target.checked)} className="w-4 h-4 accent-slate" />
-                    <span className="text-xs uppercase font-mono text-ink/60">publicar</span>
+                    <span className="text-xs uppercase font-sans text-ink/60">publicar</span>
                   </label>
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-xs uppercase text-ink/40 font-mono">orden</span>
+                    <span className="text-xs uppercase text-ink/40 font-sans">orden</span>
                     <input type="number" value={form.sort_order} onChange={(e) => set('sort_order', parseInt(e.target.value) || 0)}
-                      className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-20" />
+                      className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate w-20" />
                   </label>
                 </div>
 
@@ -1199,26 +1199,26 @@ export default function ContenidoClient({
                 {form.type === 'curriculum' && <>
 
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">título de sección</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">título de sección</span>
                   <input
                     value={form.title}
                     onChange={(e) => set('title', e.target.value)}
                     placeholder="contenido del curso"
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono uppercase bg-transparent text-ink focus:outline-none focus:border-slate"
+                    className="border border-ink/15 px-3 py-2 text-sm font-sans uppercase bg-transparent text-ink focus:outline-none focus:border-slate"
                   />
                 </label>
 
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">etiqueta rosa (opcional)</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">etiqueta rosa (opcional)</span>
                   <input
                     value={form.label ?? ''}
                     onChange={(e) => set('label', e.target.value || null)}
                     placeholder="ej. temario"
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                    className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate"
                   />
                 </label>
 
-                <div className="border border-ink/10 bg-ink/[0.02] px-4 py-3 text-xs font-mono text-ink/50 leading-relaxed">
+                <div className="border border-ink/10 bg-ink/[0.02] px-4 py-3 text-xs font-sans text-ink/50 leading-relaxed">
                   los capítulos y lecciones se cargan automáticamente del curso asociado a esta página —
                   no hay que configurarlos aquí
                 </div>
@@ -1232,15 +1232,15 @@ export default function ContenidoClient({
                 <div className="grid grid-cols-2 gap-4 border-t border-ink/8 pt-5">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="checkbox" checked={form.published} onChange={(e) => set('published', e.target.checked)} className="w-4 h-4 accent-slate" />
-                    <span className="text-xs uppercase font-mono text-ink/60">publicar</span>
+                    <span className="text-xs uppercase font-sans text-ink/60">publicar</span>
                   </label>
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-xs uppercase text-ink/40 font-mono">orden</span>
+                    <span className="text-xs uppercase text-ink/40 font-sans">orden</span>
                     <input
                       type="number"
                       value={form.sort_order}
                       onChange={(e) => set('sort_order', parseInt(e.target.value) || 0)}
-                      className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-20"
+                      className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate w-20"
                     />
                   </label>
                 </div>
@@ -1251,27 +1251,27 @@ export default function ContenidoClient({
                 {form.type === 'objectives' && <>
 
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">nombre interno</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">nombre interno</span>
                   <input
                     value={form.title}
                     onChange={(e) => set('title', e.target.value)}
                     placeholder="ej. objetivos del curso"
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                    className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate"
                   />
                   <p className="text-xs text-ink/25">solo visible en el admin</p>
                 </label>
 
                 <label className="flex flex-col gap-1.5">
-                  <span className="text-xs uppercase text-ink/40 font-mono">etiqueta rosa (opcional)</span>
+                  <span className="text-xs uppercase text-ink/40 font-sans">etiqueta rosa (opcional)</span>
                   <input
                     value={form.label ?? ''}
                     onChange={(e) => set('label', e.target.value || null)}
                     placeholder="ej. lo que vas a lograr"
-                    className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate"
+                    className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate"
                   />
                 </label>
 
-                <div className="border border-ink/10 bg-ink/[0.02] px-4 py-3 text-xs font-mono text-ink/50 leading-relaxed">
+                <div className="border border-ink/10 bg-ink/[0.02] px-4 py-3 text-xs font-sans text-ink/50 leading-relaxed">
                   la propuesta de valor y los objetivos de aprendizaje se cargan automáticamente
                   del curso asociado a esta página — edítalos en el editor del curso
                 </div>
@@ -1285,15 +1285,15 @@ export default function ContenidoClient({
                 <div className="grid grid-cols-2 gap-4 border-t border-ink/8 pt-5">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="checkbox" checked={form.published} onChange={(e) => set('published', e.target.checked)} className="w-4 h-4 accent-slate" />
-                    <span className="text-xs uppercase font-mono text-ink/60">publicar</span>
+                    <span className="text-xs uppercase font-sans text-ink/60">publicar</span>
                   </label>
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-xs uppercase text-ink/40 font-mono">orden</span>
+                    <span className="text-xs uppercase text-ink/40 font-sans">orden</span>
                     <input
                       type="number"
                       value={form.sort_order}
                       onChange={(e) => set('sort_order', parseInt(e.target.value) || 0)}
-                      className="border border-ink/15 px-3 py-2 text-sm font-mono bg-transparent text-ink focus:outline-none focus:border-slate w-20"
+                      className="border border-ink/15 px-3 py-2 text-sm font-sans bg-transparent text-ink focus:outline-none focus:border-slate w-20"
                     />
                   </label>
                 </div>

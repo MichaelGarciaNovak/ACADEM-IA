@@ -1,5 +1,9 @@
 import type { Config } from 'tailwindcss'
 
+const nimbus = ['var(--font-nimbus, "Helvetica Neue"), sans-serif']
+const nimbusCond = ['var(--font-nimbus-cond, "Arial Narrow"), sans-serif']
+const plantin = ['var(--font-plantin, Georgia), serif']
+
 const config: Config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -10,13 +14,17 @@ const config: Config = {
     extend: {
       colors: {
         ink: '#171a21',
-        pink: '#ef476f',
+        orange: '#FF6900',
         alabaster: '#dddfdf',
         slate: '#735cdd',
         ocean: '#3c91e6',
       },
       fontFamily: {
-        mono: ['"IBM Plex Mono"', 'monospace'],
+        sans: nimbus,
+        cond: nimbusCond,
+        serif: plantin,
+        // alias heredado: cualquier `font-mono` restante también usa Nimbus Sans
+        mono: nimbus,
       },
     },
   },

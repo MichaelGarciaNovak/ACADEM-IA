@@ -21,7 +21,7 @@ export default async function DashboardPage() {
   return (
     <div>
       <div className="mb-10">
-        <p className="text-xs uppercase text-pink mb-1">portal estudiante</p>
+        <p className="text-xs uppercase text-orange mb-1">portal estudiante</p>
         <h1 className="text-3xl font-normal uppercase text-ink">hola, {firstName}</h1>
       </div>
 
@@ -40,7 +40,7 @@ export default async function DashboardPage() {
             {enrollments.map((e: any) => (
               <div key={e.id} className="border border-ink/10 p-6 hover:border-ink/30 transition-colors">
                 <div className="flex items-start justify-between mb-4">
-                  <span className="text-xs text-pink border border-pink/30 px-2 py-0.5">
+                  <span className="text-xs text-orange border border-orange/30 px-2 py-0.5">
                     {e.course?.tag}
                   </span>
                   <span className="text-xs text-ink/40">{e.course?.duration}</span>
@@ -51,7 +51,7 @@ export default async function DashboardPage() {
                 <div className="flex items-center gap-3">
                   <div className="flex-1 h-1 bg-ink/10">
                     <div
-                      className="h-1 bg-pink transition-all"
+                      className="h-1 bg-orange transition-all"
                       style={{ width: `${e.progress ?? 0}%` }}
                     />
                   </div>

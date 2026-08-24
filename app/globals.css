@@ -1,12 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   --ink: #171a21;
-  --pink: #ef476f;
+  --orange: #FF6900;
   --alabaster: #dddfdf;
   --slate: #735cdd;
   --ocean: #3c91e6;
@@ -24,7 +22,7 @@ body {
   overflow-x: hidden;
   background-color: #ffffff;
   color: var(--ink);
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-nimbus), 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -33,28 +31,28 @@ a {
 }
 
 ::selection {
-  background-color: var(--pink);
+  background-color: var(--orange);
   color: #fff;
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-pink text-white font-mono font-normal uppercase px-6 py-3 rounded-sm transition-all duration-150 hover:bg-opacity-90 active:scale-95;
+    @apply bg-orange text-white font-sans font-normal uppercase px-6 py-3 rounded-sm transition-all duration-150 hover:bg-opacity-90 active:scale-95;
   }
 
   .btn-outline {
-    @apply border border-alabaster text-alabaster font-mono font-normal uppercase px-6 py-3 rounded-sm transition-all duration-150 hover:bg-alabaster hover:text-ink active:scale-95;
+    @apply border border-alabaster text-alabaster font-sans font-normal uppercase px-6 py-3 rounded-sm transition-all duration-150 hover:bg-alabaster hover:text-ink active:scale-95;
   }
 
   .btn-admin {
-    @apply bg-slate text-white font-mono font-normal uppercase px-6 py-3 rounded-sm transition-all duration-150 hover:opacity-90 active:scale-95;
+    @apply bg-slate text-white font-sans font-normal uppercase px-6 py-3 rounded-sm transition-all duration-150 hover:opacity-90 active:scale-95;
   }
 
   .btn-admin-outline {
-    @apply border border-slate text-slate font-mono font-normal uppercase px-6 py-3 rounded-sm transition-all duration-150 hover:bg-slate hover:text-white active:scale-95;
+    @apply border border-slate text-slate font-sans font-normal uppercase px-6 py-3 rounded-sm transition-all duration-150 hover:bg-slate hover:text-white active:scale-95;
   }
 
   .section-label {
-    @apply text-xs font-mono uppercase tracking-widest text-pink;
+    @apply text-xs font-sans uppercase tracking-widest text-orange;
   }
 }

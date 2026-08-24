@@ -3,11 +3,10 @@
 import { useState } from 'react'
 import Logo from './Logo'
 
-const links = [
-  { href: '#cursos', label: 'cursos' },
-  { href: '#como-funciona', label: 'cómo funciona' },
-  { href: '#precios', label: 'precios' },
-]
+// Los anclas #cursos / #como-funciona / #precios apuntaban a secciones estáticas
+// que ya no existen: la home solo renderiza lo que se crea desde /admin/contenido,
+// y las secciones de la BD no exponen un id al que enlazar.
+const links: { href: string; label: string }[] = []
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
@@ -22,16 +21,13 @@ export default function Navbar() {
             <a
               key={l.href}
               href={l.href}
-              className="text-sm uppercase font-normal text-ink/50 hover:text-ink transition-colors font-mono"
+              className="text-sm uppercase font-normal text-ink/50 hover:text-ink transition-colors font-sans"
             >
               {l.label}
             </a>
           ))}
-          <a href="/login" className="text-sm uppercase font-normal text-ink/50 hover:text-ink transition-colors font-mono">
+          <a href="/login" className="text-sm uppercase font-normal text-ink/50 hover:text-ink transition-colors font-sans">
             entrar
-          </a>
-          <a href="/registro" className="btn-primary text-sm py-2 px-4">
-            empezar gratis
           </a>
         </div>
 
@@ -40,7 +36,7 @@ export default function Navbar() {
           onClick={() => setOpen(!open)}
           aria-label="Menú"
         >
-          <span className="font-mono text-xl">{open ? '×' : '≡'}</span>
+          <span className="font-sans text-xl">{open ? '×' : '≡'}</span>
         </button>
       </div>
 
@@ -50,18 +46,15 @@ export default function Navbar() {
             <a
               key={l.href}
               href={l.href}
-              className="text-sm uppercase font-normal text-ink/50 hover:text-ink font-mono"
+              className="text-sm uppercase font-normal text-ink/50 hover:text-ink font-sans"
               onClick={() => setOpen(false)}
             >
               {l.label}
             </a>
           ))}
           <hr className="border-ink/10" />
-          <a href="/login" className="text-sm uppercase font-normal text-ink/50 hover:text-ink font-mono" onClick={() => setOpen(false)}>
+          <a href="/login" className="text-sm uppercase font-normal text-ink/50 hover:text-ink font-sans" onClick={() => setOpen(false)}>
             entrar
-          </a>
-          <a href="/registro" className="btn-primary text-sm text-center">
-            empezar gratis
           </a>
         </div>
       )}

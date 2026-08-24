@@ -39,7 +39,7 @@ export default async function AdminPagosPage() {
                 p.status === 'paid'
                   ? 'bg-ocean/10 text-ocean'
                   : p.status === 'failed'
-                  ? 'bg-pink/10 text-pink'
+                  ? 'bg-orange/10 text-orange'
                   : 'bg-ink/5 text-ink/40'
               }`}>
                 {p.status === 'paid' ? 'pagado' : p.status === 'failed' ? 'fallido' : p.status}

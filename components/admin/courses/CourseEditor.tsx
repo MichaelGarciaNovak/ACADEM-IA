@@ -127,7 +127,7 @@ function LessonItem({
           </button>
           <button
             onClick={() => onDelete(lesson.id)}
-            className="text-xs text-ink/20 hover:text-pink transition-colors"
+            className="text-xs text-ink/20 hover:text-orange transition-colors"
           >
             ✕
           </button>
@@ -144,7 +144,7 @@ function LessonItem({
               <input
                 value={data.title}
                 onChange={e => handleChange('title', e.target.value)}
-                className="border border-ink/15 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/30"
+                className="border border-ink/15 bg-white text-ink font-sans text-sm px-3 py-2 outline-none focus:border-ink/30"
                 placeholder="Título de la lección"
               />
             </div>
@@ -156,7 +156,7 @@ function LessonItem({
                 value={data.description ?? ''}
                 onChange={e => handleChange('description', e.target.value)}
                 rows={3}
-                className="border border-ink/15 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/30 resize-none"
+                className="border border-ink/15 bg-white text-ink font-sans text-sm px-3 py-2 outline-none focus:border-ink/30 resize-none"
                 placeholder="Descripción breve de la lección"
               />
             </div>
@@ -168,7 +168,7 @@ function LessonItem({
                 <input
                   value={data.video_url ?? ''}
                   onChange={e => handleChange('video_url', e.target.value)}
-                  className="border border-ink/15 bg-white text-ink font-mono text-xs px-3 py-2 outline-none focus:border-ink/30"
+                  className="border border-ink/15 bg-white text-ink font-sans text-xs px-3 py-2 outline-none focus:border-ink/30"
                   placeholder="https://vimeo.com/..."
                 />
               </div>
@@ -177,7 +177,7 @@ function LessonItem({
                 <input
                   value={data.presentation_url ?? ''}
                   onChange={e => handleChange('presentation_url', e.target.value)}
-                  className="border border-ink/15 bg-white text-ink font-mono text-xs px-3 py-2 outline-none focus:border-ink/30"
+                  className="border border-ink/15 bg-white text-ink font-sans text-xs px-3 py-2 outline-none focus:border-ink/30"
                   placeholder="https://www.canva.com/design/..."
                 />
               </div>
@@ -186,7 +186,7 @@ function LessonItem({
                 <input
                   value={data.pdf_url ?? ''}
                   onChange={e => handleChange('pdf_url', e.target.value)}
-                  className="border border-ink/15 bg-white text-ink font-mono text-xs px-3 py-2 outline-none focus:border-ink/30"
+                  className="border border-ink/15 bg-white text-ink font-sans text-xs px-3 py-2 outline-none focus:border-ink/30"
                   placeholder="https://..."
                 />
               </div>
@@ -195,7 +195,7 @@ function LessonItem({
                 <input
                   value={data.worksheet_url ?? ''}
                   onChange={e => handleChange('worksheet_url', e.target.value)}
-                  className="border border-ink/15 bg-white text-ink font-mono text-xs px-3 py-2 outline-none focus:border-ink/30"
+                  className="border border-ink/15 bg-white text-ink font-sans text-xs px-3 py-2 outline-none focus:border-ink/30"
                   placeholder="https://..."
                 />
               </div>
@@ -206,7 +206,7 @@ function LessonItem({
               <input
                 value={data.tool_url ?? ''}
                 onChange={e => handleChange('tool_url', e.target.value)}
-                className="border border-ink/15 bg-white text-ink font-mono text-xs px-3 py-2 outline-none focus:border-ink/30"
+                className="border border-ink/15 bg-white text-ink font-sans text-xs px-3 py-2 outline-none focus:border-ink/30"
                 placeholder="https://..."
               />
               <p className="text-xs text-ink/25 mt-1">si agregas una liga, la herramienta aparecerá con tarjeta de acceso en la lección del portal.</p>
@@ -229,7 +229,7 @@ function LessonItem({
                     await supabase.from('course_lessons').update({ duration_minutes: val }).eq('id', lesson.id)
                   }, 800)
                 }}
-                className="border border-ink/15 bg-white text-ink font-mono text-xs px-3 py-2 outline-none focus:border-ink/30 w-28"
+                className="border border-ink/15 bg-white text-ink font-sans text-xs px-3 py-2 outline-none focus:border-ink/30 w-28"
                 placeholder="ej. 25"
               />
               <p className="text-xs text-ink/25 mt-1">aparece en el temario de la landing del curso</p>
@@ -347,13 +347,13 @@ function ChapterItem({
         <input
           value={title}
           onChange={e => handleTitleChange(e.target.value)}
-          className="flex-1 bg-transparent text-sm font-mono text-ink uppercase outline-none border-b border-transparent focus:border-ink/20 py-0.5"
+          className="flex-1 bg-transparent text-sm font-sans text-ink uppercase outline-none border-b border-transparent focus:border-ink/20 py-0.5"
           placeholder="Título del capítulo"
         />
 
         <button
           onClick={() => onDeleteChapter(chapter.id)}
-          className="text-xs text-ink/20 hover:text-pink transition-colors ml-2"
+          className="text-xs text-ink/20 hover:text-orange transition-colors ml-2"
         >
           ✕
         </button>
@@ -536,7 +536,7 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
   }
 
   return (
-    <div className="font-mono">
+    <div className="font-sans">
       {/* Top bar */}
       <div className="flex items-center justify-between mb-10">
         <div>
@@ -549,7 +549,7 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
         <div className="flex items-center gap-4">
           {saving && <span className="text-xs text-ink/30 uppercase tracking-widest">guardando...</span>}
           {saved && <span className="text-xs text-green-600 uppercase tracking-widest">guardado ✓</span>}
-          {saveError && <span className="text-xs text-pink font-mono max-w-xs truncate" title={saveError}>error: {saveError}</span>}
+          {saveError && <span className="text-xs text-orange font-sans max-w-xs truncate" title={saveError}>error: {saveError}</span>}
           <button onClick={handleSave} className="btn-admin text-sm">
             guardar cambios
           </button>
@@ -577,7 +577,7 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
               <select
                 value={form.category_id}
                 onChange={e => handleFormChange('category_id', e.target.value)}
-                className="border border-ink/20 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/40"
+                className="border border-ink/20 bg-white text-ink font-sans text-sm px-3 py-2 outline-none focus:border-ink/40"
               >
                 <option value="">— sin categoría —</option>
                 {categories.map(c => (
@@ -590,7 +590,7 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
               <input
                 value={form.title}
                 onChange={e => handleFormChange('title', e.target.value)}
-                className="border border-ink/20 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/40"
+                className="border border-ink/20 bg-white text-ink font-sans text-sm px-3 py-2 outline-none focus:border-ink/40"
                 placeholder="Título del curso"
               />
             </div>
@@ -605,7 +605,7 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
               value={form.description}
               onChange={e => handleFormChange('description', e.target.value)}
               rows={3}
-              className="border border-ink/20 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/40 resize-none"
+              className="border border-ink/20 bg-white text-ink font-sans text-sm px-3 py-2 outline-none focus:border-ink/40 resize-none"
               placeholder="Descripción breve del curso"
             />
             <p className="text-xs text-ink/25">
@@ -622,7 +622,7 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
               value={form.value_proposition}
               onChange={e => handleFormChange('value_proposition', e.target.value)}
               rows={3}
-              className="border border-ink/20 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/40 resize-none"
+              className="border border-ink/20 bg-white text-ink font-sans text-sm px-3 py-2 outline-none focus:border-ink/40 resize-none"
               placeholder="¿Por qué alguien debería tomar este curso? ¿Qué cambia en su vida o trabajo?"
             />
           </div>
@@ -640,11 +640,11 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
               { field: 'learning_objective_4', label: 'cap. 04', value: form.learning_objective_4 },
             ] as const).map(({ field, label, value }) => (
               <div key={field} className="flex gap-3 items-start">
-                <span className="text-xs font-mono text-pink mt-2.5 flex-shrink-0 w-12">{label}</span>
+                <span className="text-xs font-sans text-orange mt-2.5 flex-shrink-0 w-12">{label}</span>
                 <input
                   value={value}
                   onChange={e => handleFormChange(field, e.target.value)}
-                  className="flex-1 border border-ink/20 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/40"
+                  className="flex-1 border border-ink/20 bg-white text-ink font-sans text-sm px-3 py-2 outline-none focus:border-ink/40"
                   placeholder="Al terminar este capítulo el alumno podrá..."
                 />
               </div>
@@ -657,7 +657,7 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
             <input
               value={form.image_url}
               onChange={e => handleFormChange('image_url', e.target.value)}
-              className="border border-ink/20 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/40"
+              className="border border-ink/20 bg-white text-ink font-sans text-sm px-3 py-2 outline-none focus:border-ink/40"
               placeholder="https://... (URL de imagen)"
             />
             {form.image_url && (
@@ -682,7 +682,7 @@ export default function CourseEditor({ course, categories, initialChapters }: Pr
                   min={0}
                   value={value}
                   onChange={e => handleFormChange(field, parseFloat(e.target.value) || 0)}
-                  className="border border-ink/20 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/40"
+                  className="border border-ink/20 bg-white text-ink font-sans text-sm px-3 py-2 outline-none focus:border-ink/40"
                 />
               </div>
             ))}

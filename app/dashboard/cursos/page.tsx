@@ -46,7 +46,7 @@ export default async function CatalogoPage() {
                   </div>
                 )}
                 <div className="flex items-start justify-between gap-3 mb-2">
-                  <span className="text-xs text-pink border border-pink/20 px-2 py-0.5">
+                  <span className="text-xs text-orange border border-orange/20 px-2 py-0.5">
                     {c.course_categories?.name ?? '—'}
                   </span>
                   {total > 0 && (

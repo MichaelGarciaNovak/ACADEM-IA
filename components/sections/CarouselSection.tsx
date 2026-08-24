@@ -1,12 +1,13 @@
 'use client'
 
 import { useRef } from 'react'
+import Logomark from '@/components/brand/Logomark'
 
 // Golden ratio
 const φ = 1.618033988749895
 // Card scale factor (+30%)
 const S = 1.3
-// Badge diameter = 1/4 of image height = cardWidth / (4φ)
+// Alto del isotipo sobre la imagen = 1/4 del alto de la imagen = cardWidth / (4φ)
 const BADGE_D = Math.round((295 * S) / (4 * φ))  // ≈ 59px
 
 export interface CarouselCard {
@@ -47,116 +48,6 @@ function ClockIcon() {
     <svg width={sz} height={sz} viewBox="0 0 10 10" fill="none" className="flex-shrink-0">
       <circle cx="5" cy="5" r="4" stroke="currentColor" strokeWidth="1" />
       <path d="M5 3V5L6.5 6.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function CircleBadge({
-  uid,
-  topText,
-  bottomText,
-  icon,
-  bgColor,
-  textColor,
-  top,
-  left,
-}: {
-  uid: number | string
-  topText?: string
-  bottomText?: string
-  icon?: string
-  bgColor: string
-  textColor: string
-  top: number
-  left: number
-}) {
-  if (!topText && !bottomText && !icon) return null
-
-  const arcR = 35
-  const cx = 50, cy = 50
-  const topId = `ta-${uid}`
-
-  return (
-    <svg
-      width={BADGE_D}
-      height={BADGE_D}
-      viewBox="0 0 100 100"
-      className="absolute pointer-events-none"
-      style={{ top, left }}
-    >
-      <defs>
-        {/* Top arc — sweep=1 goes OVER the top in SVG Y-down coords */}
-        <path
-          id={topId}
-          d={`M ${cx - arcR},${cy} A ${arcR},${arcR} 0 0,1 ${cx + arcR},${cy}`}
-          fill="none"
-        />
-      </defs>
-
-      {/* Background circle */}
-      <circle cx={cx} cy={cy} r="47" fill={bgColor} />
-
-      {/* Thin inner ring for visual refinement */}
-      <circle cx={cx} cy={cy} r="44" fill="none" stroke={textColor} strokeWidth="0.5" strokeOpacity="0.2" />
-
-      {/* Top arc text */}
-      {topText && (
-        <text
-          fontSize="10"
-          fill={textColor}
-          fontFamily="'IBM Plex Mono', monospace"
-          letterSpacing="1.5"
-          textAnchor="middle"
-        >
-          <textPath href={`#${topId}`} startOffset="50%">
-            {topText.toUpperCase()}
-          </textPath>
-        </text>
-      )}
-
-      {/* Bottom arc text — manually placed chars so glyphs face outward correctly */}
-      {/* rotate(θ - 90°) at each arc point makes chars upright and curve-following    */}
-      {bottomText && (() => {
-        const chars = bottomText.toUpperCase().split('')
-        const charArcDeg = (10 * 0.60 + 1.5) / arcR * (180 / Math.PI)
-        const totalArcDeg = chars.length * charArcDeg
-        // In SVG Y-down, θ=90° is the bottommost point, lower θ → right side, higher θ → left side.
-        // Start high (left) and decrease (right) so text reads L→R from the viewer's perspective.
-        const startDeg = 90 + totalArcDeg / 2 - charArcDeg / 2
-        return chars.map((ch, i) => {
-          const θ = startDeg - i * charArcDeg
-          const rad = θ * Math.PI / 180
-          const x = cx + arcR * Math.cos(rad)
-          const y = cy + arcR * Math.sin(rad)
-          return (
-            <text
-              key={i}
-              x={x.toFixed(2)}
-              y={y.toFixed(2)}
-              fontSize="10"
-              fill={textColor}
-              fontFamily="'IBM Plex Mono', monospace"
-              textAnchor="middle"
-              dominantBaseline="auto"
-              transform={`rotate(${(θ - 90).toFixed(2)},${x.toFixed(2)},${y.toFixed(2)})`}
-            >
-              {ch}
-            </text>
-          )
-        })
-      })()}
-
-      {/* Center icon — image URL */}
-      {icon && (
-        <image
-          href={icon}
-          x={cx - 18}
-          y={cy - 18}
-          width="36"
-          height="36"
-          preserveAspectRatio="xMidYMid meet"
-        />
-      )}
     </svg>
   )
 }
@@ -214,17 +105,12 @@ function Card({
           <div className="w-full h-full" style={{ backgroundColor: cardTextColor + '08' }} />
         )}
 
-        {/* ── Circular badge ── */}
+        {/* ── Isotipo Orange sobre la imagen ── */}
         {hasBadge && (
-          <CircleBadge
-            uid={index}
-            topText={card.badgeTopText}
-            bottomText={card.badgeBottomText}
-            icon={card.badgeIcon}
-            bgColor={card.badgeBgColor ?? cardAccentColor}
-            textColor={card.badgeTextColor ?? '#ffffff'}
-            top={badgeTop}
-            left={badgeTop}
+          <Logomark
+            color="#ffffff"
+            className="absolute w-auto pointer-events-none"
+            style={{ top: badgeTop, left: badgeTop, height: BADGE_D, opacity: 0.85 }}
           />
         )}
       </div>
@@ -236,7 +122,7 @@ function Card({
       >
         {card.category && (
           <p
-            className="font-mono uppercase"
+            className="font-sans uppercase"
             style={{
               fontSize: `${base.toFixed(1)}px`,
               letterSpacing: '0.12em',
@@ -249,7 +135,7 @@ function Card({
         )}
 
         <h3
-          className="font-mono font-normal uppercase leading-tight"
+          className="font-sans font-normal leading-tight"
           style={{
             fontSize: `${titlePx}px`,
             letterSpacing: '-0.02em',
@@ -262,7 +148,7 @@ function Card({
 
         {card.subtitle && (
           <p
-            className="font-mono leading-snug"
+            className="font-sans leading-snug"
             style={{
               fontSize: `${base.toFixed(1)}px`,
               color: cardTextColor + '60',
@@ -301,7 +187,7 @@ function Card({
         >
           {card.duration ? (
             <span
-              className="flex items-center font-mono"
+              className="flex items-center font-sans"
               style={{ fontSize: `${base.toFixed(1)}px`, color: cardTextColor + '40', gap: `${mb5}px` }}
             >
               <ClockIcon />
@@ -310,7 +196,7 @@ function Card({
           ) : <span />}
 
           <span
-            className="font-mono uppercase transition-transform duration-300 group-hover:translate-x-[4px]"
+            className="font-sans uppercase transition-transform duration-300 group-hover:translate-x-[4px]"
             style={{
               fontSize: `${base.toFixed(1)}px`,
               letterSpacing: '0.1em',
@@ -332,7 +218,7 @@ export default function CarouselSection({
   cards,
   bgColor = '#ffffff',
   textColor = '#171a21',
-  accentColor = '#ef476f',
+  accentColor = '#FF6900',
   cardBgColor = '#ffffff',
   cardTextColor,
   cardAccentColor,
@@ -359,7 +245,7 @@ export default function CarouselSection({
           <div>
             {label && (
               <p
-                className="font-mono uppercase"
+                className="font-sans uppercase"
                 style={{
                   fontSize: '9px',
                   letterSpacing: '0.15em',
@@ -372,7 +258,7 @@ export default function CarouselSection({
             )}
             {title && (
               <h2
-                className="font-mono font-normal uppercase"
+                className="font-sans font-normal"
                 style={{
                   color: textColor,
                   fontSize: 'clamp(1.875rem, 3.2vw, 2.25rem)',
@@ -385,7 +271,7 @@ export default function CarouselSection({
             )}
             {subtitle && (
               <p
-                className="font-mono"
+                className="font-sans"
                 style={{
                   fontSize: '11px',
                   color: textColor + '55',

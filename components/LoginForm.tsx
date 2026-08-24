@@ -32,36 +32,36 @@ export default function LoginForm() {
     <main className="min-h-screen bg-ink flex flex-col items-center justify-center px-6">
       <div className="w-full max-w-sm">
         <div className="mb-10 text-center">
-          <Logo variant="dark" size="md" accentColor="#ef476f" />
+          <Logo variant="dark" size="md" accentColor="#FF6900" />
         </div>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <label className="text-xs uppercase text-alabaster/50 font-mono">email</label>
+            <label className="text-xs uppercase text-alabaster/50 font-sans">email</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="tu@email.com"
-              className="bg-white/5 border border-white/10 text-alabaster font-mono text-sm px-4 py-3 outline-none focus:border-pink placeholder:text-white/20 transition-colors"
+              className="bg-white/5 border border-white/10 text-alabaster font-sans text-sm px-4 py-3 outline-none focus:border-orange placeholder:text-white/20 transition-colors"
             />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs uppercase text-alabaster/50 font-mono">contraseña</label>
+            <label className="text-xs uppercase text-alabaster/50 font-sans">contraseña</label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="bg-white/5 border border-white/10 text-alabaster font-mono text-sm px-4 py-3 outline-none focus:border-pink placeholder:text-white/20 transition-colors"
+              className="bg-white/5 border border-white/10 text-alabaster font-sans text-sm px-4 py-3 outline-none focus:border-orange placeholder:text-white/20 transition-colors"
             />
           </div>
 
           {error && (
-            <p className="text-sm text-pink font-mono">{error}</p>
+            <p className="text-sm text-orange font-sans">{error}</p>
           )}
 
           <button
@@ -73,9 +73,9 @@ export default function LoginForm() {
           </button>
         </form>
 
-        <p className="text-center text-xs text-alabaster/30 font-mono mt-8">
+        <p className="text-center text-xs text-alabaster/30 font-sans mt-8">
           ¿no tienes cuenta?{' '}
-          <a href="/registro" className="text-pink hover:underline">
+          <a href="/registro" className="text-orange hover:underline">
             regístrate gratis
           </a>
         </p>

@@ -44,7 +44,7 @@ export default async function AdminUsuariosPage() {
                 <button className="text-xs uppercase text-ink/40 hover:text-ink transition-colors">
                   editar
                 </button>
-                <button className="text-xs uppercase text-ink/40 hover:text-pink transition-colors">
+                <button className="text-xs uppercase text-ink/40 hover:text-orange transition-colors">
                   desactivar
                 </button>
               </div>

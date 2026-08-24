@@ -13,7 +13,7 @@ export default function ObjectivesSection({
   objectives,
   bgColor = '#ffffff',
   textColor = '#171a21',
-  accentColor = '#ef476f',
+  accentColor = '#FF6900',
 }: Props) {
   // Filter out empty objectives
   const items = objectives.filter(Boolean)
@@ -25,7 +25,7 @@ export default function ObjectivesSection({
         {/* Label above both columns */}
         {label && (
           <p
-            className="text-xs font-mono uppercase tracking-widest mb-8"
+            className="text-xs font-sans uppercase tracking-widest mb-8"
             style={{ color: accentColor }}
           >
             {label}
@@ -37,7 +37,7 @@ export default function ObjectivesSection({
           {/* ── LEFT: propuesta de valor ─────────────────── */}
           <div className="md:sticky md:top-24">
             <p
-              className="font-mono font-normal uppercase leading-tight"
+              className="font-sans font-normal leading-tight"
               style={{
                 color: textColor,
                 fontSize: 'clamp(1.875rem, 3.2vw, 2.25rem)',
@@ -58,7 +58,7 @@ export default function ObjectivesSection({
               >
                 {/* Chapter number */}
                 <span
-                  className="text-xs font-mono flex-shrink-0 mt-0.5 w-10"
+                  className="text-xs font-sans flex-shrink-0 mt-0.5 w-10"
                   style={{ color: accentColor }}
                 >
                   {String(i + 1).padStart(2, '0')}
@@ -66,7 +66,7 @@ export default function ObjectivesSection({
 
                 {/* Objective text */}
                 <p
-                  className="font-mono font-normal leading-snug"
+                  className="font-sans font-normal leading-snug"
                   style={{
                     color: textColor,
                     fontSize: 'clamp(1rem, 1.4vw, 1.15rem)',
@@ -79,7 +79,7 @@ export default function ObjectivesSection({
             ))}
 
             {items.length === 0 && (
-              <p className="text-xs font-mono py-6" style={{ color: textColor + '35' }}>
+              <p className="text-xs font-sans py-6" style={{ color: textColor + '35' }}>
                 sin objetivos configurados
               </p>
             )}

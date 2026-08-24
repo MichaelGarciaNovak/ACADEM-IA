@@ -67,7 +67,7 @@ export default async function CursoLandingPage({ params }: Props) {
   if (sections.length === 0) notFound()
 
   return (
-    <main className="font-mono">
+    <main className="font-sans">
       <Navbar />
 
       {sections.map((s: any) => {

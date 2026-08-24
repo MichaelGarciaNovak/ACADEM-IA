@@ -23,7 +23,7 @@ export default function DashboardSidebar({ userName }: { userName: string }) {
   return (
     <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-ink flex-col border-r border-white/10">
       <div className="px-6 py-5 border-b border-white/10">
-        <Logo variant="dark" size="sm" accentColor="#ef476f" />
+        <Logo variant="dark" size="sm" accentColor="#FF6900" />
       </div>
 
       <nav className="flex-1 px-4 py-6 flex flex-col gap-1">
@@ -39,7 +39,7 @@ export default function DashboardSidebar({ userName }: { userName: string }) {
                   : 'text-alabaster/50 hover:text-alabaster hover:bg-white/5'
               }`}
             >
-              <span className="text-pink text-xs">{l.icon}</span>
+              <span className="text-orange text-xs">{l.icon}</span>
               {l.label}
             </a>
           )
@@ -50,7 +50,7 @@ export default function DashboardSidebar({ userName }: { userName: string }) {
         <p className="text-xs text-alabaster/30 uppercase px-3 mb-3 truncate">{userName}</p>
         <button
           onClick={handleLogout}
-          className="w-full text-left flex items-center gap-3 px-3 py-2.5 text-sm uppercase text-alabaster/50 hover:text-pink transition-colors"
+          className="w-full text-left flex items-center gap-3 px-3 py-2.5 text-sm uppercase text-alabaster/50 hover:text-orange transition-colors"
         >
           <span className="text-xs">→</span>
           salir

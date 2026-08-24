@@ -101,7 +101,7 @@ export default function CurriculumSection({
   label,
   bgColor = '#ffffff',
   textColor = '#171a21',
-  accentColor = '#ef476f',
+  accentColor = '#FF6900',
   chapters,
 }: Props) {
   const [openId, setOpenId] = useState<string | null>(null)
@@ -116,7 +116,7 @@ export default function CurriculumSection({
         {/* Header — left-aligned */}
         {label && (
           <p
-            className="text-xs uppercase tracking-widest font-mono font-normal mb-4"
+            className="text-xs uppercase tracking-widest font-sans font-normal mb-4"
             style={{ color: accentColor }}
           >
             {label}
@@ -124,12 +124,12 @@ export default function CurriculumSection({
         )}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-12">
           <h2
-            className="font-mono font-normal uppercase leading-none"
+            className="font-sans font-normal leading-none"
             style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', letterSpacing: '-0.02em', color: textColor }}
           >
             {title}
           </h2>
-          <span className="text-xs font-mono flex-shrink-0" style={{ color: textColor + '55' }}>
+          <span className="text-xs font-sans flex-shrink-0" style={{ color: textColor + '55' }}>
             {chapters.length} capítulos · {totalLessons} lecciones
           </span>
         </div>
@@ -152,25 +152,25 @@ export default function CurriculumSection({
                   >
                     <div className="flex gap-6 items-start flex-1 min-w-0">
                       <span
-                        className="text-xs font-mono mt-1 flex-shrink-0 w-6 text-right"
+                        className="text-xs font-sans mt-1 flex-shrink-0 w-6 text-right"
                         style={{ color: accentColor }}
                       >
                         {String(idx + 1).padStart(2, '0')}
                       </span>
                       <div className="flex flex-col gap-1 min-w-0">
                         <span
-                          className="font-mono uppercase text-base font-normal leading-snug group-hover:opacity-70 transition-opacity"
+                          className="font-sans text-base font-normal leading-snug group-hover:opacity-70 transition-opacity"
                           style={{ color: textColor }}
                         >
                           {chapter.title}
                         </span>
-                        <span className="text-xs font-mono" style={{ color: textColor + '50' }}>
+                        <span className="text-xs font-sans" style={{ color: textColor + '50' }}>
                           {lessonCount} {lessonCount === 1 ? 'lección' : 'lecciones'}
                         </span>
                       </div>
                     </div>
                     <span
-                      className="flex-shrink-0 text-xl font-mono leading-none mt-1 transition-transform duration-200"
+                      className="flex-shrink-0 text-xl font-sans leading-none mt-1 transition-transform duration-200"
                       style={{ color: textColor + '40', display: 'inline-block', transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)' }}
                     >
                       +
@@ -194,7 +194,7 @@ export default function CurriculumSection({
                             >
                               {/* Dash */}
                               <span
-                                className="text-xs font-mono mt-0.5 flex-shrink-0"
+                                className="text-xs font-sans mt-0.5 flex-shrink-0"
                                 style={{ color: accentColor }}
                               >
                                 —
@@ -202,7 +202,7 @@ export default function CurriculumSection({
 
                               {/* Title + meta row */}
                               <div className="flex-1 min-w-0 flex flex-col gap-1.5">
-                                <p className="text-sm font-mono" style={{ color: textColor }}>
+                                <p className="text-sm font-sans" style={{ color: textColor }}>
                                   {lesson.title}
                                 </p>
 
@@ -212,7 +212,7 @@ export default function CurriculumSection({
                                     {badges.map(b => (
                                       <span
                                         key={b.key}
-                                        className="inline-flex items-center gap-1 font-mono"
+                                        className="inline-flex items-center gap-1 font-sans"
                                         style={{
                                           fontSize: '10px',
                                           color: badgeColor,
@@ -227,7 +227,7 @@ export default function CurriculumSection({
                                     ))}
                                     {lesson.duration_minutes && lesson.duration_minutes > 0 && (
                                       <span
-                                        className="font-mono"
+                                        className="font-sans"
                                         style={{ fontSize: '10px', color: textColor + '45' }}
                                       >
                                         {lesson.duration_minutes} min
@@ -237,7 +237,7 @@ export default function CurriculumSection({
                                 )}
 
                                 {lesson.description && (
-                                  <p className="text-xs font-mono" style={{ color: textColor + '50' }}>
+                                  <p className="text-xs font-sans" style={{ color: textColor + '50' }}>
                                     {lesson.description}
                                   </p>
                                 )}
@@ -250,7 +250,7 @@ export default function CurriculumSection({
 
                   {isOpen && lessonCount === 0 && (
                     <div className="pb-6" style={{ paddingLeft: '3.5rem' }}>
-                      <p className="text-xs font-mono" style={{ color: textColor + '35' }}>
+                      <p className="text-xs font-sans" style={{ color: textColor + '35' }}>
                         sin lecciones aún
                       </p>
                     </div>
@@ -261,7 +261,7 @@ export default function CurriculumSection({
         </div>
 
         {chapters.length === 0 && (
-          <p className="text-sm font-mono" style={{ color: textColor + '40' }}>
+          <p className="text-sm font-sans" style={{ color: textColor + '40' }}>
             no hay capítulos disponibles aún
           </p>
         )}

@@ -51,7 +51,7 @@ export default function NuevoCursoForm({ categories }: { categories: Category[] 
           <select
             value={categoryId}
             onChange={e => setCategoryId(e.target.value)}
-            className="w-full border border-ink/20 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/40"
+            className="w-full border border-ink/20 bg-white text-ink font-sans text-sm px-3 py-2 outline-none focus:border-ink/40"
           >
             <option value="">— sin categoría —</option>
             {categories.map(c => (
@@ -66,7 +66,7 @@ export default function NuevoCursoForm({ categories }: { categories: Category[] 
             value={title}
             onChange={e => setTitle(e.target.value)}
             required
-            className="border border-ink/20 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/40 placeholder:text-ink/20"
+            className="border border-ink/20 bg-white text-ink font-sans text-sm px-3 py-2 outline-none focus:border-ink/40 placeholder:text-ink/20"
             placeholder="Título del curso"
           />
         </div>
@@ -77,13 +77,13 @@ export default function NuevoCursoForm({ categories }: { categories: Category[] 
             value={description}
             onChange={e => setDescription(e.target.value)}
             rows={3}
-            className="border border-ink/20 bg-white text-ink font-mono text-sm px-3 py-2 outline-none focus:border-ink/40 resize-none placeholder:text-ink/20"
+            className="border border-ink/20 bg-white text-ink font-sans text-sm px-3 py-2 outline-none focus:border-ink/40 resize-none placeholder:text-ink/20"
             placeholder="Descripción breve del curso"
           />
         </div>
 
         {error && (
-          <p className="text-xs text-pink font-mono">{error}</p>
+          <p className="text-xs text-orange font-sans">{error}</p>
         )}
 
         <div className="flex gap-3 pt-2">
